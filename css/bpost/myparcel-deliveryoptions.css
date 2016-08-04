@@ -1,0 +1,87 @@
+ul, h3, p { margin:0; }
+.block { width:490px; margin-bottom:15px; }
+.block-inner { padding:20px 20px 6px; }
+.bordershadow { border:5px solid #fff; border-radius:4px; }
+.input-set { margin-bottom:5px; }
+.orangeborder a,
+.orangeborder h2 { color:#dd8529; }
+.orangeborder { border-color:#dd8529; border-width:2px; }
+.dark { background:#58585a; color:#fff; }
+.orange { background:#dd8529; color:#fff; }
+.white { background:#fff; }
+#delivery_options { margin:15px 0; }
+
+/* DeliveryOptions */
+.delivery_options_overlay_open { cursor:pointer; }
+.delivery_options_overlay_close { display:none; }
+.popup_visible #delivery_options_overlay { transform:translateX(0) translateY(0); }
+#delivery_visual { display:none; }
+#delivery_visual h3 { float:left; margin-right:15px; padding-bottom:0; }
+#delivery_visual p { line-height:24px; padding-bottom:10px; }
+#delivery_delete { float:right; height:20px; width:25px; background:url(../../images/bpost/icon-x.png) no-repeat 50% 50%; margin:0; text-decoration:none; text-indent:-1337em; overflow:hidden; cursor:pointer; }
+#delivery_delete { float:right; width:26px; height:25px; line-height:21px; background:url(../../images/bpost/todo-counter.png) no-repeat 50% 50%; margin:0; font-weight:bold; text-indent:9px; color:#fff; font-size:11px; cursor:pointer; }
+#delivery_inputs,
+#pickup_inputs,
+#show_more_pickups { display:none; }
+#show_more_pickups { background:url(../../images/bpost/icon-orange-more.png) 0% 50% no-repeat; padding-left:20px; }
+#show_pickup_inputs,
+#show_delivery_inputs { background:url(../../images/bpost/icon-orange-add.png) 100% 50% no-repeat; padding-right:20px; }
+
+#delivery_options_overlay_background { transition:all 0.3s 0.3s; }
+#delivery_options_overlay { width:840px; min-height:420px; transform:translateX(0) translateY(-40%); }
+#delivery_options_overlay,
+#delivery_options_overlay_wrapper { transition: all 0.3s ease-out; }
+#delivery_options_overlay .container { margin:25px; }
+#delivery_options_overlay .errors { display:none; }
+#delivery_options_overlay a { text-decoration:none; font-weight:normal; }
+#delivery_options_overlay h2 { line-height:42px; }
+#delivery_options_overlay .logo { float:right; background:url(../../images/bpost/bpost.png); width:77px; height:42px; display:block; text-indent:-1337em; overflow:hidden; }
+#delivery_options_overlay h3 { text-align:center; padding:5px 0; }
+#delivery_options_overlay h4 { line-height:25px; margin:5px 0 0; border-radius:5px 5px 0 0; padding:0 6px; }
+#delivery_options_overlay h4 span { float:right; color:#fff; font-weight:normal; }
+#delivery_options_overlay #delivery,
+#delivery_options_overlay #pickup { float:left; width:48.5%; }
+#delivery_options_overlay #pickup { float:right; }
+#delivery_options_overlay .input-set { margin-top:5px; }
+#delivery_options_overlay #delivery_label { text-align:center; }
+
+#delivery_options_overlay .loading { display:block; margin:50px auto 0; }
+#delivery_options_overlay .hover { background:#fff; border-radius:5px; }
+#delivery_options_overlay .location { position:relative; /*cursor:pointer;*/ }
+#delivery_options_overlay .locations ul { cursor:pointer; margin-bottom:3px; padding:0; background:#f9f9f9; border:1px solid #ccc; border-top:0; border-radius:0 0 5px 5px; }
+#delivery_options_overlay .locations ul li { list-style:none; padding:0; border-top:1px solid #eee; }
+#delivery_options_overlay .locations ul li p { line-height:36px; padding:0; }
+#delivery_options_overlay .locations ul li table p { line-height:16px; margin:5px 0 10px; padding:0 10px; }
+#delivery_options_overlay .locations ul li div { float:left; width:15%; margin-top:5px; margin-left:5%; font-size:12px; line-height:14px; }
+#delivery_options_overlay .locations ul li small { font-size:10px; line-height:12px; }
+#delivery_options_overlay .opening_info { float:right; margin:6px 0 0 6px; background:url(../../images/bpost/icon-info.png); width:14px; height:14px; text-indent:-1337em; overflow:hidden;}
+#delivery_options_overlay .price_comment { color:#f99; margin-left:15px; }
+#delivery_options_overlay table { position:absolute; top:24px; right:0; background:#fff; border:1px solid #000; z-index:1337; display:none; cursor:default; }
+#delivery_options_overlay table th { font-weight:bold; padding-left:10px; }
+#delivery_options_overlay .right { float:right; text-align:right; }
+
+/* DeliveryOptions mobile - activate by adding a class mobile to the delivery_options_overlay div */
+#delivery_options_overlay .desktop { display:block; }
+#delivery_options_overlay .mobile { display:none; }
+#delivery_options_overlay.mobile { width:99%; }
+#delivery_options_overlay.mobile .desktop { display:none; }
+#delivery_options_overlay.mobile .mobile { display:block; }
+#delivery_options_overlay.mobile #delivery,
+#delivery_options_overlay.mobile #pickup { width:100%; }
+
+#delivery_options_overlay.mobile h3 { width:50%; }
+#delivery_options_overlay.mobile h3.white { cursor:pointer; }
+#delivery_options_overlay.mobile #delivery .white,
+#delivery_options_overlay.mobile #pickup .orange { float:right; }
+
+/* force pickup locations */
+#delivery_options_overlay { width:500px; }
+#delivery_options_overlay #pickup,
+#delivery_options_overlay.mobile h3 { width:100%; }
+#delivery_options_overlay.mobile #pickup .orange { float:none; }
+#delivery_options_overlay { vertical-align: middle; }
+#pickup .dark {
+    background: #58585a none repeat scroll 0 0;
+    color: #fff;
+    border-top: medium none;
+}
