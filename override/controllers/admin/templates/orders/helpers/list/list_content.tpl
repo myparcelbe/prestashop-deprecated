@@ -1,4 +1,4 @@
-{if $prestaShopVersion == "1.5"}
+{if isset($prestaShopVersion) && $prestaShopVersion == "1.5"}
 	<tbody>
 	{if count($list)}
 	{foreach $list AS $index => $tr}
@@ -99,7 +99,7 @@
 				{/block}
 			{/foreach}
 	
-		{if $myParcel == 'true'}
+		{if isset($myParcel) && $myParcel == 'true'}
 			{assign var = myParcelOrderData value = MyParcel::getOrderData($tr.$identifier)}
 	
 			<td class="myparcel_align_right">
@@ -112,8 +112,8 @@
 	       					</div>
 						</td>
 						<td class="mypafunc">
-							<a href="#" class="myparcel-consignment-new" onclick="return createNewConsignment('{$tr.$identifier}');"><img src="{$base_uri}/modules/myparcel/images/myparcel_pdf_add.png" alt="New"></a>
-							<a href="#" class="myparcel-consignment-retour" onclick="return createNewConsignment('{$tr.$identifier}', true);"><img src="{$base_uri}/modules/myparcel/images/myparcel_retour_add.png" alt="Retour"></a>
+							<a href="#" class="myparcel-consignment-new" onclick="return createNewConsignment('{$tr.$identifier}');"><img src="/modules/myparcel/images/myparcel_pdf_add.png" alt="New"></a>
+							<a href="#" class="myparcel-consignment-retour" onclick="return createNewConsignment('{$tr.$identifier}', true);"><img src="/modules/myparcel/images/myparcel_retour_add.png" alt="Retour"></a>
 						</td>
 					</tr>
 				</table>
@@ -144,7 +144,7 @@
 		<tr><td class="center" colspan="{count($fields_display) + 2}">{l s='No items found'}</td></tr>
 	{/if}
 	</tbody>
-{elseif $prestaShopVersion == "1.6"}
+{else}
 	<tbody>
 	{if count($list)}
 	{foreach $list AS $index => $tr}
@@ -277,7 +277,7 @@
 				{/block}
 			{/foreach}
 
-		{if $myParcel == 'true'}
+		{if isset($myParcel) && $myParcel == 'true'}
 			{assign var = myParcelOrderData value = MyParcel::getOrderData($tr.$identifier)}
 
 			<td class="myparcel_align_right">
@@ -294,8 +294,8 @@
 	       					</div>
 						</td>
 						<td class="mypafunc">
-							<a href="#" class="myparcel-consignment-new" onclick="return createNewConsignment('{$tr.$identifier}');"><img src="{$base_uri}/modules/myparcel/images/myparcel_pdf_add.png" alt="New"></a>
-							<a href="#" class="myparcel-consignment-retour" onclick="return createNewConsignment('{$tr.$identifier}', true);"><img src="{$base_uri}/modules/myparcel/images/myparcel_retour_add.png" alt="Retour"></a>
+							<a href="#" class="myparcel-consignment-new" onclick="return createNewConsignment('{$tr.$identifier}');"><img src="/modules/myparcel/images/myparcel_pdf_add.png" alt="New"></a>
+							<a href="#" class="myparcel-consignment-retour" onclick="return createNewConsignment('{$tr.$identifier}', true);"><img src="/modules/myparcel/images/myparcel_retour_add.png" alt="Retour"></a>
 						</td>
 					</tr>
 				</table>

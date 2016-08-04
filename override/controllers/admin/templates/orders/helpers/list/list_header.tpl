@@ -1,7 +1,4 @@
-<script>
-	var base_uri = "{$base_uri}";
-</script>
-{if $prestaShopVersion == "1.5"}
+{if isset($prestaShopVersion) && $prestaShopVersion == "1.5"}
 	{if !$simple_header}
 	
 		<script type="text/javascript">
@@ -104,7 +101,7 @@
 							<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
 						{/foreach}
 	
-						{if $myParcel == 'true'}
+						{if isset($myParcel) && $myParcel == 'true'}
 							<col width="280px" />
 						{/if}
 	
@@ -139,7 +136,7 @@
 									</th>
 								{/foreach}
 	
-								{if $myParcel == 'true'}
+								{if isset($myParcel) && $myParcel == 'true'}
 									<th class="myparcel_align_right">
 					                    <a href="#" onclick="return printConsignmentSelection();" class="myparcel-pdf mypaleft">
 					                    	<img border="0" alt="Print" src="/modules/myparcel/images/myparcel_pdf.png">
@@ -208,7 +205,7 @@
 									</td>
 								{/foreach}
 	
-								{if $myParcel == 'true'}
+								{if isset($myParcel) && $myParcel == 'true'}
 									<td class="center">&nbsp;</td>
 								{/if}
 	
@@ -221,7 +218,7 @@
 								</tr>
 							{/if}
 							</thead>
-{elseif $prestaShopVersion == "1.6"}
+{else}
 	{if $ajax}
 	<script type="text/javascript">
 	    $(function () {
@@ -284,7 +281,46 @@
 	
 	{if !$simple_header}
 	<div class="leadin">
-		{block name="leadin"}{/block}
+    {block name=leadin}
+        {if isset($updateOrderStatus_mode) && $updateOrderStatus_mode}
+            <div class="panel">
+                <div class="panel-heading">
+                    {l s='Choose an order status'}
+                </div>
+                <form action="{$REQUEST_URI}" method="post">
+                    <div class="radio">
+                        <label for="id_order_state">
+                            <select id="id_order_state" name="id_order_state" >
+        {foreach from=$order_statuses item=order_status_name key=id_order_state}
+                                <option value="{$id_order_state|intval}">{$order_status_name|escape}</option>
+        {/foreach}
+                            </select>
+                        </label>
+                    </div>
+        {foreach $POST as $key => $value}
+            {if is_array($value)}
+                {foreach $value as $val}
+                    <input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
+                {/foreach}
+            {elseif strtolower($key) != 'id_order_state'}
+                    <input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
+        
+            {/if}
+        {/foreach}
+                    <div class="panel-footer">
+                        <button type="submit" name="cancel" class="btn btn-default">
+                            <i class="icon-remove"></i>
+                            {l s='Cancel'}
+                        </button>
+                        <button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
+                            <i class="icon-check"></i>
+                            {l s='Update Order Status'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        {/if}
+    {/block}
 	</div>
 	{/if}
 	
@@ -457,7 +493,7 @@
 						</th>
 						{/foreach}
 
-						{if $myParcel == 'true'}
+						{if isset($myParcel) && $myParcel == 'true'}
 							<th class="myparcel_align_right myparcel-action-column">
 			                    <a href="#" onclick="return printConsignmentSelection();" class="myparcel-pdf mypaleft">
 			                    	<img border="0" alt="Print" src="/modules/myparcel/images/myparcel_pdf.png">
@@ -537,7 +573,7 @@
 						</th>
 						{/foreach}
 
-						{if $myParcel == 'true'}
+						{if isset($myParcel) && $myParcel == 'true'}
 							<th class="center">--</th>
 						{/if}
 
@@ -564,45 +600,4 @@
 					</tr>
 				{/if}
 				</thead>
-
-				{block name=leadin}
-				{if isset($updateOrderStatus_mode) && $updateOrderStatus_mode}
-					<div class="panel">
-						<div class="panel-heading">
-							{l s='Choose an order status'}
-						</div>
-						<form action="{$REQUEST_URI}" method="post">
-							<div class="radio">
-								<label for="id_order_state">
-									<select id="id_order_state" name="id_order_state" >
-				{foreach from=$order_statuses item=order_status_name key=id_order_state}
-										<option value="{$id_order_state|intval}">{$order_status_name|escape}</option>
-				{/foreach}
-									</select>
-								</label>
-							</div>
-				{foreach $POST as $key => $value}
-					{if is_array($value)}
-						{foreach $value as $val}
-							<input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
-						{/foreach}
-					{elseif strtolower($key) != 'id_order_state'}
-							<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
-				
-					{/if}
-				{/foreach}
-							<div class="panel-footer">
-								<button type="submit" name="cancel" class="btn btn-default">
-									<i class="icon-remove"></i>
-									{l s='Cancel'}
-								</button>
-								<button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
-									<i class="icon-check"></i>
-									{l s='Update Order Status'}
-								</button>
-							</div>
-						</form>
-					</div>
-				{/if}
-				{/block}
 {/if}

@@ -2,7 +2,7 @@
 /**
  * Backend orders controller
  * 
- * @copyright Copyright (c) 2014 MyParcel (http://www.myparcel.nl/)
+ * @copyright Copyright (c) 2014 MyParcel (https://www.myparcel.nl/)
  */
 
 class AdminOrdersController extends AdminOrdersControllerCore
@@ -15,7 +15,6 @@ class AdminOrdersController extends AdminOrdersControllerCore
 
         $this->context->smarty->assign(
             array(
-                'base_uri'          => rtrim(_PS_BASE_URL_.__PS_BASE_URI__, '/'),
                 'myParcel'          => $myParcelFlag,
                 'prestaShopVersion' => substr(_PS_VERSION_, 0, 3),
             )

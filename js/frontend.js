@@ -1,8 +1,7 @@
 (function($){
     $(document).ready(function(){
-        var $form = $("form#add_address");
-        var str = '<p>Kies <a class="delivery_options_overlay_open" style="cursor: pointer; text-decoration: underline">hier</a> uw locatie indien u het pakket op een BPost afleverlocatie wil laten bezorgen.</p> ';
-        str += MYPARCEL_FORM_OPTION_OVERLAY;
+        var $form = $("form#add_address, form#add_adress");
+        var str = '<p>Kies <span onclick="return pakjegemak();" style="cursor: pointer; text-decoration: underline">hier</span> uw locatie indien u het pakket op een PostNL afleverlocatie wil laten bezorgen.</p>';
 
         // Five-step checkout enabled and Guest checkout disabled
         if($form.length > 0){

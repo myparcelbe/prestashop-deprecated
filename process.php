@@ -2,7 +2,7 @@
 /**
  * Process module actions
  *
- * @copyright Copyright (c) 2013 MyParcel (http://www.myparcel.nl/)
+ * @copyright Copyright (c) 2013 MyParcel (https://www.myparcel.nl/)
  */
 
 if ('' == session_id()) {
@@ -11,7 +11,7 @@ if ('' == session_id()) {
 
 require(dirname(__FILE__) . '/../../config/config.inc.php');
 
-define('MYPARCEL_URL', 'http://sendmyparcel.be/nl-be/');
+define('MYPARCEL_URL', 'https://www.myparcel.nl/');
 
 /**
  * Retrieves address from the string
@@ -123,7 +123,7 @@ if (isset($_GET['action'])) {
 
         $isoCode = CountryCore::getIsoById($address->id_country);
 
-        if (in_array($isoCode, array('BE', null))) {
+        if (in_array($isoCode, array('NL', null))) {
             $street = getAddressComponents($address->address1 . ', ' . $address->address2);
             $consignment = array(
             	'ToAddress[country_code]'    => $isoCode,
@@ -149,7 +149,7 @@ if (isset($_GET['action'])) {
             	'ToAddress[country_code]' => $isoCode,
             	'ToAddress[name]'         => $address->firstname . ' ' . $address->lastname,
             	'ToAddress[business]'     => $address->company,
-            	'ToAddress[street]'       => $address->address1 . (strlen($address->address2) > 0 ? ', ' . $address->address2 : '' ),
+            	'ToAddress[street]'       => $address->address1 . ', ' . $address->address2,
             	'ToAddress[eps_postcode]' => $address->postcode,
             	'ToAddress[town]'         => $address->city,
             	'ToAddress[email]'        => $customer->email,
@@ -272,7 +272,7 @@ if (isset($_GET['action'])) {
 
             $isoCode = CountryCore::getIsoById($address->id_country);
 
-            if (in_array($isoCode, array('BE', null))) {
+            if (in_array($isoCode, array('NL', null))) {
                 $street = getAddressComponents($address->address1 . ', ' . $address->address2);
 
                 $consignment = array(
@@ -302,7 +302,7 @@ if (isset($_GET['action'])) {
                     	'country_code' => $isoCode,
                     	'name'         => $address->firstname . ' ' . $address->lastname,
                     	'business'     => $address->company,
-                    	'street'       => $address->address1 . (strlen($address->address2) > 0 ? ', ' . $address->address2 : '' ),
+                    	'street'       => $address->address1 . ', ' . $address->address2,
                     	'eps_postcode' => $address->postcode,
                     	'town'         => $address->city,
                     	'email'        => $customer->email,

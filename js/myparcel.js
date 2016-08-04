@@ -82,7 +82,7 @@ function createNewConsignment(orderId, retour)
     if(retour == true) retourparam = '&retour=true';
     
     popup = window.open(
-        base_uri + '/modules/myparcel/process.php?action=post' + '&order_id=' + orderId + '&timestamp=' + timestamp + retourparam,
+        '/modules/myparcel/process.php?action=post' + '&order_id=' + orderId + '&timestamp=' + timestamp + retourparam,
         'myparcel',
         'width=730,height=830,dependent,resizable,scrollbars'
         );
@@ -104,7 +104,7 @@ function printConsignments(consignmentList)
     var timestamp = _getTimestamp();
     
     popup = window.open(
-        base_uri + '/modules/myparcel/process.php?action=print' + '&consignments=' + consignmentList + '&timestamp=' + timestamp,
+        '/modules/myparcel/process.php?action=print' + '&consignments=' + consignmentList + '&timestamp=' + timestamp,
         'myparcel',
         'width=415,height=365,dependent,resizable,scrollbars'
         );
@@ -156,7 +156,7 @@ function processConsignments(consignmentList)
     var timestamp = _getTimestamp();
     
     popup = window.open(
-        base_uri + '/modules/myparcel/process.php?action=process' + '&order_ids=' + consignmentList + '&timestamp=' + timestamp,
+        '/modules/myparcel/process.php?action=process' + '&order_ids=' + consignmentList + '&timestamp=' + timestamp,
         'myparcel',
         'width=415,height=365,dependent,resizable,scrollbars'
         );

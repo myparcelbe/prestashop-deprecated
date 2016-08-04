@@ -1,19 +1,18 @@
 <?php
-
 /**
  * MyParcel bootstrap file
  *
- * @copyright Copyright (c) 2013 MyParcel (http://www.myparcel.nl/)
+ * @copyright Copyright (c) 2013 MyParcel (https://www.myparcel.nl/)
  */
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class MyParcel extends Module {
-
+class MyParcel extends Module
+{
     const CONF_REMOVE_AFTER_UNINSTALL_NAME_V_15 = 'MYPARCEL_REMOVE_ON_UNINSTALL';
     const CONF_REMOVE_AFTER_UNINSTALL_NAME = 'MYPARCEL_REMOVE_DATA_AFTER_UNINSTALL';
-    const CONF_MYPARCEL_PLUGIN_FOLDER = 'myparcel';
 
     public static $conf_username = 'MYPARCEL_USERNAME';
     public static $conf_api_key = 'MYPARCEL_API_KEY';
@@ -26,15 +25,16 @@ class MyParcel extends Module {
      * @return MyParcel
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->name = 'myparcel';
         $this->tab = 'shipping_logistics';
 
         if ('1.5' == substr(_PS_VERSION_, 0, 3)) {
-            $this->version = 'v1.1.1';
+            $this->version = 'v1.1.5';
             self::$conf_remove_after_uninstall = self::CONF_REMOVE_AFTER_UNINSTALL_NAME_V_15;
         } elseif ('1.6' == substr(_PS_VERSION_, 0, 3)) {
-            $this->version = '1.1.1';
+            $this->version = '1.1.5';
         }
 
         $this->author = 'MyParcel';
@@ -44,8 +44,8 @@ class MyParcel extends Module {
 
         parent::__construct();
 
-        $this->displayName = $this->l('MyParcel Belgium');
-        $this->description = $this->l('Assistance with the parcel service through MyParcel.com');
+        $this->displayName = $this->l('MyParcel');
+        $this->description = $this->l('Assistance with the parcel service through MyParcel.nl');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the MyParcel module?');
     }
 
@@ -54,8 +54,9 @@ class MyParcel extends Module {
      *
      * @return boolean
      */
-    public function install() {
-        $override_admin_dir = _PS_ROOT_DIR_ . "/override/controllers/admin";
+    public function install()
+    {
+        $override_admin_dir = _PS_ROOT_DIR_."/override/controllers/admin";
 
         if (!is_writable($override_admin_dir)) {
             $this->_errors[] = Tools::displayError('Unable to install the module (Folder: /override/controllers/admin is not writeable).');
@@ -85,7 +86,7 @@ class MyParcel extends Module {
 
         $this->registerHook('displayBackOfficeHeader');
         // Use hook for prestashop 1.5 only
-        if ($this->isPrestashop15())
+        if($this->isPrestashop15())
             $this->registerHook('displayFooter');
         return true;
     }
@@ -93,8 +94,9 @@ class MyParcel extends Module {
     /**
      *  Override order admin template when installing
      */
-    public function overrideTemplate() {
-        $override_admin_dir = _PS_ROOT_DIR_ . "/override/controllers/admin";
+    public function overrideTemplate()
+    {
+        $override_admin_dir = _PS_ROOT_DIR_."/override/controllers/admin";
 
         $dest_dir = $override_admin_dir . '/templates/orders/helpers/list';
 
@@ -103,16 +105,22 @@ class MyParcel extends Module {
         }
 
         $src_dir = dirname(__FILE__) . '/override/controllers/admin/templates/orders/helpers/list';
-
+        
         copy($src_dir . '/list_content.tpl', $dest_dir . '/list_content.tpl');
         copy($src_dir . '/list_header.tpl', $dest_dir . '/list_header.tpl');
+        
+        $classIndexCache = _PS_CACHE_DIR_.'class_index.php';
+        if (is_file($classIndexCache)) {
+            @ unlink($classIndexCache);
+        }
     }
 
     /**
      *  Remove override order admin template when uninstalling
      */
-    public function removeOverrideTemplate() {
-        $override_admin_dir = _PS_ROOT_DIR_ . "/override/controllers/admin";
+    public function removeOverrideTemplate()
+    {
+        $override_admin_dir = _PS_ROOT_DIR_."/override/controllers/admin";
 
         $src_dir = $override_admin_dir . '/templates/orders/helpers/list';
 
@@ -123,12 +131,17 @@ class MyParcel extends Module {
         if (is_file($src_dir . '/list_header.tpl')) {
             unlink($src_dir . '/list_header.tpl');
         }
+        
+        $classIndexCache = _PS_CACHE_DIR_.'class_index.php';
+        if (is_file($classIndexCache)) {
+            @ unlink($classIndexCache);
+        }
     }
 
     /**
      *  Hook the footer for pass pakjegemak url to js (only for version 1.5)
      */
-    public function hookDisplayFooter() {
+    public function hookDisplayFooter(){
         $url = $this->getMyParcelUrl();
         $script = sprintf('<script>var MYPARCEL_PAKJEGEMAK_URL = "%s"</script>', $url);
         return $script;
@@ -139,7 +152,8 @@ class MyParcel extends Module {
      *
      * @return boolean
      */
-    public function uninstall() {
+    public function uninstall()
+    {
         if ('1.5' == substr(_PS_VERSION_, 0, 3)) {
             self::$conf_remove_after_uninstall = self::CONF_REMOVE_AFTER_UNINSTALL_NAME_V_15;
         }
@@ -171,7 +185,8 @@ class MyParcel extends Module {
      *
      * @return void
      */
-    public function hookDisplayBackOfficeHeader() {
+    public function hookDisplayBackOfficeHeader()
+    {
         $this->context->controller->addJS($this->_path . 'js/myparcel.js', 'all');
         $this->context->controller->addCSS($this->_path . 'css/myparcel.css', 'all');
     }
@@ -182,7 +197,8 @@ class MyParcel extends Module {
      * @param integer $orderId
      * @return array
      */
-    static public function getOrderData($orderId) {
+    static public function getOrderData($orderId)
+    {
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'myparcel` WHERE `order_id` = ' . $orderId;
 
         $result = Db::getInstance()->ExecuteS($sql, true, false);
@@ -190,13 +206,14 @@ class MyParcel extends Module {
         $items = '';
         $checks = '';
 
-        foreach ($result as &$row) {
+        foreach ($result as &$row)
+        {
             $_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS'] .= $row['consignment_id'] . '|';
 
-            $row['mypa_tracktrace_link'] = 'http://track.bpost.be/etr/light/performSearch.do?' . http_build_query(array(
-                        'oss_language' => 'nl',
-                        'searchByItemCode' => 'true',
-                        'itemCodes' => $row['tracktrace'],
+            $row['mypa_tracktrace_link'] = 'https://mijnpakket.postnl.nl/Inbox/Search?' . http_build_query(array(
+                'lang' => 'nl',
+                'B'    => $row['tracktrace'],
+                'P'    => $row['postcode'],
             ));
             $row['mypa_tnt_status'] = empty($row['tnt_status']) ? 'Track&Trace' : $row['tnt_status'];
             $row['mypa_pdf_image'] = ($row['retour'] == 1) ? 'myparcel_retour.png' : 'myparcel_pdf.png';
@@ -205,14 +222,16 @@ class MyParcel extends Module {
             $order = new Order(intval($row['order_id']));
             $address = new Address($order->id_address_delivery);
             $country = new Country();
-            if ($countryId = Country::getIdByName(null, $address->country)) {
+            if($countryId = Country::getIdByName(null, $address->country))
+            {
                 $country = new Country($countryId);
             }
-            if (!empty($country->iso_code) && $country->iso_code != 'BE') {
-                $row['mypa_tracktrace_link'] = 'http://track.bpost.be/etr/light/performSearch.do?' . http_build_query(array(
-                            'oss_language' => 'nl',
-                            'searchByItemCode' => 'true',
-                            'itemCodes' => $row['tracktrace'],
+            if(!empty($country->iso_code) && $country->iso_code != 'NL')
+            {
+                $row['mypa_tracktrace_link'] = 'https://www.internationalparceltracking.com/Main.aspx#/track/' . implode('/', array(
+                    $row['tracktrace'],
+                    $country->iso_code,
+                    $address->postcode,
                 ));
             }
 
@@ -231,7 +250,7 @@ class MyParcel extends Module {
 
         $myParcelData = array(
             'checks' => $checks,
-            'items' => $items,
+            'items'  => $items,
         );
 
         return $myParcelData;
@@ -240,25 +259,34 @@ class MyParcel extends Module {
     /**
      *  Configuration Page: get content of the form
      */
-    public function getContent() {
+    public function getContent()
+    {
         $output = null;
-
-        if (Tools::isSubmit('submit' . $this->name)) {
+     
+        if (Tools::isSubmit('submit'.$this->name))
+        {
             $username = strval(Tools::getValue(self::$conf_username));
             $validUsername = false;
             $validApi = false;
 
-            if (!$username || empty($username) || !Validate::isGenericName($username)) {
+            if (!$username
+              || empty($username)
+              || !Validate::isGenericName($username)) {
                 $output .= $this->displayError($this->l('Invalid Username'));
-            } else {
+              }
+            else
+            {
                 Configuration::updateValue(self::$conf_username, $username);
                 $validUsername = true;
             }
             // api key
             $api_key = strval(Tools::getValue(self::$conf_api_key));
-            if (!$api_key || empty($api_key) || !Validate::isGenericName($api_key))
+            if (!$api_key
+              || empty($api_key)
+              || !Validate::isGenericName($api_key))
                 $output .= $this->displayError($this->l('Invalid Api Key'));
-            else {
+            else
+            {
                 $validApi = true;
                 Configuration::updateValue(self::$conf_api_key, $api_key);
             }
@@ -271,19 +299,20 @@ class MyParcel extends Module {
             Configuration::updateValue(self::$conf_remove_after_uninstall, !empty($keep_data) ? 1 : 0);
 
             if ($validUsername && $validApi) {
-                $output .= $this->displayConfirmation($this->l('Settings updated'));
+              $output .= $this->displayConfirmation($this->l('Settings updated'));
             }
         }
-        return $output . $this->displayForm();
+        return $output.$this->displayForm();
     }
 
     /**
      *  Configuration Page: display form
      */
-    public function displayForm() {
+    public function displayForm()
+    {
         // Get default language
-        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-
+        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+         
         // Init Fields form array
         $fields_form[0]['form'] = array(
             'legend' => array(
@@ -313,9 +342,9 @@ class MyParcel extends Module {
                     'values' => array(
                         'query' => array(
                             array(
-                                  'id' => 'FRONTEND_PLUGIN',
-                                  'val' => '1',
-                                  'checked' => 'checked'
+                                'id' => 'FRONTEND_PLUGIN',
+                                'val' => '1',
+                                'checked' => 'checked'
                             ),
                         ),
                         'id' => 'id',
@@ -323,11 +352,12 @@ class MyParcel extends Module {
                     )
                 ),
             ),
+            
         );
 
-        $fields_form[1]['form'] = array(
+$fields_form[1]['form'] = array(
             'legend' => array(
-            // 'title' => $this->l('My Parcel Option'),
+                // 'title' => $this->l('My Parcel Option'),
             ),
             'input' => array(
                 array(
@@ -350,44 +380,44 @@ class MyParcel extends Module {
             'submit' => array(
                 'title' => $this->l('Save'),
                 'class' => 'button'
-        ));
-
+            ));
+         
         $helper = new HelperForm();
-
+         
         // Module, token and currentIndex
         $helper->module = $this;
         $helper->name_controller = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
-
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+         
         // Language
         $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = $default_lang;
-
+         
         // Title and toolbar
         $helper->title = $this->displayName;
         $helper->show_toolbar = true;        // false -> remove toolbar
         $helper->toolbar_scroll = true;      // yes - > Toolbar is always visible on the top of the screen.
-        $helper->submit_action = 'submit' . $this->name;
+        $helper->submit_action = 'submit'.$this->name;
         $helper->toolbar_btn = array(
             'save' =>
             array(
                 'desc' => $this->l('Save'),
-                'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&save' . $this->name .
-                '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.
+                '&token='.Tools::getAdminTokenLite('AdminModules'),
             ),
             'back' => array(
-                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
+                'href' => AdminController::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminModules'),
                 'desc' => $this->l('Back to list')
             )
         );
-
+         
         // Load current value
         $helper->fields_value[self::$conf_username] = Configuration::get(self::$conf_username);
         $helper->fields_value[self::$conf_api_key] = Configuration::get(self::$conf_api_key);
         $helper->fields_value[self::$conf_plugin] = Configuration::get(self::$conf_plugin);
         $helper->fields_value[self::$conf_remove_after_uninstall] = Configuration::get(self::$conf_remove_after_uninstall);
-
+         
         return $helper->generateForm($fields_form);
     }
 
@@ -396,29 +426,27 @@ class MyParcel extends Module {
      *
      * @return string
      */
-    public function getMyParcelUrl() {
+    public function getMyParcelUrl()
+    {
         $username = Configuration::get(self::$conf_username);
         $api_key = Configuration::get(self::$conf_api_key);
 
-        $webshop = _PS_BASE_URL_ . "/modules/myparcel/myparcel-passdata.html";
+        $webshop = _PS_BASE_URL_ ."/modules/myparcel/myparcel-passdata.html";
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
+            $webshop = str_replace('http://', 'https://', $webshop);
+        }
         $uw_hash = hash_hmac('sha1', $username . 'MyParcel' . $webshop, $api_key);
 
-        $url = "http://www.myparcel.nl/pakjegemak-locatie?hash=" . $uw_hash . "&webshop=" . urlencode($webshop) . "&user=" . $username;
-        ;
+        $url = "http://www.myparcel.nl/pakjegemak-locatie?hash=" . $uw_hash . "&webshop=" . urlencode($webshop) . "&user=" . $username;;
 
         return $url;
     }
 
-    public function isPrestashop15() {
+    public function isPrestashop15(){
         if ('1.5' == substr(_PS_VERSION_, 0, 3)) {
             return true;
         } elseif ('1.6' == substr(_PS_VERSION_, 0, 3)) {
             return false;
         }
-    }
-
-    public function getPluginFolderLabel()
-    {
-        return self::CONF_MYPARCEL_PLUGIN_FOLDER;
     }
 }
