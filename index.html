@@ -22,12 +22,17 @@
         Installatie- gebruikershandleiding
     </h1>
     <h2 class="project-tagline">
-        Prestashop MyParcel plug-in 1.2.6
+        Prestashop MyParcel plug-in <span id="current_version"></span>
     </h2>
     <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop">GitHub</a>
     <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop/releases">Alle updates</a>
     <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop/archive/v1.2.6.zip">Laatste versie</a>
     <!--<a target="_blank" class="btn" href="#">Magento Connect</a>-->
+    <script>
+        $.get('https://api.github.com/repos/myparcelnl/prestashop/releases/latest', function (data) {
+            $('#current_version').html(data.name);
+        });
+    </script>
 </section>
 <section class="main-content">
     <h1>Inleiding</h1>
@@ -41,7 +46,6 @@
         Mocht je problemen ondervinden met de installatie, raden wij je aan contact op te nemen met
         jouw webbouwer.<br>
         <br>
-        Versie: 1.2.6<br>
         Getest op PrestaShop 1.5.4 / 1.5.5 / 1.6.x
     </p>
     <h1>Inhoud</h1>
