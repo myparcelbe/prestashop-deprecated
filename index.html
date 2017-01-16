@@ -26,11 +26,12 @@
     </h2>
     <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop">GitHub</a>
     <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop/releases">Alle updates</a>
-    <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop/archive/v1.2.6.zip">Laatste versie</a>
+    <a target="_blank" class="btn" href="https://github.com/myparcelnl/prestashop/archive/v1.2.6.zip" id="link_download_zip">Laatste versie</a>
     <!--<a target="_blank" class="btn" href="#">Magento Connect</a>-->
     <script>
         $.get('https://api.github.com/repos/myparcelnl/prestashop/releases/latest', function (data) {
             $('#current_version').html(data.name);
+            $('#link_download_zip').attr("href", data.assets[0]['browser_download_url']);
         });
     </script>
 </section>
