@@ -15,24 +15,25 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<iframe name="myparcelcheckoutframe"
-        id="myparcelcheckoutframe"
-        src="{$link->getModuleLink('myparcel', 'myparcelcheckout', array(), Tools::usingSecureMode())|escape:'htmlall':'UTF-8'}"
+<iframe name="myparcelbecheckoutframe"
+        id="myparcelbecheckoutframe"
+        src="{$link->getModuleLink('myparcelbpost', 'myparcelcheckout', array(), Tools::usingSecureMode())|escape:'htmlall':'UTF-8'}"
         width="100%"
         height="0"
         frameBorder="0">
 </iframe>
-<div id="myparcel"></div>
+<div id="myparcelbe"></div>
 <script type="text/javascript">
   (function () {
-    window.mypaNotified = window.mypaNotified || false;
+    var cachedPrice = false;
+    window.mpbNotified = window.mpbNotified || false;
 
     if (typeof document.createElement('_').classList === 'undefined') {
       Object.defineProperty(Element.prototype, 'classList', {
         get: function() {
           var self = this, bValue = self.className.split(" ")
 
-          bValue.add = function (){
+          bValue.add = function () {
             var b;
             for(i in arguments){
               b = true;
@@ -100,6 +101,7 @@
 
     documentReady(function () {
       var xhr = null;
+      var zelargXhr = null;
 
       window.addEventListener('message', function (event) {
         if (!event.data) {
@@ -113,10 +115,15 @@
         }
 
         if (data
-          && data.messageOrigin === 'myparcelcheckout'
+          && data.messageOrigin === 'mpbpostcheckout'
           && data.subject === 'height'
         ) {
-          document.getElementById('myparcelcheckoutframe').height = parseInt(data.height, 10);
+          document.getElementById('myparcelbecheckoutframe').height = parseInt(data.height, 10);
+          {if Module::isEnabled('onepagecheckoutps')}
+          var psCheckoutElem = document.getElementById('onepagecheckoutps_step_two_container');
+          psCheckoutElem.style.height = '0'; // Always reset so we can measure the actual scrollHeight
+          psCheckoutElem.style.height = psCheckoutElem.scrollHeight + 'px';
+          {/if}
         }
       });
 
@@ -131,7 +138,7 @@
         }
 
         if (data
-          && data.messageOrigin === 'myparcelcheckout'
+          && data.messageOrigin === 'mpbpostcheckout'
           && data.subject === 'selection_changed'
         ) {
           if (xhr) {
@@ -155,10 +162,19 @@
             }
           }
 
+          {if Module::isEnabled('onepagecheckout')}
+          // Grab the delivery options HTML and inject
+          var deliveryOptions = document.getElementById('carrierTable');
+          if (deliveryOptions) {
+            deliveryOptions.style.opacity = 0.4;
+            deliveryOptions.style.pointerEvents = 'none';
+          }
+          {/if}
+
           xhr = new XMLHttpRequest();
           xhr.open(
             'POST',
-            '{$link->getModuleLink('myparcel', 'deliveryoptions', array(), Tools::usingSecureMode())|escape:'javascript':'UTF-8'}',
+            '{$link->getModuleLink('myparcelbpost', 'deliveryoptions', array(), Tools::usingSecureMode())|escape:'javascript':'UTF-8'}',
             true
           );
 
@@ -176,13 +192,72 @@
                 if (data.carrier_data) {
                   window.mypaNotified = getIdCarrier() || true;
 
+                  {if Module::isEnabled('onepagecheckout')}
+                  if (zelargXhr && typeof zelargXhr.abort === 'function') {
+                    zelargXhr.abort();
+                  }
+                  // Zelarg OPC
+                  zelargXhr = new XMLHttpRequest();
+                  zelargXhr.open('POST', window.orderOpcUrl, true);
+
+                  zelargXhr.onreadystatechange = function () {
+                    if (zelargXhr.readyState === 4) {
+                      if (zelargXhr.status >= 200 && zelargXhr.status < 400) {
+                        // Success!
+                        var data = zelargXhr.responseText;
+                        try {
+                          data = JSON.parse(data);
+                        } catch (e) {
+                          return;
+                        }
+
+                        if (data.carrier_block) {
+                          window.mypaNotified = getIdCarrier() || true;
+
+                          var carrierHTML = document.createElement('div');
+                          carrierHTML.innerHTML = data.carrier_block;
+                          carrierHTML = carrierHTML.querySelector('#carrierTable');
+
+                          if (deliveryOptions) {
+                            deliveryOptions.innerHTML = carrierHTML.innerHTML;
+                            deliveryOptions.style.opacity = 1.0;
+                            deliveryOptions.style.pointerEvents = 'inherit';
+                            if (typeof $ !== 'undefined' && $.support && $.support.placeholder) {
+                              $('#order_msg_placeholder_fallback').hide();
+                            }
+                            if (typeof window.bindInputs === 'function') {
+                              window.bindInputs();
+                            }
+                          }
+                        }
+                      } else {
+                        zelargXhr = null;
+                      }
+                    }
+                  };
+
+                  zelargXhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                  zelargXhr.send('ajax=true&method=getCarrierList&token=' + static_token);
+                  {elseif Module::isEnabled('onepagecheckoutps')}
+                  if (data.summary.total_shipping === cachedPrice) {
+                    return;
+                  }
+                  cachedPrice = data.summary.total_shipping;
+                  if (typeof Carrier === 'object' && typeof Carrier.update === 'function') {
+                    Carrier.update();
+                  }
+                  {else}
+                  if (data.summary.total_shipping === cachedPrice) {
+                    return;
+                  }
+                  cachedPrice = data.summary.total_shipping;
                   var carrierHTML = document.createElement('div');
                   carrierHTML.innerHTML = data.carrier_data.carrier_block;
                   carrierHTML = carrierHTML.querySelector('.delivery_options');
 
                   // Prevent the page from refreshing when the cart rules haven't been initialized on time
                   var removeMe = document.createElement('div');
-                  removeMe.id = 'myparcel-remove-me';
+                  removeMe.id = 'mpbpost-remove-me';
                   removeMe.classList.add('cart_discount');
 
                   // Grab the delivery options HTML and inject
@@ -199,6 +274,7 @@
                     window.bindInputs();
                   }
                   removeMe.parentNode.removeChild(removeMe);
+                  {/if}
                 }
               } else {
                 xhr = null;

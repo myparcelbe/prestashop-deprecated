@@ -6,13 +6,13 @@
  * @license MIT
  */
 
-namespace MyParcelModule\BoxPacker;
+namespace MPBpostModule\BoxPacker;
 
 if (!defined('_PS_VERSION_')) {
     return;
 }
 
-require_once dirname(__FILE__).'/../../myparcel.php';
+require_once dirname(__FILE__).'/../../myparcelbpost.php';
 
 /**
  * List of boxes available to put items into, ordered by volume

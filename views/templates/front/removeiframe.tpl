@@ -18,7 +18,7 @@
 <script type="text/javascript">
   (function () {
     top.postMessage(JSON.stringify({
-      messageOrigin: 'myparcelcheckout',
+      messageOrigin: 'mpbpostcheckout',
       subject: 'height',
       height: -1
     }), '*');

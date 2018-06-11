@@ -15,24 +15,34 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-{if in_array(strtoupper($tr['myparcel_country_iso']), ['NL', 'BE'])}
-  {if !$tr['pickup'] && $deliveryDate > '1970-01-02 00:00:00'}
+{if in_array(strtoupper($tr['mpbpost_country_iso']), ['NL', 'BE'])}
+  {if !$tr['mpbpost_pickup'] && $deliveryDate > '1970-01-02 00:00:00'}
     <span class="label label-{$badgeType|escape:'htmlall':'UTF-8'}">
       <i class="icon icon-home"></i>&nbsp;&nbsp;{$deliveryDate|escape:'htmlall':'UTF-8'}
     </span>
-  {elseif $tr['pickup']}
-    {if Tools::strtoupper($tr['myparcel_country_iso']) === 'NL'}
-      <span class="label label-{$badgeType|escape:'htmlall':'UTF-8'}">
-        <i class="icon icon-building"></i>&nbsp;&nbsp;{$deliveryDate|escape:'htmlall':'UTF-8'}</span>
+  {elseif $tr['mpbpost_pickup']}
+    {if Tools::strtoupper($tr['mpbpost_country_iso']) === 'BE'}
+      <span class="label label-{$badgeType|escape:'htmlall'} pickup-tooltip-{$tr['id_order']|intval}" title="{$tr['mpbpost_pickup']|escape:'htmlall':'UTF-8'}">
+        <i class="icon icon-building"></i>&nbsp;&nbsp;{$deliveryDate|escape:'htmlall':'UTF-8'}
+      </span>
+      <script type="text/javascript">
+        (function () {
+          function init() {
+            if (typeof $ === 'undefined') {
+              setTimeout(init, 100);
+              return;
+            }
+            $('.pickup-tooltip-{$tr['id_order']|intval}').tooltip();
+          }
+          init();
+        }());
+      </script>
     {else}
-      <span class="label label-info">
-        <i class="icon icon-building"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcel'}</span>
+      <span class="label label-info"><i class="icon icon-building"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcelbpost'}</span>
     {/if}
   {else}
-    <span class="label label-info">
-      <i class="icon icon-question-circle"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcel'}</span>
+    <span class="label label-info"><i class="icon icon-question-circle"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcelbpost'}</span>
   {/if}
 {else}
-  <span class="label label-info">
-    <i class="icon icon-globe"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcel'}</span>
+  <span class="label label-info"><i class="icon icon-globe"></i>&nbsp;&nbsp;{l s='Unknown' mod='myparcelbpost'}</span>
 {/if}

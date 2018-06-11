@@ -20,18 +20,18 @@
 spl_autoload_register(
     function ($class) {
         if (in_array($class, array(
-            'MyParcelModule\\BoxPacker\\Box',
-            'MyParcelModule\\BoxPacker\\BoxList',
-            'MyParcelModule\\BoxPacker\\Item',
-            'MyParcelModule\\BoxPacker\\ItemList',
-            'MyParcelModule\\BoxPacker\\PackedBox',
-            'MyParcelModule\\BoxPacker\\PackedBoxList',
-            'MyParcelModule\\BoxPacker\\Packer',
-            'MyParcelModule\\BoxPacker\\VolumePacker',
-            'MyParcelModule\\BoxPacker\\WeightRedistribution',
+            'MPBpostModule\\BoxPacker\\Box',
+            'MPBpostModule\\BoxPacker\\BoxList',
+            'MPBpostModule\\BoxPacker\\Item',
+            'MPBpostModule\\BoxPacker\\ItemList',
+            'MPBpostModule\\BoxPacker\\PackedBox',
+            'MPBpostModule\\BoxPacker\\PackedBoxList',
+            'MPBpostModule\\BoxPacker\\Packer',
+            'MPBpostModule\\BoxPacker\\VolumePacker',
+            'MPBpostModule\\BoxPacker\\WeightRedistribution',
         ))) {
             // project-specific namespace prefix
-            $prefix = 'MyParcelModule\\BoxPacker\\';
+            $prefix = 'MPBpostModule\\BoxPacker\\';
 
             // base directory for the namespace prefix
             $baseDir = dirname(__FILE__).'/BoxPacker/';
@@ -56,14 +56,13 @@ spl_autoload_register(
         }
 
         if (in_array($class, array(
-            'MyParcelBrievenbuspakjeItem',
-            'MyParcelCarrierDeliverySetting',
-            'MyParcelDeliveryOption',
-            'MyParcelMailboxPackage',
-            'MyParcelObjectModel',
-            'MyParcelOrder',
-            'MyParcelOrderHistory',
-            'MyParcelTools',
+            'MPBpostBrievenbuspakjeItem',
+            'MPBpostCarrierDeliverySetting',
+            'MPBpostDeliveryOption',
+            'MPBpostObjectModel',
+            'MPBpostOrder',
+            'MPBpostOrderHistory',
+            'MPBpostTools',
         ))) {
             // base directory for the namespace prefix
             $baseDir = dirname(__FILE__).'/';

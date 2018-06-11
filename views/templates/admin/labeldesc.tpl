@@ -15,20 +15,20 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-{l s='Please enter a custom label description.' mod='myparcel'}<br/>
-{l s='You can add the following variables to the description:' mod='myparcel'}<br/>
+{l s='Please enter a custom label description.' mod='myparcelbpost'}<br/>
+{l s='You can add the following variables to the description:' mod='myparcelbpost'}<br/>
 <ul>
   <li>
     <kbd class="label-code" onclick="addLabelVar('{ldelim}order.id{rdelim}');" style="cursor: pointer">
       {ldelim}order.id{rdelim}
     </kbd>
-    &nbsp;- {l s='Order ID' mod='myparcel'}
+    &nbsp;- {l s='Order ID' mod='myparcelbpost'}
   </li>
   <li>
     <kbd class="label-code" onclick="addLabelVar('{ldelim}order.reference{rdelim}');" style="cursor: pointer">
       {ldelim}order.reference{rdelim}
     </kbd>
-    &nbsp;- {l s='Order reference' mod='myparcel'}
+    &nbsp;- {l s='Order reference' mod='myparcelbpost'}
   </li>
 </ul>
 

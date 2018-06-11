@@ -15,4 +15,4 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-{l s='By enabling this option, the statuses "%s" and "%s" will automatically be set after exporting an order.' mod='myparcel' sprintf=[$shippedStatusName, $deliveredStatusName]}
+{l s='By enabling this option, the statuses "%s" and "%s" will automatically be set after exporting an order.' mod='myparcelbpost' sprintf=[$shippedStatusName, $deliveredStatusName]}
