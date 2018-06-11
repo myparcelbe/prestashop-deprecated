@@ -21,14 +21,14 @@ if (!defined('_PS_VERSION_')) {
     return;
 }
 
-require_once dirname(__FILE__).'/../../myparcel.php';
+require_once dirname(__FILE__).'/../../myparcelbpost.php';
 
 /**
- * Class MyParcelmyparcelcheckoutdemoModuleFrontController
+ * Class MyParcelBpostmyparcelcheckoutdemoModuleFrontController
  *
  * @since 2.0.0
  */
-class MyParcelmyparcelcheckoutdemoModuleFrontController extends ModuleFrontController
+class MyParcelBpostmyparcelcheckoutdemoModuleFrontController extends ModuleFrontController
 {
     /**
      * MyParcelmyparcelcheckoutdemoModuleFrontController constructor.
@@ -62,8 +62,10 @@ class MyParcelmyparcelcheckoutdemoModuleFrontController extends ModuleFrontContr
      *
      * @return string
      *
-     * @since 2.0.0
+     * @throws Exception
      * @throws PrestaShopException
+     * @throws SmartyException
+     * @since 2.0.0
      */
     public function initContent()
     {
@@ -72,15 +74,14 @@ class MyParcelmyparcelcheckoutdemoModuleFrontController extends ModuleFrontContr
         $smarty->assign(array(
             'language_code'          => Tools::strtolower(Context::getContext()->language->language_code),
             'checkoutJs'             => Media::getJSPath(
-                _PS_MODULE_DIR_.'myparcel/views/js/app/dist/checkout-89de0dc04f63df99.bundle.min.js'
+                _PS_MODULE_DIR_.'myparcelbpost/views/js/app/dist/checkout-07481c8ea100e30c.bundle.min.js'
             ),
             'base_dir_ssl'           => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://')
                 .Tools::getShopDomainSsl().__PS_BASE_URI__,
-            'signedPreferred'        => (bool) Configuration::get(MyParcel::DEFAULT_CONCEPT_SIGNED),
-            'recipientOnlyPreferred' => (bool) Configuration::get(MyParcel::DEFAULT_CONCEPT_HOME_DELIVERY_ONLY),
+            'signedPreferred'        => (bool) Configuration::get(MyParcelBpost::DEFAULT_CONCEPT_SIGNED),
         ));
 
-        echo $smarty->fetch(_PS_MODULE_DIR_.'myparcel/views/templates/admin/examplecheckout/checkout.tpl');
+        echo $smarty->fetch(_PS_MODULE_DIR_.'myparcelbpost/views/templates/admin/examplecheckout/checkout.tpl');
         exit;
     }
 }

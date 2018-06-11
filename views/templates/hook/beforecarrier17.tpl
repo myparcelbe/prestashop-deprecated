@@ -17,7 +17,7 @@
 *}
 <iframe name="myparcelcheckoutframe"
         id="myparcelcheckoutframe"
-        src="{$link->getModuleLink('myparcel', 'myparcelcheckout', array(), Tools::usingSecureMode())|escape:'htmlall':'UTF-8'}"
+        src="{$link->getModuleLink('myparcelbpost', 'myparcelcheckout', array(), Tools::usingSecureMode())|escape:'htmlall':'UTF-8'}"
         width="100%"
         height="0"
         frameBorder="0">
@@ -118,7 +118,7 @@
           }
 
           if (data
-            && data.messageOrigin === 'myparcelcheckout'
+            && data.messageOrigin === 'mpbpostcheckout'
             && data.subject === 'height'
           ) {
             var checkoutFrame = document.getElementById('myparcelcheckoutframe');
@@ -138,7 +138,7 @@
 
           var data = JSON.parse(event.data);
           if (data
-            && data.messageOrigin === 'myparcelcheckout'
+            && data.messageOrigin === 'mpbpostcheckout'
             && data.subject === 'selection_changed'
           ) {
             if (pendingXhrs.length) {
@@ -168,7 +168,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open(
               'POST',
-              '{$link->getModuleLink('myparcel', 'deliveryoptions', array(), Tools::usingSecureMode())|escape:'javascript':'UTF-8'}',
+              '{$link->getModuleLink('myparcelbpost', 'deliveryoptions', array(), Tools::usingSecureMode())|escape:'javascript':'UTF-8'}',
               true
             );
 

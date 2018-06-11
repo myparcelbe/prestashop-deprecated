@@ -16,12 +16,12 @@
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 <div class="info-order box">
-  <h3 class="page-subheading">{l s='PostNL delivery' mod='myparcel'}</h3>
+  <h3 class="page-subheading">{l s='bpost delivery' mod='myparcelbpost'}</h3>
   {foreach name=shipmentLoop from=$shipments item=shipment}
-    <h4>{l s='Shipment' mod='myparcel'} {$smarty.foreach.shipmentLoop.index + 1|intval nofilter}</h4>
+    <h4>{l s='Shipment' mod='myparcelbpost'} {$smarty.foreach.shipmentLoop.index + 1|intval nofilter}</h4>
     {if isset($shipment['tracktrace']) && $shipment['tracktrace']}
-      <strong>{l s='Track & Trace:' mod='myparcel'}</strong>
-      <a href="http://postnl.nl/tracktrace/?L={$languageIso|escape:'htmlall':'UTF-8' nofilter}&B={$shipment['tracktrace']|escape:'htmlall':'UTF-8' nofilter}&P={$shipment['postcode']|escape:'htmlall':'UTF-8' nofilter}&D=NL&T=C"
+      <strong>{l s='Track & Trace:' mod='myparcelbpost'}</strong>
+      <a href="https://track.bpost.be/btr/web/#/search?itemCode={$shipment['tracktrace']|escape:'htmlall':'UTF-8' nofilter}"
          target="_blank">
         {$shipment['tracktrace']|escape:'htmlall':'UTF-8' nofilter}
       </a>
@@ -29,8 +29,8 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th class="first_item">{l s='PostNL Status' mod='myparcel'}</th>
-          <th class="last_item">{l s='Date updated' mod='myparcel'}</th>
+          <th class="first_item">{l s='bpost Status' mod='myparcelbpost'}</th>
+          <th class="last_item">{l s='Date updated' mod='myparcelbpost'}</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +38,7 @@
           <tr class="item">
             <td class="bold">
               <label for="cb_59">
-                {$historyDetail['postnl_status']|intval nofilter}
+                {$historyDetail['mpbpost_status']|intval nofilter}
               </label>
             </td>
             <td class="bold">

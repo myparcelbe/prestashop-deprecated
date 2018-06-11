@@ -18,7 +18,7 @@
 <script type="text/javascript">
   (function () {
     function initMyParcelExport() {
-      if (typeof window.MyParcelModule === 'undefined'
+      if (typeof window.MyParcelBpostModule === 'undefined'
           // It takes a while before Internet Explorer recognizes the bulk actions button
         || document.querySelector('.btn-group.bulk-actions ul.dropdown-menu') == null
       ) {
@@ -47,19 +47,20 @@
       }
 
       documentReady(function () {
-        window.MyParcelModule.misc = window.MyParcelModule.misc || {ldelim}{rdelim};
-        window.MyParcelModule.misc.process_url = '{$myparcel_process_url|escape:'javascript':'UTF-8'}';
-        window.MyParcelModule.misc.module_url = '{$myparcel_module_url|escape:'javascript':'UTF-8'}';
-        window.MyParcelModule.misc.countries = {$jsCountries|json_encode};
-        window.MyParcelModule.misc.icons = [];
+        window.MyParcelBpostModule.misc = window.MyParcelBpostModule.misc || {ldelim}{rdelim};
+        window.MyParcelBpostModule.misc.process_url = '{$mpbpost_process_url|escape:'javascript':'UTF-8'}';
+        window.MyParcelBpostModule.misc.module_url = '{$mpbpost_module_url|escape:'javascript':'UTF-8'}';
+        window.MyParcelBpostModule.misc.countries = {mypa_json_encode($mpbJsCountries)};
+        window.MyParcelBpostModule.misc.icons = [];
         try {
-          window.MyParcelModule.paperSize = {$paperSize|json_encode};
+          window.MyParcelBpostModule.paperSize = {mypa_json_encode($paperSize)};
         } catch (e) {
-          window.MyParcelModule.paperSize = false;
+          window.MyParcelBpostModule.paperSize = false;
         }
-        window.MyParcelModule.debug = {if Configuration::get(MyParcel::LOG_API)}true{else}false{/if};
+        window.MyParcelBpostModule.askPaperSize = {if !empty($askPaperSize)}true{else}false{/if};
+        window.MyParcelBpostModule.debug = {if Configuration::get(MyParcelBpost::LOG_API)}true{else}false{/if};
 
-        var paperSize = {$paperSize|json_encode};
+        var paperSize = {mypa_json_encode($paperSize)};
 
         if (!paperSize) {
           paperSize = {
@@ -73,7 +74,7 @@
           };
         }
 
-        new MyParcelModule.ordergrid({
+        new MyParcelBpostModule.ordergrid({
           paperSize: paperSize
         },
         {include file="../translations.tpl"}
@@ -82,6 +83,12 @@
 
     }
 
+    {if $checkWebhooks}
+    var request = new XMLHttpRequest();
+    request.open('GET', '{$mpbpost_process_url|escape:'javascript'}&action=CheckWebhooks', true);
+    request.send();
+    request = null;
+    {/if}
     initMyParcelExport();
   }());
 </script>

@@ -15,7 +15,7 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<myparcel-icon data-id-order="{$tr['id_order']|intval}">
+<mpbpost-icon data-id-order="{$tr['id_order']|intval}" style="display: inline-block">
   <div style="float: left;">
     <span class="btn-group-action">
       <span class="btn-group">
@@ -25,4 +25,4 @@
       </span>
     </span>
   </div>
-</myparcel-icon>
+</mpbpost-icon>

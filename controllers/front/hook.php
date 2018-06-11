@@ -21,12 +21,12 @@ if (!defined('_PS_VERSION_')) {
     return;
 }
 
-require_once dirname(__FILE__).'/../../myparcel.php';
+require_once dirname(__FILE__).'/../../myparcelbpost.php';
 
 /**
- * Class MyParcelHookModuleFrontController
+ * Class MyParcelBpostHookModuleFrontController
  */
-class MyParcelHookModuleFrontController extends ModuleFrontController
+class MyParcelBpostHookModuleFrontController extends ModuleFrontController
 {
     /** @var MyParcel $module */
     public $module;
@@ -35,16 +35,18 @@ class MyParcelHookModuleFrontController extends ModuleFrontController
      * Initialize content and block unauthorized calls
      *
      * @since 2.0.0
+     * @throws PrestaShopException
+     * @throws Adapter_Exception
      */
     public function initContent()
     {
-        if (!Module::isEnabled('myparcel')) {
+        if (!Module::isEnabled('myparcelbpost')) {
             header('Content-Type: application/json; charset=utf8');
-            die(json_encode(array('data' => array('message' => 'Module is not enabled'))));
+            die(mypa_json_encode(array('data' => array('message' => 'Module is not enabled'))));
         }
-        if (!Configuration::get(MyParcel::UPDATE_ORDER_STATUSES)) {
+        if (!Configuration::get(MyParcelBpost::UPDATE_ORDER_STATUSES)) {
             header('Content-Type: application/json; charset=utf8');
-            die(json_encode(array('data' => array('message' => 'Webhooks are not enabled'))));
+            die(mypa_json_encode(array('data' => array('message' => 'Webhooks are not enabled'))));
         }
 
         $this->processWebhook();
@@ -56,13 +58,15 @@ class MyParcelHookModuleFrontController extends ModuleFrontController
      * Process webhook
      *
      * @since 2.0.0
+     * @throws PrestaShopException
+     * @throws Adapter_Exception
      */
     protected function processWebhook()
     {
         // @codingStandardsIgnoreStart
         $content = file_get_contents('php://input');
         // @codingStandardsIgnoreEnd
-        if (Configuration::get(MyParcel::LOG_API)) {
+        if (Configuration::get(MyParcelBpost::LOG_API)) {
             $logContent = pSQL($content);
             Logger::addLog("MyParcel webhook: $logContent");
         }
@@ -74,7 +78,7 @@ class MyParcelHookModuleFrontController extends ModuleFrontController
                     && isset($item['status'])
                     && isset($item['barcode'])
                 ) {
-                    MyParcelOrder::updateStatus($item['shipment_id'], $item['barcode'], $item['status']);
+                    MPBpostOrder::updateStatus($item['shipment_id'], $item['barcode'], $item['status']);
                 }
             }
 

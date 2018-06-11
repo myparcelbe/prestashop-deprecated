@@ -10,47 +10,47 @@ td.ui-state-warning {
     display: none!important;
 }
 
-.myparcel-label-warning {
+.mpbpost-label-warning {
     background-color: #fbbb22 !important;
 }
 
-.myparcel-label-success {
+.mpbpost-label-success {
     background-color: #72C279 !important;
 }
 
-.myparcel-label-info {
+.mpbpost-label-info {
     background-color: #00aff0 !important;
 }
 
-.myparcel-label-danger {
+.mpbpost-label-danger {
     background-color: #E08F95 !important;
 }
 
-.myparcel-label-inverse {
+.mpbpost-label-inverse {
     background-color: #333333 !important;
 }
 
-.myparcel-badge-warning {
+.mpbpost-badge-warning {
     color: #fbbb22 !important;
     background-color: white !important;
 }
 
-.myparcel-badge-success {
+.mpbpost-badge-success {
     color: #72C279 !important;
     background-color: white !important;
 }
 
-.myparcel-badge-info {
+.mpbpost-badge-info {
     color: #00aff0 !important;
     background-color: white !important;
 }
 
-.myparcel-badge-danger {
+.mpbpost-badge-danger {
     color: #E08F95 !important;
     background-color: white !important;
 }
 
-.myparcel-badge-inverse {
+.mpbpost-badge-inverse {
     color: #333333 !important;
     background-color: white !important;
 }

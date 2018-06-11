@@ -18,10 +18,10 @@
 <!doctype html>
 <html lang="{$language_code|escape:'html':'UTF-8' nofilter}">
 <body>
-  <div id="myparcelapp" class="myparcelcheckout"></div>
+  <div id="mpbpostapp" class="mpbpostcheckout"></div>
   <script type="text/javascript">
     {if $smarty.const._TB_VERSION_}
-    window.currencyModes = {Currency::getModes()|json_encode};
+    window.currencyModes = {mypa_json_encode(Currency::getModes())};
     {/if}
     window.priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval nofilter};
     window.currency_iso_code = '{Context::getContext()->currency->iso_code|escape:'htmlall':'UTF-8'}';
@@ -60,69 +60,61 @@
         }
       });
 
-      window.MyParcelModule = window.MyParcelModule || {ldelim}{rdelim};
-      window.MyParcelModule.misc = window.MyParcelModule.misc || {ldelim}{rdelim};
-      window.MyParcelModule.misc.errorCodes = {
-        '3212': '{l s='Unknown address' mod='myparcel' js=1}'
+      window.MyParcelBpostModule = window.MyParcelBpostModule || {ldelim}{rdelim};
+      window.MyParcelBpostModule.misc = window.MyParcelBpostModule.misc || {ldelim}{rdelim};
+      window.MyParcelBpostModule.misc.errorCodes = {
+        '3212': '{l s='Unknown address' mod='myparcelbpost' js=1}'
       };
 
       function initMyParcelCheckout() {
-        if (typeof window.MyParcelModule === 'undefined'
-          || typeof window.MyParcelModule.checkout === 'undefined') {
+        if (typeof window.MyParcelBpostModule === 'undefined'
+          || typeof window.MyParcelBpostModule.checkout === 'undefined') {
           setTimeout(initMyParcelCheckout, 100);
 
           return;
         }
 
-        window.checkout = new MyParcelModule.checkout({
+        window.checkout = new MyParcelBpostModule.checkout({
           data: {include file="./example.json"},
-          target: 'myparcelapp',
+          target: 'mpbpostapp',
           form: null,
           iframe: true,
           refresh: false,
           selected: null,
-          street: 'Siriusdreef',
-          houseNumber: '66',
-          postalCode: '2132WT',
+          street: 'Adriaan Brouwerstraat',
+          houseNumber: '16',
+          postalCode: '2000',
           deliveryDaysWindow: 12,
           dropoffDelay: 0,
           dropoffDays: '1,2,3,4,5',
           cutoffTime: '15:30:00',
-          cc: 'NL',
+          cc: 'BE',
           methodsAvailable: {
             timeframes: true,
             pickup: true,
-            expressPickup: true,
-            morning: true,
-            night: true,
             signed: true,
-            recipientOnly: true,
-            signedRecipientOnly: true
+            saturdayDelivery: true
           },
           customStyle: {
             foreground1Color: '',
             foreground2Color: '',
+            foreground3Color: '',
             background1Color: '',
             background2Color: '',
-            background3Color: '',
             highlightColor: '',
-            fontFamily: '{Configuration::get(MyParcel::CHECKOUT_FONT)|escape:'javascript':'UTF-8'}',
+            inactiveColor: '',
+            fontFamily: '{Configuration::get(MyParcelBpost::CHECKOUT_FONT)|escape:'javascript':'UTF-8'}',
             fontSize: 2,
           },
           price: {
-            morning: 2,
             standard: 0,
-            night: 2,
+            saturdayDelivery: 2,
             signed: 2,
-            recipientOnly: 2,
-            signedRecipientOnly: 2,
             pickup: 0,
-            expressPickup: 0
           },
           signedPreferred: {if $signedPreferred}true{else}false{/if},
-          recipientOnlyPreferred: {if $recipientOnlyPreferred}true{else}false{/if},
           baseUrl: '',
-          locale: 'nl-NL',
+          locale: 'nl-BE',
           currency: 'EUR'
         },
           {include file="../../front/translations.tpl"}

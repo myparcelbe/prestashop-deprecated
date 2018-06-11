@@ -16,7 +16,7 @@
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 function addLabelVar(text) {
-  document.getElementById('MYPARCEL_LABEL_DESCRIPTION').value += text;
+  document.getElementById('MPBPOST_LABEL_DESCRIPTION').value += text;
 }
 
 (function () {
@@ -80,14 +80,14 @@ function addLabelVar(text) {
   }
 
   function checkAvailableMainSettings() {
-    var automateCheckbox = document.querySelector('[name=MYPARCEL_UPDATE_OS]');
-    var notificationsCheckbox = document.querySelector('[name=MYPARCEL_NOTIFS]');
+    var automateCheckbox = document.querySelector('[name=MPBPOST_UPDATE_OS]');
+    var notificationsCheckbox = document.querySelector('[name=MPBPOST_NOTIFS]');
     if (automateCheckbox == null || notificationsCheckbox == null) {
       return;
     }
 
-    automate = automateCheckbox.checked;
-    notifications = notificationsCheckbox.checked;
+    var automate = automateCheckbox.checked;
+    var notifications = notificationsCheckbox.checked;
 
     var selectVisibility = {
       MYPARCEL_SHIPPED_STATUS: automate,
@@ -105,40 +105,26 @@ function addLabelVar(text) {
   }
 
   function checkAvailableDeliverySettings() {
-    if (document.querySelector('[name=mailbox_package]') == null) {
+    if (document.querySelector('[name=delivery]') == null) {
       return;
     }
 
-    var mailboxPackage = document.querySelector('[name=mailbox_package]').checked;
     var delivery = document.querySelector('[name=delivery]').checked;
+    var saturday_delivery = document.querySelector('[name=saturday_delivery]').checked;
     var pickup = document.querySelector('[name=pickup]').checked;
-    var morning = document.querySelector('[name=morning]').checked;
-    var evening = document.querySelector('[name=evening]').checked;
     var signed = document.querySelector('[name=signed]').checked;
-    var recipientOnly = document.querySelector('[name=recipient_only]').checked;
-    var morningPickup = document.querySelector('[name=morning_pickup]').checked;
 
     var formGroupVisibility = {
-      mailbox_package: true,
-      delivery: !mailboxPackage,
-      pickup: !mailboxPackage,
-      timeframe_days: !mailboxPackage && delivery,
-      dropoff_delay: !mailboxPackage && delivery,
-      morning: !mailboxPackage && delivery,
-      morning_fee_tax_incl: !mailboxPackage && delivery && morning,
-      evening: !mailboxPackage && delivery,
-      evening_fee_tax_incl: !mailboxPackage && delivery && evening,
-      signed: !mailboxPackage && delivery,
-      signed_fee_tax_incl: !mailboxPackage && delivery && signed,
-      recipient_only: !mailboxPackage && delivery,
-      recipient_only_fee_tax_incl: !mailboxPackage && delivery && recipientOnly,
-      signed_recipient_only_fee_tax_incl: !mailboxPackage && delivery && signed && recipientOnly,
-      morning_pickup: !mailboxPackage && pickup,
-      morning_pickup_fee_tax_incl: !mailboxPackage && pickup && morningPickup,
+      dropoff_delay: delivery,
+      saturday_delivery: delivery,
+      saturday_delivery_fee_tax_incl: delivery && saturday_delivery,
+      signed: delivery,
+      signed_fee_tax_incl: delivery && signed,
+      pickup_fee_tax_incl: pickup,
     };
 
     var panelVisibility = {
-      fieldset_1_1: !mailboxPackage && delivery,
+      fieldset_1_1: delivery,
     };
 
     Object.keys(formGroupVisibility).forEach(function (targetSelector) {
@@ -164,7 +150,7 @@ function addLabelVar(text) {
       case 1:
         break;
       case 2:
-        if (parseInt(findGetParameter('id_myparcel_carrier_delivery_setting'), 10)) {
+        if (parseInt(findGetParameter('id_mpbpost_carrier_delivery_setting'), 10)) {
           checkAvailableDeliverySettings();
         }
         break;
@@ -189,14 +175,16 @@ function addLabelVar(text) {
         html.addEventListener('click', function (e) {
           e.preventDefault();
           try {
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_FG_COLOR1]').attr('id'), '#FFFFFF');
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_FG_COLOR2]').attr('id'), '#000000');
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_BG_COLOR1]').attr('id'), '#FBFBFB');
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_BG_COLOR2]').attr('id'), '#01BBC5');
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_BG_COLOR3]').attr('id'), '#75D3D8');
-            $.fn.mColorPicker.setInputColor($('[name=MYPARCEL_CHECKOUT_HL_COLOR]').attr('id'), '#FF8C00');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_FG_COLOR1]').attr('id'), '#FFFFFF');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_FG_COLOR2]').attr('id'), '#000000');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_FG_COLOR3]').attr('id'), '#000000');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_BG_COLOR1]').attr('id'), '#FBFBFB');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_BG_COLOR2]').attr('id'), '#01BBC5');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_BG_COLOR3]').attr('id'), '#75D3D8');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_HL_COLOR]').attr('id'), '#FF8C00');
+            $.fn.mColorPicker.setInputColor($('[name=MPBPOST_CHECKOUT_IA_COLOR]').attr('id'), '#848484');
             window.stripeFontselect.checkout.setFont('Exo');
-            $('[name=MYPARCEL_CHECKOUT_FSIZE]').val(2);
+            $('[name=MPBPOST_CHECKOUT_FSIZE]').val(2);
           } catch (e) {
           }
         });

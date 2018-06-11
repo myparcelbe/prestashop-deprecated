@@ -19,7 +19,7 @@
 <html lang="{$language_code|escape:'html':'UTF-8' nofilter}">
 <head>
   <style>
-    #myparcelapp {
+    #mpbpostapp {
       width: 1px;
       min-width: 100%;
       *width: 100%;
@@ -27,10 +27,10 @@
   </style>
 </head>
 <body>
-  <div id="myparcelapp" class="myparcelcheckout"></div>
+  <div id="mpbpostapp" class="mpbpostcheckout"></div>
   <script type="text/javascript">
     {if $smarty.const._TB_VERSION_}
-    window.currencyModes = {Currency::getModes()|json_encode};
+    window.currencyModes = {mypa_json_encode(Currency::getModes())};
     {/if}
     window.priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval nofilter};
     window.currency_iso_code = '{Context::getContext()->currency->iso_code|escape:'htmlall':'UTF-8'}';
@@ -43,22 +43,24 @@
   <script type="text/javascript" src="{$base_dir_ssl|escape:'htmlall':'UTF-8' nofilter}js/tools.js"></script>
   <script type="text/javascript">
     (function () {
-      window.MyParcelModule = window.MyParcelModule || {ldelim}{rdelim};
-      window.MyParcelModule.misc = window.MyParcelModule.misc || {ldelim}{rdelim};
-      window.MyParcelModule.misc.errorCodes = {
-        '3212': '{l s='Unknown address' mod='myparcel' js=1}'
+      window.MyParcelBpostModule = window.MyParcelBpostModule || {ldelim}{rdelim};
+      window.MyParcelBpostModule.misc = window.MyParcelBpostModule.misc || {ldelim}{rdelim};
+      window.MyParcelBpostModule.misc.errorCodes = {
+        '3212': '{l s='Unknown address' mod='myparcelbpost' js=1}'
       };
+      window.MyParcelBpostModule.debug = {if Configuration::get(MyParcelBpostModule::LOG_API)}true{else}false{/if};
 
       function initMyParcelCheckout() {
-        if (typeof window.MyParcelModule === 'undefined'
-          || typeof window.MyParcelModule.checkout === 'undefined') {
+        if (typeof window.MyParcelBpostModule === 'undefined'
+          || typeof window.MyParcelBpostModule.checkout === 'undefined'
+        ) {
           setTimeout(initMyParcelCheckout, 100);
 
           return;
         }
 
-        window.checkout = new MyParcelModule.checkout({
-          target: 'myparcelapp',
+        window.checkout = new MyParcelBpostModule.checkout({
+          target: 'mpbpostapp',
           form: null,
           iframe: true,
           refresh: false,
@@ -73,38 +75,29 @@
           cacheKey: '{$cacheKey|escape:'htmlall':'UTF-8'}',
           cc: '{$countryIso|escape:'javascript':'UTF-8' nofilter}',
           signedPreferred: {if $signedPreferred}true{else}false{/if},
-          recipientOnlyPreferred: {if $recipientOnlyPreferred}true{else}false{/if},
           methodsAvailable: {
+            daytime: {if $daytime}true{else}false{/if},
             timeframes: {if $delivery}true{else}false{/if},
             pickup: {if $pickup}true{else}false{/if},
-            expressPickup: {if $express}true{else}false{/if},
-            morning: {if $morning}true{else}false{/if},
-            night: {if $night}true{else}false{/if},
             signed: {if $signed}true{else}false{/if},
-            recipientOnly: {if $recipientOnly}true{else}false{/if},
-            signedRecipientOnly: {if $signedRecipientOnly}true{else}false{/if}
+            saturdayDelivery: {if $saturdayDelivery}true{else}false{/if},
           },
           customStyle: {
             foreground1Color: '{$foreground1color|escape:'javascript':'UTF-8' nofilter}',
             foreground2Color: '{$foreground2color|escape:'javascript':'UTF-8' nofilter}',
             background1Color: '{$background1color|escape:'javascript':'UTF-8' nofilter}',
             background2Color: '{$background2color|escape:'javascript':'UTF-8' nofilter}',
-            background3Color: '{$background3color|escape:'javascript':'UTF-8' nofilter}',
             highlightColor: '{$highlightcolor|escape:'javascript':'UTF-8' nofilter}',
             fontFamily: '{$fontFamily|escape:'javascript':'UTF-8' nofilter}',
             fontSize: {$fontSize|intval} ? {$fontSize|intval} : 2
           },
           price: {
-            morning: {$morningFeeTaxIncl|floatval nofilter},
             standard: 0,
-            night: {$nightFeeTaxIncl|floatval nofilter},
-            signed: {$signedFeeTaxIncl|floatval nofilter},
-            recipientOnly: {$recipientOnlyFeeTaxIncl|floatval nofilter},
-            signedRecipientOnly: {$signedRecipientOnlyFeeTaxIncl|floatval nofilter},
-            pickup: 0,
-            expressPickup: {$morningPickupFeeTaxIncl|floatval nofilter}
+            signed: {$signedFeeTaxIncl|floatval},
+            saturdayDelivery: {$saturdayDeliveryFeeTaxIncl|floatval},
+            pickup: {$pickupFeeTaxIncl|floatval},
           },
-          baseUrl: '{$myparcel_ajax_checkout_link|escape:'javascript':'UTF-8' nofilter}',
+          baseUrl: '{$mpbpost_ajax_checkout_link|escape:'javascript':'UTF-8' nofilter}',
           locale: 'nl-NL',
           currency: '{$currencyIso|escape:'javascript':'UTF-8' nofilter}'
         },
@@ -112,9 +105,15 @@
         );
       }
 
+      top.postMessage(JSON.stringify({
+        messageOrigin: 'mpbpostcheckout',
+        subject: 'height',
+        height: 300,
+      }), '*');
+
       initMyParcelCheckout();
     })();
   </script>
-  <script type="text/javascript" src="{$checkoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
+  <script type="text/javascript" src="{$mpbCheckoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
 </body>
 </html>

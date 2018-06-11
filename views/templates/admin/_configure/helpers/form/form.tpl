@@ -41,7 +41,7 @@
     <script type="text/javascript">
       (function () {
         function ready(fn) {
-          if (document.readyState !== 'loading'){
+          if (document.readyState !== 'loading') {
             fn();
           } else if (document.addEventListener) {
             document.addEventListener('DOMContentLoaded', fn);
@@ -70,88 +70,93 @@
       }());
     </script>
   {elseif $input.type == 'checkout'}
-    <iframe id="checkoutexample"
-            style="border: 1px solid #C7D6DB; border-radius: 3px; padding: 0"
-            class="col-xs-12 col-sm-12 col-md-9"
-            height="580"
-            src="../index.php?fc=module&module=myparcel&controller=myparcelcheckoutdemo"
-            frameborder="0"
-    ></iframe>
-    <script type="text/javascript">
-      (function () {
-        var currentStyle = null;
+    {if !Module::isEnabled('myparcelbpost')}
+      {l s='Preview not available. Module has been disabled.' mod='myparcelbpost'}
+    {else}
+      <iframe id="checkoutexample"
+              style="border: 1px solid #C7D6DB; border-radius: 3px; padding: 0"
+              class="col-xs-12 col-sm-12 col-md-9"
+              height="400"
+              src="{$smarty.server.REQUEST_URI|escape:'html'}&demo=1"
+              frameborder="0"
+      ></iframe>
+      <script type="text/javascript">
+        (function () {
+          var currentStyle = null;
 
-        function ready(fn) {
-          if (document.readyState !== 'loading'){
-            fn();
-          } else if (document.addEventListener) {
-            window.addEventListener('DOMContentLoaded', fn);
-          } else {
-            document.attachEvent('onreadystatechange', function() {
-              if (document.readyState !== 'loading')
-                fn();
-            });
-          }
-        }
-
-        function sendStyle() {
-          var iframeWindow = document.getElementById('checkoutexample').contentWindow;
-
-          var style = {
-            foreground1Color: document.querySelector('[name={MyParcel::CHECKOUT_FG_COLOR1|escape:'htmlall':'UTF-8'}]').value,
-            foreground2Color: document.querySelector('[name={MyParcel::CHECKOUT_FG_COLOR2|escape:'htmlall':'UTF-8'}]').value,
-            background1Color: document.querySelector('[name={MyParcel::CHECKOUT_BG_COLOR1|escape:'htmlall':'UTF-8'}]').value,
-            background2Color: document.querySelector('[name={MyParcel::CHECKOUT_BG_COLOR2|escape:'htmlall':'UTF-8'}]').value,
-            background3Color: document.querySelector('[name={MyParcel::CHECKOUT_BG_COLOR3|escape:'htmlall':'UTF-8'}]').value,
-            highlightColor: document.querySelector('[name={MyParcel::CHECKOUT_HL_COLOR|escape:'htmlall':'UTF-8'}]').value,
-            fontFamily: document.querySelector('[name={MyParcel::CHECKOUT_FONT|escape:'htmlall':'UTF-8'}]').value,
-            fontSize: document.querySelector('[name={MyParcel::CHECKOUT_FONT_SIZE|escape:'htmlall':'UTF-8'}]').value,
-          };
-
-          if (JSON.stringify(currentStyle) === JSON.stringify(style)) {
-            return;
+          function ready(fn) {
+            if (document.readyState !== 'loading') {
+              fn();
+            } else if (document.addEventListener) {
+              window.addEventListener('DOMContentLoaded', fn);
+            } else {
+              document.attachEvent('onreadystatechange', function() {
+                if (document.readyState !== 'loading')
+                  fn();
+              });
+            }
           }
 
-          var newEvent = {
-            subject: 'sendStyle',
-            style: style
-          };
-          iframeWindow.postMessage(JSON.stringify(newEvent), window.location.href);
-        }
+          function sendStyle() {
+            var iframeWindow = document.getElementById('checkoutexample').contentWindow;
 
-        function receiveStyle(event) {
-          var originLink = document.createElement('a');
-          originLink.href = event.origin;
-          var currentLink = document.createElement('a');
-          currentLink.href = window.location.href;
+            var style = {
+              foreground1Color: document.querySelector('[name={MyParcelBpost::CHECKOUT_FG_COLOR1|escape:'htmlall':'UTF-8'}]').value,
+              foreground2Color: document.querySelector('[name={MyParcelBpost::CHECKOUT_FG_COLOR2|escape:'htmlall':'UTF-8'}]').value,
+              foreground3Color: document.querySelector('[name={MyParcelBpost::CHECKOUT_FG_COLOR3|escape:'htmlall':'UTF-8'}]').value,
+              background1Color: document.querySelector('[name={MyParcelBpost::CHECKOUT_BG_COLOR1|escape:'htmlall':'UTF-8'}]').value,
+              background2Color: document.querySelector('[name={MyParcelBpost::CHECKOUT_BG_COLOR2|escape:'htmlall':'UTF-8'}]').value,
+              highlightColor: document.querySelector('[name={MyParcelBpost::CHECKOUT_HL_COLOR|escape:'htmlall':'UTF-8'}]').value,
+              inactiveColor: document.querySelector('[name={MyParcelBpost::CHECKOUT_INACTIVE_COLOR|escape:'htmlall':'UTF-8'}]').value,
+              fontFamily: document.querySelector('[name={MyParcelBpost::CHECKOUT_FONT|escape:'htmlall':'UTF-8'}]').value,
+              fontSize: document.querySelector('[name={MyParcelBpost::CHECKOUT_FONT_SIZE|escape:'htmlall':'UTF-8'}]').value,
+            };
 
-          if (!event.data) {
-            return;
+            if (JSON.stringify(currentStyle) === JSON.stringify(style)) {
+              return;
+            }
+
+            var newEvent = {
+              subject: 'sendStyle',
+              style: style
+            };
+            iframeWindow.postMessage(JSON.stringify(newEvent), window.location.href);
           }
 
-          try {
-            var data = JSON.parse(event.data);
-          } catch (e) {
-            return;
+          function receiveStyle(event) {
+            var originLink = document.createElement('a');
+            originLink.href = event.origin;
+            var currentLink = document.createElement('a');
+            currentLink.href = window.location.href;
+
+            if (!event.data) {
+              return;
+            }
+
+            try {
+              var data = JSON.parse(event.data);
+            } catch (e) {
+              return;
+            }
+
+            if (originLink.host === currentLink.host
+              && typeof data === 'object'
+              && data.subject === 'receivedStyle'
+            ) {
+              currentStyle = data.style;
+            }
           }
 
-          if (originLink.host === currentLink.host
-            && typeof data === 'object'
-            && data.subject === 'receivedStyle'
-          ) {
-            currentStyle = data.style;
-          }
-        }
+          ready(function() {
+            {* Send the style every 100ms when it has changed *}
+            {* Request an update from the target frame to verify the style has been applied *}
+            window.addEventListener('message', receiveStyle, false);
 
-        ready(function() {
-          {* Send the style every 100ms when it has changed *}
-          {* Request an update from the target frame to verify the style has been applied *}
-          window.addEventListener('message', receiveStyle, false);
-
-          setInterval(sendStyle, 100);
-        });
-      }());
-    </script>
+            setInterval(sendStyle, 100);
+          });
+        }());
+      </script>
+    {/if}
   {elseif $input.type == 'paperselector'}
     <input type="hidden" name="{$input.name|escape:'htmlall':'UTF-8'}" value="{if isset($fields_value[$input.name])}{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}{/if}">
     <div id="paper-selector"></div>
@@ -177,8 +182,8 @@
         };
 
         function paperSelector() {
-          if (typeof window.MyParcelModule === 'undefined'
-            || typeof window.MyParcelModule.paperselector === 'undefined'
+          if (typeof window.MyParcelBpostModule === 'undefined'
+            || typeof window.MyParcelBpostModule.paperselector === 'undefined'
           ) {
             setTimeout(paperSelector, 100);
 
@@ -208,7 +213,7 @@
             setInput();
           }
 
-          new window.MyParcelModule.paperselector({
+          new window.MyParcelBpostModule.paperselector({
             selected: selection,
             onChangeSize: changeSize,
             onChangeLabels: changeLabels,
@@ -266,23 +271,23 @@
             <i class="icon icon-calendar"></i> <span id="{$input.name|escape:'html':'UTF-8'}_datetitle"></span>
           </div>
           <div class="date-warning" style="display:none">
-            <div class="alert alert-info">{l s='Select a date in the future to configure its cutoff time' mod='myparcel'}</div>
+            <div class="alert alert-info">{l s='Select a date in the future to configure its cutoff time' mod='myparcelbpost'}</div>
           </div>
           <div class="panel-body">
             <div class="btn-group" role="group">
               <button type="button" id="{$input.name|escape:'html':'UTF-8'}-nodispatch-btn" class="btn btn-default">
-                <i class="icon-times"></i> {l s='No dispatch' mod='myparcel'}
+                <i class="icon-times"></i> {l s='No dispatch' mod='myparcelbpost'}
               </button>
               <button type="button" id="{$input.name|escape:'html':'UTF-8'}-otherdispatch-btn" class="btn btn-default">
-                <i  class="icon-clock-o"></i> {l s='Different cut-off time' mod='myparcel'}
+                <i  class="icon-clock-o"></i> {l s='Different cut-off time' mod='myparcelbpost'}
               </button>
               <div id="{$input.name|escape:'html':'UTF-8'}-dispatch-btn" class="btn btn-success">
-                <i class="icon-check"></i> {l s='Normal cut-off time' mod='myparcel'}
+                <i class="icon-check"></i> {l s='Normal cut-off time' mod='myparcelbpost'}
               </div>
             </div>
             <div class="form-inline well" style="margin-top: 5px">
               <div class="form-group">
-                <label for="{$input.name|escape:'html':'UTF-8'}-cutoff">{l s='Cut-off time' mod='myparcel'}: </label>
+                <label for="{$input.name|escape:'html':'UTF-8'}-cutoff">{l s='Cut-off time' mod='myparcelbpost'}: </label>
                 <div class="input-group">
                   <input type="text"
                          id="{$input.name|escape:'html':'UTF-8'}-cutoff"
@@ -304,8 +309,8 @@
     </div>
     <script type="text/javascript">
       (function () {
-        function {$input.name|escape:'html':'UTF-8'}highlightDays(date) {
-          var dates = JSON.parse($('#{$input.name|escape:'html':'UTF-8'}').val());
+        function {$input.name|escape:'html'}highlightDays(date) {
+          var dates = JSON.parse($('#{$input.name|escape:'html'}').val());
           for (var i = 0; i < Object.keys(dates).length; i++) {
             var item = dates[Object.keys(dates)[i]];
             var formattedDate = Object.keys(dates)[i].split('-');
@@ -321,120 +326,123 @@
           return [true, ''];
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}dateSelect(date) {
-          if (moment().format('DD-MM-YYYY') === moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')) {
-            $('#{$input.name|escape:'html':'UTF-8'}_datepanel').find('.panel-body').hide();
-            $('#{$input.name|escape:'html':'UTF-8'}_datepanel').find('.date-warning').show();
+        function {$input.name|escape:'javascript'}dateSelect(date) {
+          console.log(date);
+          if (moment().format('YYYY-MM-DD') > moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD')) {
+            $('#{$input.name|escape:'html'}_datepanel').find('.panel-body').hide();
+            $('#{$input.name|escape:'html'}_datepanel').find('.date-warning').show();
           } else {
-            $('#{$input.name|escape:'html':'UTF-8'}_datepanel').find('.panel-body').show();
-            $('#{$input.name|escape:'html':'UTF-8'}_datepanel').find('.date-warning').hide();
-            var dates = JSON.parse($('#{$input.name|escape:'html':'UTF-8'}').val());
+            $('#{$input.name|escape:'html'}_datepanel').find('.panel-body').show();
+            $('#{$input.name|escape:'html'}_datepanel').find('.date-warning').hide();
+            var dates = JSON.parse($('#{$input.name|escape:'html'}').val());
             if (!!dates[date]) {
               var item = dates[date];
               if (item.cutoff) {
-                {$input.name|escape:'javascript':'UTF-8'}setOtherDispatch(item.cutoff);
+                {$input.name|escape:'javascript'}setOtherDispatch(item.cutoff);
               } else {
-                {$input.name|escape:'javascript':'UTF-8'}setNoDispatch();
+                {$input.name|escape:'javascript'}setNoDispatch();
               }
             } else {
-              {$input.name|escape:'javascript':'UTF-8'}setDispatch();
+              {$input.name|escape:'javascript'}setDispatch();
             }
           }
 
-          $('#{$input.name|escape:'html':'UTF-8'}_datetitle').text(moment(date, 'DD-MM-YYYY').format('DD MMMM YYYY'));
+          $('#{$input.name|escape:'html'}_datetitle').text(moment(date, 'DD-MM-YYYY').format('DD MMMM YYYY'));
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}setDispatch() {
-          $('#{$input.name|escape:'javascript':'UTF-8'}-nodispatch-btn').addClass('btn-default').removeClass('btn-danger');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-otherdispatch-btn').addClass('btn-default').removeClass('btn-warning');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-dispatch-btn').addClass('btn-success').removeClass('btn-default');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val('');
+        window.setDate = {$input.name|escape:'javascript'}dateSelect;
+
+        function {$input.name|escape:'javascript'}setDispatch() {
+          $('#{$input.name|escape:'javascript'}-nodispatch-btn').addClass('btn-default').removeClass('btn-danger');
+          $('#{$input.name|escape:'javascript'}-otherdispatch-btn').addClass('btn-default').removeClass('btn-warning');
+          $('#{$input.name|escape:'javascript'}-dispatch-btn').addClass('btn-success').removeClass('btn-default');
+          $('#{$input.name|escape:'javascript'}-cutoff').val('');
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}setOtherDispatch(cutoff) {
-          $('#{$input.name|escape:'javascript':'UTF-8'}-nodispatch-btn').addClass('btn-default').removeClass('btn-danger');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-otherdispatch-btn').addClass('btn-warning').removeClass('btn-default');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-dispatch-btn').addClass('btn-default').removeClass('btn-success');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val(cutoff);
+        function {$input.name|escape:'javascript'}setOtherDispatch(cutoff) {
+          $('#{$input.name|escape:'javascript'}-nodispatch-btn').addClass('btn-default').removeClass('btn-danger');
+          $('#{$input.name|escape:'javascript'}-otherdispatch-btn').addClass('btn-warning').removeClass('btn-default');
+          $('#{$input.name|escape:'javascript'}-dispatch-btn').addClass('btn-default').removeClass('btn-success');
+          $('#{$input.name|escape:'javascript'}-cutoff').val(cutoff);
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}setNoDispatch() {
+        function {$input.name|escape:'javascript'}setNoDispatch() {
 
-          $('#{$input.name|escape:'javascript':'UTF-8'}-nodispatch-btn').addClass('btn-danger').removeClass('btn-default');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-otherdispatch-btn').addClass('btn-default').removeClass('btn-warning');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-dispatch-btn').addClass('btn-default').removeClass('btn-success');
-          $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val('');
+          $('#{$input.name|escape:'javascript'}-nodispatch-btn').addClass('btn-danger').removeClass('btn-default');
+          $('#{$input.name|escape:'javascript'}-otherdispatch-btn').addClass('btn-default').removeClass('btn-warning');
+          $('#{$input.name|escape:'javascript'}-dispatch-btn').addClass('btn-default').removeClass('btn-success');
+          $('#{$input.name|escape:'javascript'}-cutoff').val('');
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}addDate(date) {
-          var dates = JSON.parse($('#{$input.name|escape:'html':'UTF-8'}').val());
+        function {$input.name|escape:'javascript'}addDate(date) {
+          var dates = JSON.parse($('#{$input.name|escape:'html'}').val());
           dates[date] = {
             "nodispatch": true
           };
-          $('#{$input.name|escape:'html':'UTF-8'}').val(JSON.stringify(dates));
+          $('#{$input.name|escape:'html'}').val(JSON.stringify(dates));
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}addCutOff(date, cutoff) {
-          var dates = JSON.parse($('#{$input.name|escape:'html':'UTF-8'}').val());
+        function {$input.name|escape:'javascript'}addCutOff(date, cutoff) {
+          var dates = JSON.parse($('#{$input.name|escape:'html'}').val());
           dates[date] = {
             "nodispatch": true,
             "cutoff": cutoff
           };
-          $('#{$input.name|escape:'html':'UTF-8'}').val(JSON.stringify(dates));
+          $('#{$input.name|escape:'html'}').val(JSON.stringify(dates));
         }
 
-        function {$input.name|escape:'javascript':'UTF-8'}removeDate(date) {
-          var dates = JSON.parse($('#{$input.name|escape:'html':'UTF-8'}').val());
+        function {$input.name|escape:'javascript'}removeDate(date) {
+          var dates = JSON.parse($('#{$input.name|escape:'html'}').val());
           delete dates[date];
-          $('#{$input.name|escape:'html':'UTF-8'}').val(JSON.stringify(dates));
+          $('#{$input.name|escape:'html'}').val(JSON.stringify(dates));
         }
 
         $(document).ready(function () {
-          $('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').datepicker({
+          $('#datepicker_{$input.name|escape:'javascript'}').datepicker({
             dateFormat: 'dd-mm-yy',
-            beforeShowDay: {$input.name|escape:'javascript':'UTF-8'}highlightDays,
+            beforeShowDay: {$input.name|escape:'javascript'}highlightDays,
             minDate: 0,
-            onSelect: {$input.name|escape:'javascript':'UTF-8'}dateSelect
+            onSelect: {$input.name|escape:'javascript'}dateSelect
           });
-          $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').timepicker({
+          $('#{$input.name|escape:'javascript'}-cutoff').timepicker({
             timeOnly: true,
             timeFormat: 'hh:mm'
           });
-          $('#{$input.name|escape:'javascript':'UTF-8'}-dispatch-btn').click(function () {
-            {$input.name|escape:'javascript':'UTF-8'}removeDate($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val());
-            {$input.name|escape:'javascript':'UTF-8'}setDispatch();
+          $('#{$input.name|escape:'javascript'}-dispatch-btn').click(function () {
+            {$input.name|escape:'javascript'}removeDate($('#datepicker_{$input.name|escape:'javascript'}').val());
+            {$input.name|escape:'javascript'}setDispatch();
           });
-          $('#{$input.name|escape:'javascript':'UTF-8'}-otherdispatch-btn').click(function () {
-            if ($('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val()) {
-              {$input.name|escape:'javascript':'UTF-8'}removeDate($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val());
-              {$input.name|escape:'javascript':'UTF-8'}addCutOff(
-                $('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val(),
-                $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val()
+          $('#{$input.name|escape:'javascript'}-otherdispatch-btn').click(function () {
+            if ($('#{$input.name|escape:'javascript'}-cutoff').val()) {
+              {$input.name|escape:'javascript'}removeDate($('#datepicker_{$input.name|escape:'javascript'}').val());
+              {$input.name|escape:'javascript'}addCutOff(
+                $('#datepicker_{$input.name|escape:'javascript'}').val(),
+                $('#{$input.name|escape:'javascript'}-cutoff').val()
               );
             }
-            {$input.name|escape:'javascript':'UTF-8'}setOtherDispatch($('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val());
+            {$input.name|escape:'javascript'}setOtherDispatch($('#{$input.name|escape:'javascript'}-cutoff').val());
           });
-          $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').change(function () {
+          $('#{$input.name|escape:'javascript'}-cutoff').change(function () {
             if ($(this).val()) {
-              {$input.name|escape:'javascript':'UTF-8'}removeDate($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val());
-              {$input.name|escape:'javascript':'UTF-8'}addCutOff(
-                $('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val(),
-                $('#{$input.name|escape:'javascript':'UTF-8'}-cutoff').val()
+              {$input.name|escape:'javascript'}removeDate($('#datepicker_{$input.name|escape:'javascript'}').val());
+              {$input.name|escape:'javascript'}addCutOff(
+                $('#datepicker_{$input.name|escape:'javascript'}').val(),
+                $('#{$input.name|escape:'javascript'}-cutoff').val()
               );
-              {$input.name|escape:'javascript':'UTF-8'}setOtherDispatch($(this).val());
+              {$input.name|escape:'javascript'}setOtherDispatch($(this).val());
             }
           });
-          $('#{$input.name|escape:'javascript':'UTF-8'}-nodispatch-btn').click(function () {
-            {$input.name|escape:'javascript':'UTF-8'}removeDate($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val());
-            {$input.name|escape:'javascript':'UTF-8'}addDate($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').val());
-            {$input.name|escape:'javascript':'UTF-8'}setNoDispatch();
+          $('#{$input.name|escape:'javascript'}-nodispatch-btn').click(function () {
+            {$input.name|escape:'javascript'}removeDate($('#datepicker_{$input.name|escape:'javascript'}').val());
+            {$input.name|escape:'javascript'}addDate($('#datepicker_{$input.name|escape:'javascript'}').val());
+            {$input.name|escape:'javascript'}setNoDispatch();
           });
-          var current_date = new Date($('#datepicker_{$input.name|escape:'javascript':'UTF-8'}').datepicker('getDate')),
+          var current_date = new Date($('#datepicker_{$input.name|escape:'javascript'}').datepicker('getDate')),
             yr = current_date.getFullYear(),
             month = (current_date.getMonth() + 1) < 10 ? '0' + (current_date.getMonth() + 1) : (current_date.getMonth() + 1),
             day = current_date.getDate() < 10 ? '0' + current_date.getDate() : current_date.getDate(),
             new_current_date = day + '-' + month + '-' + yr;
-          {$input.name|escape:'javascript':'UTF-8'}dateSelect(new_current_date);
+          {$input.name|escape:'javascript'}dateSelect(new_current_date);
         });
       }());
     </script>
