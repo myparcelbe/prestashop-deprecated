@@ -26,7 +26,7 @@
     </h2>
     <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop">GitHub</a>
     <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/releases">Alle updates</a>
-    <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/archive/master.zip">Laatste stabiele versie</a>
+    <a id="latest-release-zip" target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/archive/master.zip">Laatste stabiele versie</a>
 </section>
 <section class="main-content">
     <h3 style="color:red;">Let op: Deze plugin communiceert alleen met het nieuwe platform van SendMyParcel. Heb je eerder gebruik gemaakt van een oudere versie? Dan is een nieuwe API-key noodzakelijk.</h3>
@@ -218,5 +218,17 @@ In het orderdetail scherm kun jij ook nog aanpassingen maken in de soort verzend
         </p>
     </footer>
 </section>
+<script type="text/javascript">
+  (function init() {
+    if (typeof $ === 'undefined') { setTimeout(init, 100);return; }
+    $('#latest-release-zip').click(function (e) {
+      e.preventDefault();
+      $.get('https://api.github.com/repos/myparcelbe/prestashop/releases/latest')
+        .then(function (response) { window.location.href = response.assets[0].browser_download_url; })
+        .fail(function () { window.location.href = e.target.href; })
+      ;
+    });
+  }());
+</script>
 </body>
 </html>
