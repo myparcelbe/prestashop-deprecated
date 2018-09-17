@@ -44,7 +44,7 @@ class MPBpostOrder extends MPBpostObjectModel
                 'db_type'  => 'INT(11) UNSIGNED',
             ),
             'id_shipment'    => array(
-                'type'     => self::TYPE_STRING,
+                'type'     => self::TYPE_INT,
                 'validate' => 'isInt',
                 'required' => true,
                 'db_type'  => 'BIGINT(20)',
@@ -69,11 +69,11 @@ class MPBpostOrder extends MPBpostObjectModel
                 'db_type'  => 'VARCHAR(32)',
             ),
             'mpbpost_status' => array(
-                'type'     => self::TYPE_STRING,
+                'type'     => self::TYPE_INT,
                 'validate' => 'isString',
                 'required' => false,
                 'default'  => '1',
-                'db_type'  => 'VARCHAR(255)',
+                'db_type'  => 'VARCHAR(255)', // TODO: convert to INT(11) UNSIGNED IN 2.3.x, okay for now
             ),
             'date_upd'       => array(
                 'type'     => self::TYPE_DATE,
@@ -113,12 +113,12 @@ class MPBpostOrder extends MPBpostObjectModel
     public $tracktrace;
     /** @var string $postcode */
     public $postcode;
-    /** @var string $mpbpost_status */
+    /** @var int $mpbpost_status */
     public $mpbpost_status;
     /** @var string $date_upd */
     public $date_upd;
     /** @var bool $mpbpost_final */
-    public $mpbost_final;
+    public $mpbpost_final;
     /** @var string $shipment */
     public $shipment;
     /** @var int $type */
@@ -146,7 +146,7 @@ class MPBpostOrder extends MPBpostObjectModel
         }
 
         if ($result) {
-            return json_decode($result, true);
+            return @json_decode($result, true);
         }
 
         return false;
@@ -176,15 +176,29 @@ class MPBpostOrder extends MPBpostObjectModel
 
         try {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            foreach ($results as &$result) {
+                $result['id_shipment'] = (int) $result['id_shipment'];
+                $result['mpbpost_status'] = (int) $result['mpbpost_status'];
+                $result['mpbpost_final'] = (bool) $result['mpbpost_final'];
+                $result['retour'] = (bool) $result['retour'];
+                $result['type'] = (int) $result['type'];
+                $result['id_order'] = (int) $result['id_order'];
+                $result[static::$definition['primary']] = (int) $result[static::$definition['primary']];
+            }
         } catch (PrestaShopException $e) {
             $results = array();
         }
 
+        $newResults = array();
         foreach ($results as &$result) {
-            $result['shipment'] = json_decode($result['shipment']);
+            $result['shipment'] = @json_decode($result['shipment']);
+            if (!isset($newResults[$result['id_order']])) {
+                $newResults[$result['id_order']] = array();
+            }
+            $newResults[$result['id_order']][$result['id_shipment']] = $result;
         }
 
-        return (array) $results;
+        return $newResults;
     }
 
     /**
@@ -285,7 +299,7 @@ class MPBpostOrder extends MPBpostObjectModel
                 MPBpostOrderHistory::setShipped($idShipment);
             }
             if ($statusCode >= 7 && $statusCode <= 11) {
-                MyParcelOrderHistory::setReceived($idShipment);
+                MPBpostOrderHistory::setReceived($idShipment);
             }
         } catch (PrestaShopException $e) {
             Logger::addLog("Myparcel module error: {$e->getMessage()}");

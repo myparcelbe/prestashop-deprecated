@@ -1091,11 +1091,19 @@
     }
 
     var link = this.options.api + font;
-
     if (document.querySelector("link[href*='" + font + "']") == null) {
       var links = Array.prototype.slice.call(document.querySelectorAll('link'));
       var lastLink = links[links.length - 1];
-      lastLink.insertAdjacentHTML('afterend', '<link href="' + link + '" rel="stylesheet" type="text/css">');
+      var stylesheet = document.createElement('LINK');
+      stylesheet.href = link;
+      stylesheet.rel = 'stylesheet';
+      stylesheet.type = 'text/css';
+      // temporarily set media to something inapplicable to ensure it'll fetch without blocking render
+      stylesheet.media = 'only x';
+      // set the media back when the stylesheet loads
+      stylesheet.onload = function() { stylesheet.media = 'all' };
+      document.getElementsByTagName('head')[0].appendChild(stylesheet);
+      lastLink.insertAdjacentHTML('afterend', stylesheet.outerHTML);
     }
   };
 

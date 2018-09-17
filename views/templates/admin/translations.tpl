@@ -151,5 +151,19 @@
   errorWhileExporting: '{l s='Error while exporting' mod='myparcelbpost' js=1}',
   movedTheDeliveryDate: '{l s='The delivery timeframe has been moved to a new date.' mod='myparcelbpost' js=1}',
   removedTheSpecialDeliveryOption: '{l s='The special delivery option of the following type has been removed, because it is not available on the new date:' mod='myparcelbpost' js=1}',
-  preferredDelivery: '{l s='Preferred delivery date' mod='myparcelbpost' js=1}'
+  preferredDelivery: '{l s='Preferred delivery date' mod='myparcelbpost' js=1}',
+  thereAreNoShipments: '{l s='There are no shipments' mod='myparcelbpost' js=1}',
+  deliveryDateUnknown: '{l s='No delivery date chosen' mod='myparcelbpost' js=1}',
+  delivery: '{l s='Delivery' mod='myparcelbpost' js=1}',
+  pickup: '{l s='Pickup' mod='myparcelbpost' js=1}',
+  search: '{l s='Search' mod='myparcelbpost' js=1}',
+  deliveryOptions: '{l s='Delivery Options' mod='myparcelbpost' js=1}',
+  deliveryOptionsDomesticOnly: '{l s='Delivery options are only available for parcel shipments to BE' mod='myparcelbpost' js=1}',
+  from: '{l s='from' mod='myparcelbpost' js=1}',
+  hour: '{l s='hr' mod='myparcelbpost' js=1}',
+  noResultsFound: '{l s='No results found' mod='myparcelbpost' js=1}',
+  standard: '{l s='Standard' mod='myparcelbpost' js=1}',
+  standardDelivery: '{l s='Standard delivery' mod='myparcelbpost' js=1}',
+  postOffice: '{l s='Post Office' mod='myparcelbpost' js=1}',
+  noSpecificData: '{l s='No specific date' mod='myparcelbpost' js=1}'
 }

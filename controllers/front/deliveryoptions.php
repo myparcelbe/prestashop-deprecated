@@ -77,7 +77,7 @@ class MyParcelBpostDeliveryOptionsModuleFrontController extends ModuleFrontContr
             ));
         }
         // @codingStandardsIgnoreStart
-        $content = json_decode(file_get_contents('php://input'), true);
+        $content = @json_decode(file_get_contents('php://input'), true);
         // @codingStandardsIgnoreEnd
         if (isset($content['ajax']) && $content['ajax']) {
             $this->displayAjax();
@@ -92,10 +92,11 @@ class MyParcelBpostDeliveryOptionsModuleFrontController extends ModuleFrontContr
      */
     public function displayAjax()
     {
-        header('Content-Type: application/json');
+        @ob_clean();
+        header('Content-Type: application/json;charset=UTF-8');
 
         // @codingStandardsIgnoreStart
-        $content = json_decode(file_get_contents('php://input'), true);
+        $content = @json_decode(file_get_contents('php://input'), true);
         // @codingStandardsIgnoreEnd
         if (!empty($content['updateOption'])) {
             $context = Context::getContext();
@@ -136,9 +137,8 @@ class MyParcelBpostDeliveryOptionsModuleFrontController extends ModuleFrontContr
                     Db::getInstance()->execute(
                         'INSERT INTO `'._DB_PREFIX_.bqSQL(MPBpostDeliveryOption::$definition['table'])
                         .'` (`id_mpbpost_delivery_option`, `mpbpost_delivery_option`)
-                     VALUES ('.(int) $deliveryOptionObject->id.', \''.mypa_json_encode($deliveryOption).'\')
-                         ON DUPLICATE KEY UPDATE `mpbpost_delivery_option` = \''.mypa_json_encode($deliveryOption)
-                        .'\''
+                     VALUES ('.(int) $deliveryOptionObject->id.', \''.psQL(mypa_json_encode($deliveryOption), true).'\')
+                         ON DUPLICATE KEY UPDATE `mpbpost_delivery_option` = \''.pSQL(mypa_json_encode($deliveryOption), true).'\''
                     );
                 }
 

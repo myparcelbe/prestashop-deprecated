@@ -49,7 +49,7 @@
             && typeof data === 'object'
             && data.subject === 'sendStyle'
           ) {
-            window.checkout.setStyle(data.style);
+            window.checkout.constructor.setStyle(data.style);
 
             var newEvent = {
               subject: 'receivedStyle',
@@ -62,19 +62,22 @@
 
       window.MyParcelBpostModule = window.MyParcelBpostModule || {ldelim}{rdelim};
       window.MyParcelBpostModule.misc = window.MyParcelBpostModule.misc || {ldelim}{rdelim};
+      window.MyParcelBpostModule.async = {if $mpbAsync}true{else}false{/if};
       window.MyParcelBpostModule.misc.errorCodes = {
         '3212': '{l s='Unknown address' mod='myparcelbpost' js=1}'
       };
 
       function initMyParcelCheckout() {
         if (typeof window.MyParcelBpostModule === 'undefined'
-          || typeof window.MyParcelBpostModule.checkout === 'undefined') {
+          || typeof window.MyParcelBpostModule.checkout === 'undefined'
+          || typeof window.MyParcelBpostModule.checkout.default === 'undefined'
+        ) {
           setTimeout(initMyParcelCheckout, 100);
 
           return;
         }
 
-        window.checkout = new MyParcelBpostModule.checkout({
+        window.checkout = new window.MyParcelBpostModule.checkout.default({
           data: {include file="./example.json"},
           target: 'mpbpostapp',
           form: null,
@@ -103,7 +106,7 @@
             background2Color: '',
             highlightColor: '',
             inactiveColor: '',
-            fontFamily: '{Configuration::get(MyParcelBpost::CHECKOUT_FONT)|escape:'javascript':'UTF-8'}',
+            fontFamily: '{$mpbCheckoutFont|escape:'javascript':'UTF-8'}',
             fontSize: 2,
           },
           price: {
@@ -124,6 +127,6 @@
       initMyParcelCheckout();
     })();
   </script>
-  <script type="text/javascript" src="{$checkoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
+  <script type="text/javascript" src="{$mypaBpostCheckoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
 </body>
 </html>

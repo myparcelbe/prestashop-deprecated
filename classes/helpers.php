@@ -27,32 +27,19 @@ if (!function_exists('mypa_dot')) {
     }
 }
 
-/*
- * json_encode with JSON_UNESCAPED_UNICODE polyfill
- *
- * https://stackoverflow.com/a/39724348
- */
 if (!function_exists('mypa_json_encode')) {
-    function mypa_json_encode($input, $flags = 0) {
-        $fails = implode('|', array_filter(array(
-            '\\\\',
-            $flags & JSON_HEX_TAG ? 'u003[CE]' : '',
-            $flags & JSON_HEX_AMP ? 'u0026' : '',
-            $flags & JSON_HEX_APOS ? 'u0027' : '',
-            $flags & JSON_HEX_QUOT ? 'u0022' : '',
-        )));
-        $pattern = "/\\\\(?:(?:$fails)(*SKIP)(*FAIL)|u([0-9a-fA-F]{4}))/";
-        $callback = function ($m) {
-            return html_entity_decode("&#x$m[1];", ENT_QUOTES, 'UTF-8');
-        };
-        return preg_replace_callback($pattern, $callback, json_encode($input, $flags));
-    }
+    function mypa_json_encode($input, $flags = null) {
+        // Escape HTML entities and other risky chars by default
+        if ($flags === null) {
+            // Using native PHP 5.3+ flags
+            $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+        }
 
-    $json = array(
-        'Sample' => array(
-            'specialchars' => '<x>& \' "</x>',
-            'backslashes' => '\\u0020',
-            'context' => 'جمهوری اسلامی ایران',
-        )
-    );
+        $json = json_encode($input, $flags);
+
+        // Simulate JSON_UNESCAPED_SLASHES
+        $json = str_replace('\\/', '/', $json);
+
+        return $json;
+    }
 }

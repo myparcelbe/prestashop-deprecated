@@ -22,10 +22,12 @@ if (!defined('_PS_VERSION_')) {
 }
 
 require_once dirname(__FILE__).'/../myparcelbpost.php';
-if (file_exists(dirname(__FILE__).'/../../../vendor/smarty/smarty/libs/plugins/modifier.escape.php')) {
-    require_once dirname(__FILE__).'/../../../vendor/smarty/smarty/libs/plugins/modifier.escape.php';
-} elseif (file_exists(dirname(__FILE__).'/../../../tools/smarty/plugins/modifier.escape.php')) {
-    require_once dirname(__FILE__).'/../../../tools/smarty/plugins/modifier.escape.php';
+if (!function_exists('smarty_modifier_escape')) {
+    if (file_exists(dirname(__FILE__).'/../../../vendor/smarty/smarty/libs/plugins/modifier.escape.php')) {
+        require_once dirname(__FILE__).'/../../../vendor/smarty/smarty/libs/plugins/modifier.escape.php';
+    } elseif (file_exists(dirname(__FILE__).'/../../../tools/smarty/plugins/modifier.escape.php')) {
+        require_once dirname(__FILE__).'/../../../tools/smarty/plugins/modifier.escape.php';
+    }
 }
 
 /**
@@ -42,7 +44,7 @@ class MPBpostTools
     /** @var string $thisModuleClass */
     public static $thisModuleClass = 'MyParcelBpost';
     /** @var array $supportedModules */
-    public static $supportedModules = array('bpost', 'myparcel', 'myparcelbpost');
+    public static $supportedModules = array('myparcel', 'myparcelbpost', 'postnl');
 
     /**
      * Prints the preferred delivery date on a HelperList
@@ -150,7 +152,11 @@ class MPBpostTools
         $reflection = new ReflectionClass($thisModuleClass);
         $moduleOverridden = !file_exists(dirname($reflection->getFileName()).'/'.$location);
 
-        return $output.$module->display(
+        if ($output) {
+            return $output;
+        }
+
+        return $module->display(
                 $moduleOverridden ? _PS_MODULE_DIR_."{$thisModule}/{$thisModule}.php" : $reflection->getFileName(),
                 $location
             );
@@ -457,10 +463,10 @@ class MPBpostTools
         try {
             $weight = ceil($order->getTotalWeight());
         } catch (PrestaShopException $e) {
-            $weight = 1;
+            $weight = 1000;
         }
-        if ($weight < 1) {
-            $weight = 1;
+        if ($weight < 1000) {
+            $weight = 1000;
         }
 
         return $weight;

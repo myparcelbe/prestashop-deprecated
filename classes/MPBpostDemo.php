@@ -46,12 +46,12 @@ class MPBpostDemo
         $smarty = Context::getContext()->smarty;
         $smarty->assign(array(
             'language_code'          => Tools::strtolower(Context::getContext()->language->language_code),
-            'checkoutJs'             => Media::getJSPath(
-                _PS_MODULE_DIR_.'myparcelbpost/views/js/app/dist/checkout-07481c8ea100e30c.bundle.min.js'
-            ),
+            'mypaBpostCheckoutJs'    => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/checkout-853f0c02eaf3aba7.bundle.min.js'),
             'base_dir_ssl'           => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://')
                 .Tools::getShopDomainSsl().__PS_BASE_URI__,
             'signedPreferred'        => (bool) Configuration::get(MyParcelBpost::DEFAULT_CONCEPT_SIGNED),
+            'mpbCheckoutFont'        => Configuration::get(MyParcelBpost::CHECKOUT_FONT),
+            'mpbAsync'               => (bool) Configuration::get(MyParcelBpost::DEV_MODE_ASYNC),
         ));
         @ob_clean();
         echo $smarty->fetch(_PS_MODULE_DIR_.'myparcelbpost/views/templates/admin/examplecheckout/checkout.tpl');

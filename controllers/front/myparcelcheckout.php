@@ -189,39 +189,40 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
                     : (float) $this->mpBpostCarrierDeliverySetting->signed_fee_tax_incl * $conversion,
             'fontFamily'                    => Configuration::get(MyParcelBpost::CHECKOUT_FONT) ?: 'Exo',
             'fontSize'                      => (int) Configuration::get(MyParcelBpost::CHECKOUT_FONT_SIZE),
-            'mpbCheckoutJs'                    =>
-                    Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/app/dist/checkout-07481c8ea100e30c.bundle.min.js'),
+            'mypaBpostCheckoutJs'           => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/checkout-853f0c02eaf3aba7.bundle.min.js'),
             'link'                          => $context->link,
             'foreground1color'              => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR1),
             'foreground2color'              => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR2),
-            'foreground3color'             => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR3),
-            'background1color'             => Configuration::get(MyParcelBpost::CHECKOUT_BG_COLOR1),
-            'background2color'             => Configuration::get(MyParcelBpost::CHECKOUT_BG_COLOR2),
-            'highlightcolor'               => Configuration::get(MyParcelBpost::CHECKOUT_HL_COLOR),
-            'inactiveColor'                => Configuration::get(MyParcelBpost::CHECKOUT_INACTIVE_COLOR),
-            'fontfamily'                   => Configuration::get(MyParcelBpost::CHECKOUT_FONT),
-            'dropoffDelay'                 => (int) $this->mpBpostCarrierDeliverySetting->dropoff_delay,
-            'dropoffDays'                  => implode(
+            'foreground3color'              => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR3),
+            'background1color'              => Configuration::get(MyParcelBpost::CHECKOUT_BG_COLOR1),
+            'background2color'              => Configuration::get(MyParcelBpost::CHECKOUT_BG_COLOR2),
+            'highlightcolor'                => Configuration::get(MyParcelBpost::CHECKOUT_HL_COLOR),
+            'inactiveColor'                 => Configuration::get(MyParcelBpost::CHECKOUT_INACTIVE_COLOR),
+            'fontfamily'                    => Configuration::get(MyParcelBpost::CHECKOUT_FONT),
+            'dropoffDelay'                  => (int) $this->mpBpostCarrierDeliverySetting->dropoff_delay,
+            'dropoffDays'                   => implode(
                 ';',
                 $this->mpBpostCarrierDeliverySetting->getDropoffDays(date('Y-m-d H:i:s'))
             ),
-            'cutoffTime'                   => $cutoffTime,
-            'signedPreferred'              =>
+            'cutoffTime'                    => $cutoffTime,
+            'signedPreferred'               =>
                 (bool) Configuration::get(MyParcelBpost::DEFAULT_CONCEPT_SIGNED),
-            'recipientOnlyPreferred'       =>
+            'recipientOnlyPreferred'        =>
                 (bool) Configuration::get(MyParcelBpost::DEFAULT_CONCEPT_HOME_DELIVERY_ONLY),
-            'mpbpost_ajax_checkout_link'   => $this->context->link->getModuleLink(
+            'mpbpost_ajax_checkout_link'    => $this->context->link->getModuleLink(
                 'myparcelbpost',
                 'myparcelcheckout',
                 array('ajax' => true),
                 Tools::usingSecureMode()
             ),
-            'mpbpost_deliveryoptions_link' => $this->context->link->getModuleLink(
+            'mpbpost_deliveryoptions_link'  => $this->context->link->getModuleLink(
                 'myparcelbpost',
                 'deliveryoptions',
-                    array(),
-                    Tools::usingSecureMode()
-                ),
+                array(),
+                Tools::usingSecureMode()
+            ),
+            'mpbCheckoutFont'               => Configuration::get(MyParcelBpost::CHECKOUT_FONT),
+            'mpbAsync'                      => (bool) Configuration::get(MyParcelBpost::DEV_MODE_ASYNC),
         );
         $cacheKey = md5(
             mypa_json_encode($smartyVars)
@@ -271,6 +272,8 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
      */
     protected function getDeliveryOptions()
     {
+        @ob_clean();
+        header('Content-Type: application/json;charset=UTF-8');
         if (!Tools::isSubmit('ajax')) {
             die(mypa_json_encode(array(
                 'success' => false,
@@ -280,7 +283,7 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
         // @codingStandardsIgnoreStart
         $input = file_get_contents('php://input');
         // @codingStandardsIgnoreEnd
-        $request = json_decode($input, true);
+        $request = @json_decode($input, true);
         if (!$request) {
             die(mypa_json_encode(array(
                 'success' => false,
@@ -339,10 +342,9 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
             )));
         }
 
-        header('Content-Type: application/json;charset=utf-8');
         die(mypa_json_encode(array(
             'success'  => true,
-            'response' => json_decode($response),
+            'response' => @json_decode($response),
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 

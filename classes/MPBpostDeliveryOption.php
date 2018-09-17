@@ -165,7 +165,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
         }
 
         if ($result) {
-            return json_decode($result);
+            return @json_decode($result);
         }
 
         return false;
@@ -183,8 +183,8 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
      */
     public static function saveRawDeliveryOption($deliveryOption, $idCart)
     {
-        $preferredDeliveryDay = static::getPreferredDeliveryDay(json_decode($deliveryOption, true));
-        $preferredPickup = static::getPreferredPickup(json_decode($deliveryOption, true));
+        $preferredDeliveryDay = static::getPreferredDeliveryDay(@json_decode($deliveryOption, true));
+        $preferredPickup = static::getPreferredPickup(@json_decode($deliveryOption, true));
 
         $sql = new DbQuery();
         $sql->select('`id_cart`');
@@ -300,8 +300,8 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
 
         $deliveryOptions = array();
         foreach ($results as $result) {
-            $deliveryOption = json_decode($result['mpbpost_delivery_option'], true);
-            $deliveryOption['id_order'] = (string) $result['id_order'];
+            $deliveryOption = @json_decode($result['mpbpost_delivery_option'], true);
+            $deliveryOption['idOrder'] = (int) $result['id_order'];
 
             if (empty($deliveryOption['concept']) || !static::validateDeliveryOption($deliveryOption, true)) {
                 $order = new Order($result['id_order']);
@@ -327,7 +327,12 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
             $deliveryOptions = array_merge($deliveryOptions, static::getConceptsByOrderIds($range));
         }
 
-        return $deliveryOptions;
+        $results = array();
+        foreach ($deliveryOptions as $deliveryOption) {
+            $deliveryOption['idOrder'] = (int) $deliveryOption['idOrder'];
+            $results[$deliveryOption['idOrder']] = $deliveryOption;
+        }
+        return $results;
     }
 
     /**
@@ -715,6 +720,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
      * @throws Adapter_Exception
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws Exception
      * @since 2.0.0
      */
     public static function getByOrder($order)
@@ -731,14 +737,10 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
         $sql->innerJoin('orders', 'o', 'o.`id_cart` = mdo.`id_cart`');
         $sql->where('o.`id_order` = '.(int) $idOrder);
 
-        try {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-        } catch (PrestaShopException $e) {
-            return new stdClass();
-        }
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 
         if ($result) {
-            $concept = json_decode($result, true);
+            $concept = @json_decode($result, true);
             static::validateDeliveryOption($concept, true);
 
             return mypa_json_encode($concept);
@@ -746,7 +748,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
 
         $concepts = static::getConceptsByOrderIds(array($idOrder));
         if (is_array($concepts)) {
-            $concept = $concepts[0];
+            $concept = reset($concepts);
             static::validateDeliveryOption($concept, true);
 
             return mypa_json_encode($concept);
@@ -774,11 +776,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
         $sql->from('orders', 'o');
         $sql->where('o.`id_order` IN ('.implode(',', $range).')');
 
-        try {
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        } catch (PrestaShopException $e) {
-            $results = array();
-        }
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         $concepts = array();
 
@@ -786,9 +784,9 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
             $concept = array();
             $order = new Order($result['id_order']);
             $concept['concept'] = static::createConcept($order);
-            $concept['id_order'] = (string) $order->id;
+            $concept['idOrder'] = (int) $order->id;
 
-            $concepts[] = $concept;
+            $concepts[$concept['idOrder']] = $concept;
         }
 
         return $concepts;
@@ -804,6 +802,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws Exception
      * @since 2.0.0
      */
     public static function saveConcept($order, $concept)
@@ -818,7 +817,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
             return false;
         }
 
-        $concept = json_decode($concept, true);
+        $concept = @json_decode($concept, true);
 
         $idCart = Cart::getCartIdByOrderId($idOrder);
 
@@ -828,61 +827,94 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
         $sql->from(bqSQL(static::$definition['table']), 'mdo');
         $sql->where('mdo.`id_cart` = '.(int) $idCart);
 
-        try {
-            if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
-                $deliveryOption = json_decode($result[static::$definition['table']], true);
-                if (!empty($deliveryOption['concept']) && static::validateDeliveryOption($deliveryOption)) {
-                    $deliveryOption['concept'] = $concept;
-                    if (isset($deliveryOption['concept']['options']['delivery_type'])
-                        && in_array($deliveryOption['concept']['options']['delivery_type'], array(4, 5))
-                    ) {
-                        $deliveryOption['type'] = 'pickup';
-                    } else {
-                        $deliveryOption['type'] = 'delivery';
-                    }
-                    try {
-                        return Db::getInstance()->update(
-                            bqSQL(static::$definition['table']),
-                            array(
-                                bqSQL(static::$definition['table']) => mypa_json_encode($deliveryOption),
-                            ),
-                            '`id_cart` = '.(int) $idCart
-                        );
-                    } catch (PrestaShopException $e) {
-                        return false;
-                    }
-                } else {
-                    $deliveryOption = array('concept' => $concept);
-                    try {
-                        return Db::getInstance()->update(
-                            bqSQL(static::$definition['table']),
-                            array(
-                                bqSQL(static::$definition['table']) => mypa_json_encode($deliveryOption),
-                            ),
-                            '`id_cart` = '.(int) $idCart
-                        );
-                    } catch (PrestaShopException $e) {
-                        return false;
-                    }
-                }
+        if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+            $deliveryOption = @json_decode($result[static::$definition['table']], true);
+            if (!empty($deliveryOption['concept']) && static::validateDeliveryOption($deliveryOption)) {
+                $deliveryOption['concept'] = $concept;
+                return Db::getInstance()->update(
+                    bqSQL(static::$definition['table']),
+                    array(
+                        bqSQL(static::$definition['table']) => array('type' => 'sql', 'value' => "'".pSQL(mypa_json_encode($deliveryOption), true)."'"),
+                    ),
+                    '`id_cart` = '.(int) $idCart
+                );
+            } else {
+                $deliveryOption = array('concept' => $concept);
+                return Db::getInstance()->update(
+                    bqSQL(static::$definition['table']),
+                    array(
+                        bqSQL(static::$definition['table']) => array('type' => 'sql', 'value' => "'".pSQL(mypa_json_encode($deliveryOption), true)."'"),
+                    ),
+                    '`id_cart` = '.(int) $idCart
+                );
             }
-        } catch (PrestaShopException $e) {
-            return false;
         }
 
         $deliveryOption = mypa_json_encode(array('concept' => $concept));
 
-        try {
-            return Db::getInstance()->insert(
-                bqSQL(static::$definition['table']),
-                array(
-                    bqSQL(static::$definition['table']) => $deliveryOption,
-                    'id_cart'                         => (int) $idCart,
-                )
-            );
-        } catch (PrestaShopException $e) {
+        return Db::getInstance()->insert(
+            bqSQL(static::$definition['table']),
+            array(
+                bqSQL(static::$definition['table']) => array('type' => 'sql', 'value' => "'".pSQL($deliveryOption, true)."'"),
+                'id_cart'                           => (int) $idCart,
+            )
+        );
+    }
+
+    /**
+     * Save concept data
+     *
+     * @param Order|int $order
+     * @param string    $conceptData
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws Exception
+     *
+     * @since 2.2.0
+     */
+    public static function saveConceptData($order, $conceptData)
+    {
+        if ($order instanceof Order) {
+            $idOrder = $order->id;
+        } else {
+            $idOrder = $order;
+        }
+
+        if (!$idOrder) {
             return false;
         }
+
+        $conceptData = @json_decode($conceptData, true);
+
+        $idCart = Cart::getCartIdByOrderId($idOrder);
+
+        $sql = new DbQuery();
+        $sql->select('`id_cart`');
+        $sql->select(bqSQL(static::$definition['table']));
+        $sql->from(bqSQL(static::$definition['table']), 'mdo');
+        $sql->where('mdo.`id_cart` = '.(int) $idCart);
+
+        if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+            $deliveryOption = @json_decode($result[static::$definition['table']], true);
+            if ($conceptData) {
+                $deliveryOption['data'] = $conceptData;
+            } else {
+                unset($deliveryOption['data']);
+            }
+            $deliveryOption['idOrder'] = (int) $idOrder;
+            return Db::getInstance()->update(
+                bqSQL(static::$definition['table']),
+                array(
+                    bqSQL(static::$definition['table']) => array('type' => 'sql', 'value' => "'".pSQL(mypa_json_encode($deliveryOption), true)."'"),
+                ),
+                '`id_cart` = '.(int) $idCart
+            );
+        }
+
+        return false;
     }
 
     /**
@@ -963,6 +995,7 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
      * @param string $preferredDeliveryDate Customer preference
      *
      * @return int
+     * @throws Exception
      */
     public static function getShippingDaysRemaining($shippingDate, $preferredDeliveryDate)
     {
@@ -1005,17 +1038,22 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
     }
 
     /**
-     * Get an array with all Dutch holidays for the given year
+     * Get an array with all Belgian holidays for the given year
      *
      * @param string $year
      *
      * @return array
      *
      * Credits to @tvlooy (https://gist.github.com/tvlooy/1894247)
+     *
      * @throws Exception
      */
     protected static function getHolidaysForYear($year)
     {
+        if (!extension_loaded('calendar')) {
+            return array();
+        }
+
         // Avoid holidays
         // Fixed
         $nieuwjaar = new DateTime($year.'-01-01');
@@ -1077,30 +1115,6 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
             if (!$dot->has('concept.recipient.number')
                 || !$dot->has('concept.recipient.postal_code')
             ) {
-                return false;
-            }
-        }
-
-        // Fix missing `delivery_type`
-        if (!$dot->has('concept.options.delivery_type')) {
-            if ($autofix) {
-                if ($dot->get('data.type') === 'pickup') {
-                    $dot->set('concept.options.delivery_type', 4);
-                } else {
-                    $dot->set('concept.options.delivery_type', 2);
-                }
-                if ($dot->has('data.time.0.type')) {
-                    $dot->set('data.time.0.type', $dot->get('concept.options.delivery_type'));
-                    switch ((int) $dot->get('data.time.0.type')) {
-                        case 2:
-                            $dot->set('data.time.0.price_comment', 'standard');
-                            break;
-                        case 4:
-                            $dot->set('data.time.0.price_comment', 'retail');
-                            break;
-                    }
-                }
-            } else {
                 return false;
             }
         }

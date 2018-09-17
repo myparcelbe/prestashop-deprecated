@@ -135,6 +135,7 @@
         try {
           var data = JSON.parse(event.data);
         } catch (e) {
+          return;
         }
 
         if (data

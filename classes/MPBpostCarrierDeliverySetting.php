@@ -92,7 +92,7 @@ class MPBpostCarrierDeliverySetting extends MPBpostObjectModel
                 'validate' => 'isFloat',
                 'required' => true,
                 'default'  => '0',
-                'db_type'  => 'DECIMAL(15, 5)',
+                'db_type'  => 'DECIMAL(15, 6)',
             ),
             'monday_enabled'                     => array(
                 'type'     => self::TYPE_BOOL,
@@ -211,21 +211,21 @@ class MPBpostCarrierDeliverySetting extends MPBpostObjectModel
                 'validate' => 'isFloat',
                 'required' => true,
                 'default'  => '0',
-                'db_type'  => 'DECIMAL(15, 5)',
+                'db_type'  => 'DECIMAL(15, 6)',
             ),
             'default_fee_tax_incl'               => array(
                 'type'     => self::TYPE_FLOAT,
                 'validate' => 'isFloat',
                 'required' => true,
                 'default'  => '0',
-                'db_type'  => 'DECIMAL(15, 5)',
+                'db_type'  => 'DECIMAL(15, 6)',
             ),
             'signed_fee_tax_incl'                => array(
                 'type'     => self::TYPE_FLOAT,
                 'validate' => 'isFloat',
                 'required' => true,
                 'default'  => '0',
-                'db_type'  => 'DECIMAL(15, 5)',
+                'db_type'  => 'DECIMAL(15, 6)',
             ),
         ),
     );
@@ -548,7 +548,7 @@ class MPBpostCarrierDeliverySetting extends MPBpostObjectModel
         $cutoffTimes = array();
         if ($method === static::ENUM_DELIVERY) {
             $date = new DateTime($dateFrom);
-            $cutoffExceptions = json_decode($this->cutoff_exceptions, true);
+            $cutoffExceptions = @json_decode($this->cutoff_exceptions, true);
             if (!is_array($cutoffExceptions)) {
                 $cutoffExceptions = array();
             }
@@ -619,7 +619,7 @@ class MPBpostCarrierDeliverySetting extends MPBpostObjectModel
         $cutoffTimes = array();
 
         $date = new DateTime($dateFrom);
-        $cutoffExceptions = json_decode($this->cutoff_exceptions, true);
+        $cutoffExceptions = @json_decode($this->cutoff_exceptions, true);
         if (!is_array($cutoffExceptions)) {
             $cutoffExceptions = array();
         }

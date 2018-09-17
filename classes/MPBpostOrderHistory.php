@@ -100,21 +100,20 @@ class MPBpostOrderHistory extends MPBpostObjectModel
      * @param int $idShipment Shipment ID
      *
      * @return array Shipment history
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public static function getShipmentHistoryByShipmentId($idShipment)
     {
         $sql = new DbQuery();
         $sql->select('moh.`id_shipment`, moh.`bpost_status`');
         $sql->select('moh.`date_upd`, mo.`tracktrace`, mo.`shipment`, mo.`postcode`');
-        $sql->from(bqSQL(static::$definition['table']), 'mo');
+        $sql->from(bqSQL(MPBpostOrder::$definition['table']), 'mo');
         $sql->innerJoin(bqSQL(static::$definition['table']), 'moh', 'mo.`id_shipment` = moh.`id_shipment`');
         $sql->where('mo.`id_shipment` = '.(int) $idShipment);
 
-        try {
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        } catch (PrestaShopException $e) {
-            $results = array();
-        }
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         if ($results && is_array($results)) {
             return $results;
@@ -183,7 +182,7 @@ class MPBpostOrderHistory extends MPBpostObjectModel
         }
 
         try {
-            static::setOrderStatus($idShipment, $targetOrderState, !Configuration::get(MyParcelBpost::NOTIFICATIONS));
+            static::setOrderStatus($idShipment, $targetOrderState);
         } catch (Exception $e) {
             Logger::addLog("MyParcel BE module error: {$e->getMessage()}");
 
@@ -218,7 +217,7 @@ class MPBpostOrderHistory extends MPBpostObjectModel
         }
 
         try {
-            static::setOrderStatus($idShipment, $targetOrderState, !Configuration::get(MyParcelBpost::NOTIFICATIONS));
+            static::setOrderStatus($idShipment, $targetOrderState);
         } catch (Exception $e) {
             Logger::addLog("MyParcel BE module error: {$e->getMessage()}");
 
@@ -247,11 +246,11 @@ class MPBpostOrderHistory extends MPBpostObjectModel
             if (!Validate::isLoadedObject($mpbpostOrder)) {
                 return;
             }
-            $shipmentHistory = MyParcelOrderHistory::getShipmentHistoryByShipmentId($idShipment);
+            $shipmentHistory = MPBpostOrderHistory::getShipmentHistoryByShipmentId($idShipment);
             $previousStates = array_pad(array_column($shipmentHistory, 'bpost_status'), 1, 0);
 
-            if ((Configuration::get(MyParcel::NOTIFICATION_MOMENT) && max($previousStates) >= 2
-                || !Configuration::get(MyParcel::NOTIFICATION_MOMENT) && max($previousStates) >= 3)
+            if ((Configuration::get(MyParcelBpost::NOTIFICATION_MOMENT) && max($previousStates) >= 2
+                || !Configuration::get(MyParcelBpost::NOTIFICATION_MOMENT) && max($previousStates) >= 3)
             ) {
                 return;
             }
@@ -263,7 +262,7 @@ class MPBpostOrderHistory extends MPBpostObjectModel
             $address = new Address($order->id_address_delivery);
             $shipment = mypa_dot(@json_decode($mpbpostOrder->shipment, true));
             $deliveryRequest = mypa_dot(MPBpostDeliveryOption::getByOrderId($order->id));
-            $deliveryOption = MPBpostDeliveryOption::getByCartId($order->id_cart);
+            $deliveryOption = mypa_dot(MPBpostDeliveryOption::getByCartId($order->id_cart));
 
             $mailIso = Language::getIsoById($order->id_lang);
             $mailIsoUpper = strtoupper($mailIso);
@@ -301,28 +300,27 @@ class MPBpostOrderHistory extends MPBpostObjectModel
                 12 => 'december',
             );
 
-            $displayedDate = date('Y-m-d', strtotime($deliveryOption->date_delivery));
-            $option = @json_decode($deliveryOption->mpbpost_delivery_option, true);
-            if (isset($option['data']['date'])
-                && isset($option['data']['time'][0]['type'])
-                && $option['data']['time'][0]['type'] < 4
+            $displayedDate = date('Y-m-d', strtotime($deliveryOption->get('date_delivery')));
+            $option = mypa_dot(@json_decode($deliveryOption->get('mpbpost_delivery_option'), true));
+            if ($option->has('data.time.0.type')
+                && $option->get('data.time.0.type') < 4
             ) {
                 $startParts = array_pad(explode(':', Tools::substr(
-                    $option['data']['time'][0]['start'],
+                    $option->get('data.time.0.start'),
                     0,
-                    Tools::strlen($option['data']['time'][0]['start'])
+                    Tools::strlen($option->get('data.time.0.start'))
                 )), 2, '00');
                 $start = "{$startParts[0]}:{$startParts[1]}";
                 $endParts = array_pad(explode(':', Tools::substr(
-                    $option['data']['time'][0]['end'],
+                    $option->get('data.time.0.end'),
                     0,
-                    Tools::strlen($option['data']['time'][0]['end'])
+                    Tools::strlen($option->get('data.time.0.end'))
                 )), 2, '00');
                 $end = "{$endParts[0]}:{$endParts[1]}";
 
                 $displayedDate .= " {$start}-{$end}";
             } else {
-                $displayedDate .= ' '.date('H:i', strtotime($deliveryOption->date_delivery));
+                $displayedDate .= ' '.date('H:i', strtotime($deliveryOption->get('date_delivery')));
             }
             preg_match("/^(?P<date>\d{4}-\d{2}-\d{2}) (?P<from>\d{2}:\d{2}(?:.*?))(:?-(?P<to>\d{2}:\d{2}(?:.*?)))?/", $displayedDate, $m);
             if (isset($m['date']) && isset($m['from'])) {
@@ -581,7 +579,7 @@ class MPBpostOrderHistory extends MPBpostObjectModel
         foreach ($results as $result) {
             if (!array_key_exists($result['id_shipment'], $shipments)) {
                 $shipments[$result['id_shipment']] = array(
-                    'shipment'   => json_decode($result['shipment'], true),
+                    'shipment'   => @json_decode($result['shipment'], true),
                     'tracktrace' => $result['tracktrace'],
                     'postcode'   => $result['postcode'],
                     'history'    => array(),

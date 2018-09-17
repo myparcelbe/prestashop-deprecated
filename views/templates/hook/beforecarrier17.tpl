@@ -15,8 +15,8 @@
  * @copyright  2010-2018 DM Productions B.V.
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<iframe name="myparcelcheckoutframe"
-        id="myparcelcheckoutframe"
+<iframe name="myparcelbpostcheckoutframe"
+        id="myparcelbpostcheckoutframe"
         src="{$link->getModuleLink('myparcelbpost', 'myparcelcheckout', array(), Tools::usingSecureMode())|escape:'htmlall':'UTF-8'}"
         width="100%"
         height="0"
@@ -63,7 +63,7 @@
     }
 
     function refreshIframe() {
-      document.getElementById('myparcelcheckoutframe').src = document.getElementById('myparcelcheckoutframe').src;
+      document.getElementById('myparcelbpostcheckoutframe').src = document.getElementById('myparcelbpostcheckoutframe').src;
     }
 
     function refreshSummary() {
@@ -115,13 +115,14 @@
           try {
             var data = JSON.parse(event.data);
           } catch (e) {
+            return;
           }
 
           if (data
             && data.messageOrigin === 'mpbpostcheckout'
             && data.subject === 'height'
           ) {
-            var checkoutFrame = document.getElementById('myparcelcheckoutframe');
+            var checkoutFrame = document.getElementById('myparcelbpostcheckoutframe');
             if (data.height <= 0) {
               checkoutFrame.style.display = 'none';
             } else {
@@ -136,7 +137,11 @@
             return;
           }
 
-          var data = JSON.parse(event.data);
+          try {
+            var data = JSON.parse(event.data);
+          } catch (e) {
+            return;
+          }
           if (data
             && data.messageOrigin === 'mpbpostcheckout'
             && data.subject === 'selection_changed'

@@ -45,21 +45,23 @@
     (function () {
       window.MyParcelBpostModule = window.MyParcelBpostModule || {ldelim}{rdelim};
       window.MyParcelBpostModule.misc = window.MyParcelBpostModule.misc || {ldelim}{rdelim};
+      window.MyParcelBpostModule.async = {if Configuration::get(MyParcelBpost::DEV_MODE_ASYNC)}true{else}false{/if};
       window.MyParcelBpostModule.misc.errorCodes = {
         '3212': '{l s='Unknown address' mod='myparcelbpost' js=1}'
       };
-      window.MyParcelBpostModule.debug = {if Configuration::get(MyParcelBpostModule::LOG_API)}true{else}false{/if};
+      window.MyParcelBpostModule.debug = {if Configuration::get(MyParcelBpost::LOG_API)}true{else}false{/if};
 
       function initMyParcelCheckout() {
         if (typeof window.MyParcelBpostModule === 'undefined'
           || typeof window.MyParcelBpostModule.checkout === 'undefined'
+          || typeof window.MyParcelBpostModule.checkout.default === 'undefined'
         ) {
           setTimeout(initMyParcelCheckout, 100);
 
           return;
         }
 
-        window.checkout = new MyParcelBpostModule.checkout({
+        window.checkout = new window.MyParcelBpostModule.checkout.default({
           target: 'mpbpostapp',
           form: null,
           iframe: true,
@@ -114,6 +116,6 @@
       initMyParcelCheckout();
     })();
   </script>
-  <script type="text/javascript" src="{$mpbCheckoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
+  <script type="text/javascript" src="{$mypaBpostCheckoutJs|escape:'htmlall':'UTF-8' nofilter}"></script>
 </body>
 </html>

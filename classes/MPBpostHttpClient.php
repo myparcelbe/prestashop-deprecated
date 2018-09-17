@@ -60,7 +60,7 @@ class MPBpostHttpClient extends Curl
     {
         if (!static::$mpbpostclient) {
             $curl = new static();
-            $curl->retryDecider = static::getRetryDecider();
+            $curl->retryDecider = $curl->getRetryDecider();
             $curl->setConnectTimeout(MyParcelBpost::API_TIMEOUT);
             $curl->setTimeout(MyParcelBpost::API_TIMEOUT);
             $curl->setDefaultHeaders();
@@ -93,7 +93,7 @@ class MPBpostHttpClient extends Curl
     /**
      * @return Closure
      */
-    protected static function getRetryDecider() {
+    public function getRetryDecider() {
         return function (MPBpostHttpClient $curl) {
             if ($curl->remainingRetries > 0 && ($curl->curlErrorCode || $curl->httpStatusCode >= 500)) {
                 // Exponential back off

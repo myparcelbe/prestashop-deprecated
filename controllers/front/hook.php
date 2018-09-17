@@ -71,7 +71,7 @@ class MyParcelBpostHookModuleFrontController extends ModuleFrontController
             Logger::addLog("MyParcel webhook: $logContent");
         }
 
-        $data = json_decode($content, true);
+        $data = @json_decode($content, true);
         if (isset($data['data']['hooks']) && is_array($data['data']['hooks'])) {
             foreach ($data['data']['hooks'] as &$item) {
                 if (isset($item['shipment_id'])
