@@ -73,7 +73,7 @@ class MyParcelBpostmyparcelcheckoutdemoModuleFrontController extends ModuleFront
 
         $smarty->assign(array(
             'language_code'          => Tools::strtolower(Context::getContext()->language->language_code),
-            'mypaBpostCheckoutJs'    => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/checkout-853f0c02eaf3aba7.bundle.min.js'),
+            'mypaBpostCheckoutJs'    => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/front-cbfee8e3cbc20b2b.bundle.min.js'),
             'base_dir_ssl'           => (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').Tools::getShopDomainSsl().__PS_BASE_URI__,
             'signedPreferred'        => (bool) Configuration::get(MyParcelBpost::DEFAULT_CONCEPT_SIGNED),
         ));

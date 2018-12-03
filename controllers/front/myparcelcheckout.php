@@ -189,7 +189,7 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
                     : (float) $this->mpBpostCarrierDeliverySetting->signed_fee_tax_incl * $conversion,
             'fontFamily'                    => Configuration::get(MyParcelBpost::CHECKOUT_FONT) ?: 'Exo',
             'fontSize'                      => (int) Configuration::get(MyParcelBpost::CHECKOUT_FONT_SIZE),
-            'mypaBpostCheckoutJs'           => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/checkout-853f0c02eaf3aba7.bundle.min.js'),
+            'mypaBpostCheckoutJs'           => Media::getJSPath(_PS_MODULE_DIR_.'myparcelbpost/views/js/dist/front-cbfee8e3cbc20b2b.bundle.min.js'),
             'link'                          => $context->link,
             'foreground1color'              => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR1),
             'foreground2color'              => Configuration::get(MyParcelBpost::CHECKOUT_FG_COLOR2),
@@ -272,8 +272,7 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
      */
     protected function getDeliveryOptions()
     {
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         if (!Tools::isSubmit('ajax')) {
             die(mypa_json_encode(array(
                 'success' => false,

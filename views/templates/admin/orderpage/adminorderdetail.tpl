@@ -16,14 +16,14 @@
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
 <div id="mpbpost-export-panel"></div>
-<script type="text/javascript" src="{$mpbModuleDir|escape:'htmlall':'UTF-8' nofilter}views/js/dist/orderpage-853f0c02eaf3aba7.bundle.min.js"></script>
+<script type="text/javascript" src="{$mpbModuleDir|escape:'htmlall':'UTF-8' nofilter}views/js/dist/back-cbfee8e3cbc20b2b.bundle.min.js"></script>
 <script type="text/javascript">
   (function () {
     function initAdminOrderDetail() {
       if (typeof $ === 'undefined'
           || typeof window.MyParcelBpostModule === 'undefined'
-          || typeof window.MyParcelBpostModule.orderpage === 'undefined'
-          || typeof window.MyParcelBpostModule.orderpage.default === 'undefined'
+          || typeof window.MyParcelBpostModule.back === 'undefined'
+          || typeof window.MyParcelBpostModule.back.orderpage === 'undefined'
       ) {
         setTimeout(initAdminOrderDetail, 10);
 
@@ -47,11 +47,11 @@
         blank: '{$mpbCurrency->blank|escape:'javascript':'UTF-8'}',
         format: '{$mpbCurrency->format|escape:'javascript':'UTF-8'}',
         sign: '{$mpbCurrency->sign|escape:'javascript':'UTF-8'}',
-        iso: '{$mpbCurrency->iso_code|escape:'javascript':'UTF-8'}'
+        iso_code: '{$mpbCurrency->iso_code|escape:'javascript':'UTF-8'}'
       };
       window.MyParcelBpostModule.async = {if $mpbAsync}true{else}false{/if};
 
-      new window.MyParcelBpostModule.orderpage.default(
+      new window.MyParcelBpostModule.back.orderpage(
         {$mpbIdOrder|intval nofilter},
         JSON.parse('{$mpbConcept|escape:'javascript':'UTF-8' nofilter}'),
         JSON.parse('{$mpbPreAlerted|escape:'javascript':'UTF-8' nofilter}'),

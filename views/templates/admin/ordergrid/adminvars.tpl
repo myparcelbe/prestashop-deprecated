@@ -19,8 +19,8 @@
   (function () {
     function initMyParcelExport() {
       if (typeof window.MyParcelBpostModule === 'undefined'
-        || typeof window.MyParcelBpostModule.ordergrid === 'undefined'
-        || typeof window.MyParcelBpostModule.ordergrid.default === 'undefined'
+        || typeof window.MyParcelBpostModule.back === 'undefined'
+        || typeof window.MyParcelBpostModule.back.ordergrid === 'undefined'
       ) {
         setTimeout(initMyParcelExport, 10);
 
@@ -57,7 +57,7 @@
           blank: '{$mpbCurrency->blank|escape:'javascript':'UTF-8'}',
           format: '{$mpbCurrency->format|escape:'javascript':'UTF-8'}',
           sign: '{$mpbCurrency->sign|escape:'javascript':'UTF-8'}',
-          iso: '{$mpbCurrency->iso_code|escape:'javascript':'UTF-8'}'
+          iso_code: '{$mpbCurrency->iso_code|escape:'javascript':'UTF-8'}'
         };
         window.MyParcelBpostModule.async = {if $mpbAsync}true{else}false{/if};
 
@@ -73,7 +73,7 @@
           };
         }
 
-        new window.MyParcelBpostModule.ordergrid.default({include file="../translations.tpl"});
+        new window.MyParcelBpostModule.back.ordergrid({include file="../translations.tpl"});
       });
     }
 

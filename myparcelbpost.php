@@ -85,6 +85,7 @@ class MyParcelBpost extends Module
     const DEV_MODE_SET_VERSION = 'MPBPOST_SET_VERSION';
     const DEV_MODE_CHECK_WEBHOOKS = 'MPBPOST_CHECK_WEBHOOKS';
     const DEV_MODE_ASYNC = 'MYPARCEL_ASYNC'; // Force the same mode as the MyParcel NL module
+    const DEV_MODE_HIDE_PREFERRED = 'MYPARCEL_HIDE_PREFERRED'; // Force the same mode as the MyParcel NL module
 
     const UPDATE_ORDER_STATUSES = 'MPBPOST_UPDATE_OS';
     const CONNECTION_ATTEMPTS = 3;
@@ -162,7 +163,7 @@ class MyParcelBpost extends Module
     {
         $this->name = 'myparcelbpost';
         $this->tab = 'shipping_logistics';
-        $this->version = '2.2.1';
+        $this->version = '2.2.2';
         $this->author = 'MyParcel BE';
         $this->module_key = 'c9bb3b85a9726a7eda0de2b54b34918d';
         $this->bootstrap = true;
@@ -911,7 +912,7 @@ class MyParcelBpost extends Module
             $html .= $this->display(__FILE__, 'views/templates/admin/ordergrid/adminvars.tpl');
 
             $this->context->controller->addJquery();
-            $this->context->controller->addJS($this->_path.'views/js/dist/ordergrid-853f0c02eaf3aba7.bundle.min.js');
+            $this->context->controller->addJS($this->_path.'views/js/dist/back-cbfee8e3cbc20b2b.bundle.min.js');
             $this->context->controller->addCSS($this->_path.'views/css/forms.css');
         } elseif (Tools::getValue('controller') == 'AdminModules'
             && Tools::getValue('configure') == $this->name
@@ -1108,7 +1109,7 @@ class MyParcelBpost extends Module
     public function ajaxProcessOrderInfo()
     {
         if (!$this->active) {
-            header('Content-Type: text/plain');
+            header('Content-Type: text/plain;charset=utf-8');
             if (function_exists('http_response_code')) {
                 http_response_code(404);
             } else {
@@ -1118,8 +1119,7 @@ class MyParcelBpost extends Module
             die('MyParcel module has been disabled');
         }
 
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         // @codingStandardsIgnoreStart
         $payload = @json_decode(file_get_contents('php://input'), true);
         // @codingStandardsIgnoreEnd
@@ -1269,7 +1269,6 @@ class MyParcelBpost extends Module
         }
 
         // finally, output the content
-        @ob_clean();
         header('Content-Type: application/json;charset=utf-8');
         die(mypa_json_encode($response->jsonSerialize()));
     }
@@ -1289,8 +1288,7 @@ class MyParcelBpost extends Module
         // @codingStandardsIgnoreEnd
         if (isset($request['idShipment'])) {
             $idShipment = (int) $request['idShipment'][0];
-            @ob_clean();
-            header('Content-Type: application/json;charset=UTF-8');
+            header('Content-Type: application/json;charset=utf-8');
             die(mypa_json_encode(array(
                 'success' => MPBpostOrder::deleteShipment($idShipment),
             )));
@@ -1360,8 +1358,7 @@ class MyParcelBpost extends Module
                 $shipments[] = $filteredConcept;
             }
         } else {
-            @ob_clean();
-            header('Content-Type: application/json;charset=UTF-8');
+            header('Content-Type: application/json;charset=utf-8');
             die(mypa_json_encode(array(
                 'success' => false,
             )));
@@ -1379,8 +1376,7 @@ class MyParcelBpost extends Module
             ),
         )));
 
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         if ($response) {
             $labelData = $this->processNewLabels($response, $idOrders, mypa_dot($request)->get('moduleData.shipments'));
             if (empty($labelData)) {
@@ -1407,8 +1403,7 @@ class MyParcelBpost extends Module
      */
     public function ajaxProcessPrintLabel()
     {
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         $curl = \MPBpostModule\MPBpostHttpClient::getInstance();
         $curl->setHeader('Accept', 'application/json;charset=utf-8');
         $requestBody = file_get_contents('php://input');
@@ -1471,8 +1466,7 @@ class MyParcelBpost extends Module
      */
     public function ajaxProcessCreateRelatedReturnLabel()
     {
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         $request = @json_decode(file_get_contents('php://input'), true);
         if (isset($request['moduleData']['parent'])) {
             $parent = (int) $request['moduleData']['parent'];
@@ -1553,8 +1547,7 @@ class MyParcelBpost extends Module
         $data = @json_decode(file_get_contents('php://input'), true);
         // @codingStandardsIgnoreEnd
 
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
         if (isset($data['data']['concept'])) {
             die(
             mypa_json_encode(
@@ -1588,7 +1581,7 @@ class MyParcelBpost extends Module
         $data = @json_decode(file_get_contents('php://input'), true);
         // @codingStandardsIgnoreEnd
 
-        header('Content-Type: application/json');
+        header('Content-Type: application/json;charset=utf-8');
         if (isset($data['idOrder'])) {
             die(mypa_json_encode(
                 array(
@@ -1963,6 +1956,7 @@ class MyParcelBpost extends Module
             );
             Configuration::updateValue(static::LOG_API, (bool) Tools::getValue(static::LOG_API));
             Configuration::updateValue(static::DEV_MODE_ASYNC, (bool) Tools::getValue(static::DEV_MODE_ASYNC));
+            Configuration::updateValue(static::DEV_MODE_HIDE_PREFERRED, (bool) Tools::getValue(static::DEV_MODE_HIDE_PREFERRED));
             Configuration::updateValue(static::PRINTED_STATUS, (int) Tools::getValue(static::PRINTED_STATUS));
             Configuration::updateValue(static::SHIPPED_STATUS, (int) Tools::getValue(static::SHIPPED_STATUS));
             Configuration::updateValue(static::RECEIVED_STATUS, (int) Tools::getValue(static::RECEIVED_STATUS));
@@ -2284,15 +2278,17 @@ class MyParcelBpost extends Module
      */
     protected function getShopId()
     {
-        if (isset(Context::getContext()->employee->id)
-            && Context::getContext()->employee->id && Shop::getContext() == Shop::CONTEXT_SHOP
+        $context = Context::getContext();
+        if (isset($context->employee->id)
+            && $context->employee->id && Shop::getContext() == Shop::CONTEXT_SHOP
+            && version_compare(_PS_VERSION_, '1.7.0.0', '<')
         ) {
-            $cookie = Context::getContext()->cookie->getFamily('shopContext');
+            $cookie = $context->cookie->getFamily('shopContext');
 
             return (int) Tools::substr($cookie['shopContext'], 2, count($cookie['shopContext']));
         }
 
-        return (int) Context::getContext()->shop->id;
+        return (int) $context->shop->id;
     }
 
     /**
@@ -2996,8 +2992,8 @@ class MyParcelBpost extends Module
         );
         $helper->fields_value = $this->getMainFormValues();
 
-        $this->context->controller->addJS($this->_path.'views/js/dist/checkout-853f0c02eaf3aba7.bundle.min.js');
-        $this->context->controller->addJS($this->_path.'views/js/dist/paperselector-853f0c02eaf3aba7.bundle.min.js');
+        $this->context->controller->addJS($this->_path.'views/js/dist/front-cbfee8e3cbc20b2b.bundle.min.js');
+        $this->context->controller->addJS($this->_path.'views/js/dist/back-cbfee8e3cbc20b2b.bundle.min.js');
 
         return $helper->generateForm(array(
             $this->getApiForm(),
@@ -3032,6 +3028,7 @@ class MyParcelBpost extends Module
             static::UPDATE_ORDER_STATUSES   => Configuration::get(static::UPDATE_ORDER_STATUSES),
             static::LOG_API                 => Configuration::get(static::LOG_API),
             static::DEV_MODE_ASYNC          => Configuration::get(static::DEV_MODE_ASYNC),
+            static::DEV_MODE_HIDE_PREFERRED => Configuration::get(static::DEV_MODE_HIDE_PREFERRED),
             static::PRINTED_STATUS          => Configuration::get(static::PRINTED_STATUS),
             static::SHIPPED_STATUS          => Configuration::get(static::SHIPPED_STATUS),
             static::RECEIVED_STATUS         => Configuration::get(static::RECEIVED_STATUS),
@@ -3805,14 +3802,16 @@ class MyParcelBpost extends Module
                     }
                 }
 
-                $params['fields']['mpbpost_date_delivery'] = array(
-                    'title'           => $this->l('Preferred delivery date'),
-                    'class'           => 'fixed-width-lg',
-                    'callback'        => 'printOrderGridPreference',
-                    'callback_object' => 'MPBpostTools',
-                    'filter_key'      => 'mpbdo!date_delivery',
-                    'type'            => 'date',
-                );
+                if (!Configuration::get(static::DEV_MODE_HIDE_PREFERRED)) {
+                    $params['fields']['mpbpost_date_delivery'] = array(
+                        'title'           => $this->l('Preferred delivery date'),
+                        'class'           => 'fixed-width-lg',
+                        'callback'        => 'printOrderGridPreference',
+                        'callback_object' => 'MPBpostTools',
+                        'filter_key'      => 'mpbdo!date_delivery',
+                        'type'            => 'date',
+                    );
+                }
                 $params['fields']['mpbpost_void_1'] = array(
                     'title'           => implode(' / ', array_values($carrierNames)),
                     'class'           => 'fixed-width-lg',

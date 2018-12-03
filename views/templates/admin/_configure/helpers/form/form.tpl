@@ -183,8 +183,8 @@
 
         function paperSelector() {
           if (typeof window.MyParcelBpostModule === 'undefined'
-            || typeof window.MyParcelBpostModule.paperselector === 'undefined'
-            || typeof window.MyParcelBpostModule.paperselector.default === 'undefined'
+            || typeof window.MyParcelBpostModule.back === 'undefined'
+            || typeof window.MyParcelBpostModule.back.paperselector === 'undefined'
           ) {
             setTimeout(paperSelector, 100);
 
@@ -214,7 +214,7 @@
             setInput();
           }
 
-          new window.MyParcelBpostModule.paperselector.default({
+          new window.MyParcelBpostModule.back.paperselector({
             selected: selection,
             onChangeSize: changeSize,
             onChangeLabels: changeLabels,

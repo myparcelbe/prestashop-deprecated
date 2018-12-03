@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
-    'ComposerAutoloaderInit6e52fc34e4cb7e21356f4dcb028b177f' => $vendorDir . '/composer/autoload_real.php',
+    'ComposerAutoloaderInit504ef3de54aa8dcb9e8e15832008d3d3' => $vendorDir . '/composer/autoload_real.php',
     'MPBpostBrievenbuspakjeItem' => $baseDir . '/classes/MPBpostBrievenbuspakjeItem.php',
     'MPBpostCarrierDeliverySetting' => $baseDir . '/classes/MPBpostCarrierDeliverySetting.php',
     'MPBpostDeliveryOption' => $baseDir . '/classes/MPBpostDeliveryOption.php',
@@ -22,7 +22,7 @@ return array(
     'MPBpostModule\\BoxPacker\\VolumePacker' => $baseDir . '/classes/BoxPacker/VolumePacker.php',
     'MPBpostModule\\BoxPacker\\WeightRedistributor' => $baseDir . '/classes/BoxPacker/WeightRedistributor.php',
     'MPBpostModule\\Composer\\Autoload\\ClassLoader' => $vendorDir . '/composer/ClassLoader.php',
-    'MPBpostModule\\Composer\\Autoload\\ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f' => $vendorDir . '/composer/autoload_static.php',
+    'MPBpostModule\\Composer\\Autoload\\ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3' => $vendorDir . '/composer/autoload_static.php',
     'MPBpostModule\\Curl\\ArrayUtil' => $vendorDir . '/php-curl-class/php-curl-class/src/Curl/ArrayUtil.php',
     'MPBpostModule\\Curl\\CaseInsensitiveArray' => $vendorDir . '/php-curl-class/php-curl-class/src/Curl/CaseInsensitiveArray.php',
     'MPBpostModule\\Curl\\Curl' => $vendorDir . '/php-curl-class/php-curl-class/src/Curl/Curl.php',

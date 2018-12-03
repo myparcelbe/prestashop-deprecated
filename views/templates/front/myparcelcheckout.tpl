@@ -53,15 +53,15 @@
 
       function initMyParcelCheckout() {
         if (typeof window.MyParcelBpostModule === 'undefined'
-          || typeof window.MyParcelBpostModule.checkout === 'undefined'
-          || typeof window.MyParcelBpostModule.checkout.default === 'undefined'
+          || typeof window.MyParcelBpostModule.front === 'undefined'
+          || typeof window.MyParcelBpostModule.front.checkout === 'undefined'
         ) {
           setTimeout(initMyParcelCheckout, 100);
 
           return;
         }
 
-        window.checkout = new window.MyParcelBpostModule.checkout.default({
+        window.checkout = new window.MyParcelBpostModule.front.checkout({
           target: 'mpbpostapp',
           form: null,
           iframe: true,

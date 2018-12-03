@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f
+class ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3
 {
     public static $files = array (
         'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
@@ -45,7 +45,7 @@ class ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f
 
     public static $classMap = array (
         'CallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
-        'ComposerAutoloaderInit6e52fc34e4cb7e21356f4dcb028b177f' => __DIR__ . '/..' . '/composer/autoload_real.php',
+        'ComposerAutoloaderInit504ef3de54aa8dcb9e8e15832008d3d3' => __DIR__ . '/..' . '/composer/autoload_real.php',
         'MPBpostBrievenbuspakjeItem' => __DIR__ . '/../..' . '/classes/MPBpostBrievenbuspakjeItem.php',
         'MPBpostCarrierDeliverySetting' => __DIR__ . '/../..' . '/classes/MPBpostCarrierDeliverySetting.php',
         'MPBpostDeliveryOption' => __DIR__ . '/../..' . '/classes/MPBpostDeliveryOption.php',
@@ -60,7 +60,7 @@ class ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f
         'MPBpostModule\\BoxPacker\\VolumePacker' => __DIR__ . '/../..' . '/classes/BoxPacker/VolumePacker.php',
         'MPBpostModule\\BoxPacker\\WeightRedistributor' => __DIR__ . '/../..' . '/classes/BoxPacker/WeightRedistributor.php',
         'MPBpostModule\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
-        'MPBpostModule\\Composer\\Autoload\\ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f' => __DIR__ . '/..' . '/composer/autoload_static.php',
+        'MPBpostModule\\Composer\\Autoload\\ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3' => __DIR__ . '/..' . '/composer/autoload_static.php',
         'MPBpostModule\\Curl\\ArrayUtil' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/ArrayUtil.php',
         'MPBpostModule\\Curl\\CaseInsensitiveArray' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/CaseInsensitiveArray.php',
         'MPBpostModule\\Curl\\Curl' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/Curl.php',
@@ -84,9 +84,9 @@ class ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6e52fc34e4cb7e21356f4dcb028b177f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$classMap;
 
         }, null, ClassLoader::class);
     }

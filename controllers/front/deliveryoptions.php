@@ -92,8 +92,7 @@ class MyParcelBpostDeliveryOptionsModuleFrontController extends ModuleFrontContr
      */
     public function displayAjax()
     {
-        @ob_clean();
-        header('Content-Type: application/json;charset=UTF-8');
+        header('Content-Type: application/json;charset=utf-8');
 
         // @codingStandardsIgnoreStart
         $content = @json_decode(file_get_contents('php://input'), true);

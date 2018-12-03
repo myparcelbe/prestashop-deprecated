@@ -1201,6 +1201,11 @@ class MPBpostDeliveryOption extends MPBpostObjectModel
         $concept = mypa_dot($concept);
 
         $concept->delete('recipient.label');
+        $concept->delete('recipient.street_additional_info');
+        $concept->delete('options.number_suffix');
+        $concept->delete('options.only_recipient');
+        $concept->delete('options.return');
+
         if ($concept->has('options.delivery_date')) {
             if (date('Y-m-d', strtotime($concept->get('options.delivery_date'))) <= date('Y-m-d')) {
                 $concept->delete('option.delivery_date');
