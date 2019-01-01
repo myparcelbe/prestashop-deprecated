@@ -142,7 +142,7 @@ class MyParcelBPostmyparcelcheckoutModuleFrontController extends ModuleFrontCont
         // Calculate the conversion to make before displaying prices
         // It is comprised of taxes and currency conversions
         /** @var Currency $defaultCurrency */
-        $defaultCurrency = Currency::getCurrencyInstance(Configuration::get(' PS_CURRENCY_DEFAULT'));
+        $defaultCurrency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
         /** @var Currency $currentCurrency */
         $currentCurrency = $this->context->currency;
         $conversion = $defaultCurrency->conversion_rate * $currentCurrency->conversion_rate;
