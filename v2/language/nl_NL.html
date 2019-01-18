@@ -1,0 +1,166 @@
+<script src="js/auto_menu.js"></script>
+<section class="page-header">
+    <p>
+        <img alt="Logo MyParcel" src="media/MyParcel_Belgie.png"/>
+        <img height="180" alt="logo PrestaShop" src="media/Prestashop-logo.png"/>
+    </p>
+    <h1 class="project-name">Installatie- gebruikershandleiding</h1>
+    <h2 class="project-tagline">MyParcel BE PrestaShop extensie</h2>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop">GitHub</a>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/releases">Alle updates</a>
+    <a id="latest-release-zip" target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/archive/master.zip">Laatste stabiele versie</a>
+</section>
+<section class="main-content">
+    <h1>Inleiding</h1>
+    <p>
+        In deze handleiding laten wij zien hoe jij de MyParcel BE plug-in kunt installeren in jouw PrestaShop omgeving. Vervolgens geven wij een instructie van het gebruik van de plug-in.<br><br>
+        De installatie en het gebruik van de koppeling wordt jou kosteloos aangeboden door MyParcel. Wij helpen jou graag met vragen over het gebruik van de plug-in. Omdat PrestaShop een open source platform is, kan het zijn dat de MyParcel BE plug-in conflicteert met reeds geïnstalleerde plug-ins. <br><br>De MyParcel BE plugin wordt op een juiste werking getest in een standaard PrestaShop omgeving. Vooral het gebruik van gemodificeerde check-out modules en 3th party shipping modules kan conflicten geven met de MyParcel module.<br><br>
+        De in de vensters getoonde prijzen zijn slechts als voorbeeld ingesteld en wijken af van de werkelijke tarieven. Voor de juiste prijzen kun jij de tarieven in jouw account raadplegen.<br><br>
+        Mocht je problemen ondervinden met de installatie, raden wij je aan contact op te nemen met jouw webshop bouwer.
+    </p>
+
+    <h1>Inhoud</h1>
+    <div class="menu"></div>
+
+    <h1 id="1">1 Installatie</h1>
+    <p>
+        Dit hoofdstuk omschrijft de installatie van de MyParcel BE PrestaShop Plug-in met gebruik van de knop “Nieuwe Module toevoegen”.  <br><br>
+        Wij adviseren de installatie altijd eerst op een testomgeving uit te voeren en een back-up te maken van jouw webshop voor je met de plugin in de live webshop gaat.
+    </p>
+    <ol>
+        <li>Download het MyParcel PrestaShop Plug-in.zip </a>bestand</li>
+    </ol>
+
+    <h2 id="1_1">1.1 Via het CMS</h2>
+    <ol>
+        <li>Ga naar Modules → “Modules en Services” en klik vervolgens op “Nieuwe Module” toevoegen. Selecteer met behulp van de knop "Kies een bestand" het gedownloade zip bestand.</li>
+        <img src="media/myparcel_installer.png"/>
+        <li>Als het bestand is geselecteerd dan klik je op de knop "Upload deze module".</li>
+    </ol>
+
+    <h2 id="1_2">1.2 Testen</h2>
+    <p>
+        Met de plugin van MyParcel worden bepaalde bezorgopties toegevoegd aan jouw checkout. Welke bezorgopties je jouw klant aan wil bieden kun je instellen in de configuratie van de MyParcel BE plug-in. Wij adviseren dan ook om na het installeren van de plugin jouw bestelproces goed door te lopen of alles naar wens is.<br><br>
+        Ook omdat niet alle checkouts in PrestaShop hetzelfde werken is het nogmaals goed om te kijken of alles naar wens staat. Staat alles op de juiste plaats en is het goed uitgelijnd? Onze tip is om hier naar te kijken voordat jouw klanten dit gebruiken.
+    </p>
+    <h1 id="2">2 Landen, zones en vervoerders instellen</h1>
+    <h2 id="2_1">2.1 Het instellen van zones en landen</h2>
+    <p>Via het menu onderdeel “Internationaal” > “Locaties” kun jij de zones instellen met daarin de landen die onder die zone vallen. Een zone kan bijvoorbeeld meerdere landen bevatten die jij dezelfde verzendprijs wil geven. (dat hoeft dus niet de prijs te zijn die door MyParcel wordt berekend). Jij wil bijvoorbeeld meer Nederlandse klanten krijgen, dus biedt jij een aantrekkelijke prijs aan voor de verzending van jouw producten, gelijk aan het bijvoorbeeld het tarief voor België.</p>
+    <p>In de standaard configuratie staan de zones van complete werelddelen. Jij zal dus nieuwe zones moeten toevoegen om per land een vervoerder te kunnen toevoegen.</p>
+    <p>Als de zones met de bijbehorende landen zijn aangemaakt, kun jij verder met per zone een “Vervoerder” aan te maken. Op die manier kiest Prestashop de juiste prijs bij de juiste vervoerders.</p>
+    <p>
+        <img src="media/Presta-locaties-zoneoverzicht-1.png"/>
+        Bovenstaand venster geeft de standaard zones aan die Prestashop als default instelling weergeeft.<br><br>
+        <img src="media/Presta-zones-toevoegen-duitsland.png"/>
+        als jij de button "Nieuwe zone toevoegen" aanklikt krijg je bovenstaand scherm waar een naam van de zone ingevuld moet worden.<br><br>
+        <img src="media/Presta-landen-duitsland-toewijzen-3.png"/>
+        Als je op het scherm landen klikt en jij kiest Duitsland, zie jij dat Duitsland onder de zone Europa valt. Voor Duitsland willen wij een vervoerder instellen die alleen voor Duitse klanten een bepaalde prijs laat zien in de checkout.<br><br>
+        <img src="media/Presta-zone-duitsland-toewijzen.png"/>
+        Voor Duitsland hebben wij een aparte zone aangemaakt die wij "Pakket Duitsland" hebben genoemd.<br><br>
+        <img src="media/Presta-zones-landenoverzicht.png"/>
+        In het tabblad landen zien wij dat het land Duitsland is toegewezen aan de zone "Pakket Duitsland".
+    </p>
+    <h2 id="2_2">2.1 Het instellen van de “Vervoerders”</h2>
+    <p>
+        Als eerste ga jij bepalen welke verzendmethodes (vervoerders) jij wil gebruiken om de producten bij de klant te krijgen.<br><br>
+        Dit is afhankelijk van verschillende parameters. Deze zijn:
+    </p>
+    <ol>
+        <li>Vanuit welke landen kan men bestellen</li>
+        <li>Wil ik ook ophaallocaties aanbieden</li>
+        <li>Wil ik dat klanten een product kunnen ophalen in de fysieke winkel of magazijn</li>
+    </ol>
+    <p>
+        Niet onbelangrijk is om ook te denken aan de prijzen die jij aan jouw klant wil doorberekenen. De bedragen van de opties moet men los zien van het bedrag wat er wordt doorberekend door MyParcel.
+        <img src="media/Presta-vervoerders-overzichtBE.png"/>
+        Hierboven zie je een overzicht van de vervoerders die als voorbeeld in Prestashop aangemaakt kunnen worden. Jij gaat nu een vervoerder voor pakketten aanmaken die in de zone "Pakket België" gaat vallen.<br><br>
+        <img src="media/Presta-vervoerders-algemene-instellingenBE.png"/>
+        Bij de algemene instellingen kun jij de vervoerder een naam geven, en bij de transiettijd eventueel een verwerkingsboodschap zetten.<br><br>
+        <img src="media/Presta-bezorgadressen-kostenBE.png"/>
+        Bij bovenstaand scherm geef jij de prijs in bij de zone die er voor deze vervoerder hebt aangemaakt.<br><br>
+        <img src="media/Presta-vervoerders-grootte-gewicht.png"/>
+        Bij bovenstaand scherm geef jij de pakketafmetingen en het maximum totale pakketgewicht in.<br><br>
+        <img src="media/Presta-vervoerders-samenvattingBE.png"/>
+        Bovenstaand scherm geeft een overzicht van alle instellingen voor deze vervoerder zijn gemaakt.
+    </p>
+
+    <h1 id="3">3 Configuratie MyParcel module</h1>
+    <ol>
+        <li>Ga in PrestaShop naar <span class="nice"> Modules → Modules en Services → MyParcel → Configureer </span></li>
+    </ol>
+    <img src="media/myparcel_configureer.png"/>
+
+    <h2 id="3_1">3.1 API instellingen</h2>
+    <p>
+        Om verbinding te kunnen maken met jouw MyParcel account is het noodzakelijk om hier jouw API-key in te vullen.<br><br>
+        <img src="media/myparcel_api_keyBE.png"/><br>
+        Als je ingelogd bent in jouw MyParcel account op <a href="https://backoffice.sendmyparcel.be/">backoffice.sendmyparcel.be</a> dan kun je deze vinden in menu <span class="nice">Instellingen → Algemeen.</span>
+    </p>
+
+    <h2 id="3_2">3.2 Orderstatus automatisering</h2>
+    <p>Geef hier aan of je de status "Verzonden" en "Afgeleverd" automatisch wilt neerzetten nadat de order is geëxporteerd naar MyParcel.</p>
+
+    <h2 id="3_3">3.3 MyParcel checkout</h2>
+    <p>Alle kleuren van de checkout zijn hier aan te passen, naar de gewenste kleuren. Naast de kleuren, is het ook mogelijk om het lettertype aan te passen.</p><br><br>
+    <img src="media/myparcel_checkout.png"/>
+
+    <h2 id="3_4">3.4 Verzendlabels</h2>
+    <p>In het kenmerk van een label heb jij de keuze om er een tekst in te zetten, of om een order ID of Order referentie mee te geven om later makkelijker op te zoeken welke order bij welk pakket hoort.</p>
+    <p>Bij de keuze voor een standaardprinter gaat het systeem er van uit dat er een A4 (laser)printer gebruikt wordt die 4 A6 labels op één vel uitprint. Je kunt ook de keuze maken voor een labelprinter (moet wel geschikt zijn voor A6 labels) om jouw verzendlabels uit te printen.</p>
+
+    <h2 id="3_5">3.5 Concepten</h2>
+    <p>
+        Bij de concepten is het mogelijk om aan te geven wat jouw standaard verzendopties zijn, voor jouw pakket zendingen naar een Nederlands adres. Je kunt hier kiezen voor extra groot formaat, alleen huisadres, handtekening voor ontvangst, retour bij geen gehoor en verzekerd verzenden.<br><br>
+        Jouw zendingen krijgen hiermee standaard de verzendoptie mee wanneer je deze exporteerd. De opties die je hier aangeeft, kunnen bij het exporteren altijd nog per zending aangepast worden.<br><br>
+        <img src="media/myparcel_concepten.png"/><br><br>
+
+        Bij het onderdeel <span class="nice"> Beschrijving op label</span> is het mogelijk om een beschijving te plaatsen. Deze zal worden afgedrukt op de linkerbovenhoek van het label en kun je gebruiken om de zending in jouw orderoverzicht op te zoeken. <br><br>
+        <img src="media/myparcel_veschrijving_label.png"/>
+    </p>
+
+    <h2 id="3_6">3.6 Gegevens delen</h2><br><br>
+    <img src="media/myparcel_gegevens.png"/><br>
+    <p>Om te zorgen dat het telefoonnummer en e-mailadres mee wordt ge-exporteert naar MyParcel kun jij dit op “Aan” zetten. Het e-mailadres is noodzakelijk als jij de Track&Trace e-mail via het MyParcel systeem wil laten versturen. Dit is vooral handig als jij internationaal pakketten verzend. Bijvoorbeeld de e-mail voor Belgische klanten is tweetalig uitgevoerd, zodat een een klant uit Wallonië ook een Franstalig gedeelte krijgt met de noodzakelijke Track&Trace informatie.</p>
+    <p>In een aantal landen zijn de afstanden zodanig dat de pakketbezorger eerst naar de ge-adresseerde opbelt of men thuis is. Het telefoonnummer wordt dan in de landen die van toepassing zijn op het label afgedrukt.</p>
+
+    <h2 id="3_7">3.7 Bezorgopties checkout</h2>
+    <li><b>Handtekening voor ontvangst:</b> Er moet sowieso een handtekening voor ontvangst gezet worden door degene die het pakket aanneemt (dus ook een huisgenoot of buurman). Afgifte alleen aan de geadresseerde zonder handtekening (dus niet bij de buren). En dan nog de combinatie van geadresseerde die ook nog moet tekenen. Vooral bij nieuwsgierige buren is de optie “toeslag voor alleen de geadresseerde” een goede keuze.</li>
+
+    <img src="media/presta-bezorgopties-checkoutBE.png"/>
+    <p>Als jij de juiste instellingen hebt gemaakt hoort de check-out er voor jouw klanten er ongeveer volgens bovenstaand voorbeeld uit te zien. In dit geval kan de klant kiezen voor een bepaalde afleverdag, afhalen bij een bpost servicepunt, handtekening voor ontvangst.</p><br><br>
+
+    <h1 id="4">4 Het verwerken van jouw zendingen:</h1>
+    <p>Als een order is binnengekomen verschijnt deze in de “Bestellingen”.</p>
+    <p>Als de order is betaald kun jij de verzending op 2 manieren afhandelen.</p>
+    <ol>
+        <li>
+            Vink de gewenste bestellingen aan, en kies met de knop bulkacties “Exporteren”. Op dat moment worden alle data van de order naar MyParcel verstuurd en komt deze zending binnen met de status “Concept”. Het voordeel van een concept zending is, dat jij alle opties nog kunt veranderen, en ook nog correcties op de NAW gegevens kunt uitvoeren.<br><br>
+            Op het moment dat jij in de MyParcel verzendomgeving de labels uitprint worden jouw zendingen aangemeld bij bpost en krijg jij na een korte tijd een barcode. Deze barcode wordt daarna ook nog teruggekoppeld naar de Prestashop inclusief de status van de zending.
+        </li><br><br>
+        <li>
+            Methode 2. Vink de gewenste bestellingen in Prestashop aan, en kies uit de “bulkacties”, “Exporteren en Printen”. Er verschijnt een print scherm en er wordt een PDF bestand gegenereerd. Dit PDF bestand kun jij daarna uitprinten. De zending wordt met deze combi actie gelijk bij bpost aangemeld en is niet meer te wijzigen.<br><br>
+            Bij beide acties kan het voorkomen dat een zending een foutmelding geeft, en dat er geen export uitgevoerd word. Bij een foutmelding is het verstandig om eerst de adresgegevens te controleren omdat het meestal een fout in een NAW gegevens betreft. Vooral het veld huisnummer toevoeging geeft nog wel eens een probleem bij het gebruik van meer dan 4 karakters
+        </li>
+    </ol>
+    </p>
+
+    <img src="media/Presta-bestellijst-gekozenbezorgdatum.png"/>
+    <p>In bovenstaand voorbeeld zie jij dat een klant een bezorgdatum heeft gekozen en is het menu bulkacties zichtbaar.</p><br><br>
+    <img src="media/Presta-orderlijst-print-button.png"/>
+    <p>
+        Als jij op de printer button klikt verschijnt er een venster met daarin de mogelijkheid om de startpositie te kiezen voor het te printen label. Ook is het mogelijk om over te schakelen naar een (mits aanwezig) A6 labelprinter.<br><br>
+        In het orderdetail scherm kun jij ook nog aanpassingen maken in de soort verzending of voordat jij de order exporteert een adres correctie toepassen.
+    </p><br><br>
+
+    <footer class="site-footer">
+        <p><span class="site-footer-owner">MyParcel België</span></p>
+        <p>
+            <span class="site-footer-credits">
+                <strong>Adres </strong>Adriaan Brouwerstraat 16, 2000 Antwerpen&nbsp;
+                <strong>Telefoon </strong>03 808 18 20&nbsp;
+                <strong>E-mail</strong> &nbsp;info@sendmyparcel.be<br/>
+                <strong>Website </strong>www.sendmyparcel.be&nbsp;
+            </span><br/>&nbsp;
+        </p>
+    </footer>
+</section>

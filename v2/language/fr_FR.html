@@ -1,0 +1,167 @@
+<script src="js/auto_menu.js"></script>
+<section class="page-header">
+    <p>
+        <img alt="Logo MyParcel" src="media/MyParcel_Belgie.png"/>
+        <img height="180" alt="logo PrestaShop" src="media/Prestashop-logo.png"/>
+    </p>
+    <h1 class="project-name">Manuel d’installation utilisateur</h1>
+    <h2 class="project-tagline">Extension PrestaShop MyParcel BE</h2>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop">GitHub</a>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/releases">Toutes les mises à jour</a>
+    <a id="latest-release-zip" target="_blank" class="btn" href="https://github.com/myparcelbe/prestashop/archive/master.zip">Dernière version stable</a>
+</section>
+<section class="main-content">
+    <h1>Inleiding</h1>
+    <p>
+        Ce manuel vous explique comment installer le plug-in MyParcel BE dans votre environnement PrestaShop. Nous vous donnerons ensuite quelques instructions relatives à l’utilisation du plug-in. <br><br>
+        L’installation et l’utilisation du couplage vous sont proposées gratuitement par MyParcel. N’hésitez pas à nous contacter en cas de question sur l’utilisation du plug-in. PrestaShop est une plateforme open source. Il se peut donc que le plug-in MyParcel BE entre en conflit avec des plug-ins déjà installés.  <br><br>
+        Le bon fonctionnement du plug-in MyParcel BE a été testé dans un environnement PrestaShop standard. Les modules de checkout modifiés ou les modules d’expédition de tierces parties peuvent notamment entrer en conflit avec le module MyParcel.   <br><br>
+        Les prix affichés dans les fenêtres sont indiqués à titre d’exemple et peuvent différer des tarifs réels. Les prix corrects peuvent être consultés sur votre compte.   <br><br>
+        Si vous rencontrez des problèmes lors de l’installation, nous vous conseillons de prendre contact avec le développeur de votre boutique en ligne.
+    </p>
+
+    <h1>Sommaire</h1>
+    <div class="menu"></div>
+    <p>
+    <h1 id="1">1 Installation</h1>
+    <p>
+        Cette rubrique décrit l’installation du plug-in MyParcel BE PrestaShop à l’aide du bouton  "Ajouter un nouveau module". .  <br><br>
+        Dans tous les cas, nous vous recommandons de procéder à une installation dans un environnement de test et d’effectuer une sauvegarde de votre boutique en ligne avant toute installation dans votre environnement  "en production".
+    </p>
+    <ol>
+        <li>Téléchargez le fichier Plug-in .zip MyParcel PrestaShop</li>
+    </ol>
+
+    <h2 id="1_1">1.1 Via le CMS</h2>
+    <ol>
+        <li>Allez dans Modules →  "Modules et Services" et cliquez ensuite sur ajouter un  "Nouveau module". Sélectionnez le fichier .zip téléchargé avec le bouton  "Sélectionner un fichier".</li>
+        <img src="media/myparcel_installer.png"/>
+        <li>Lorsque le fichier est sélectionné, cliquez sur le bouton  "Télécharger ce module".</li>
+    </ol>
+
+    <h2 id="1_2">1.2 Test</h2>
+    <p>
+        Le plug-in MyParcel ajoute certaines options de livraison à votre checkout. Les options de livraison que vous souhaitez proposer à vos clients peuvent être définies lors de la configuration du plug-in MyParcel. Nous vous conseillons donc de bien vérifier votre processus de commande après avoir installé le plug-in.  <br><br>
+        Tous les checkouts dans PrestaShop ne fonctionnent pas de la même façon. Il est donc important de vérifier que tout est bien correct et à la bonne place. Notre conseil est de contrôler chaque élément avant toute utilisation par vos clients.
+    </p>
+    <h1 id="2">2 Configurer les pays, les zones et les transporteurs</h1>
+    <h2 id="2_1">2.1 Paramétrage des zones et pays</h2>
+    <p>Dans le menu  "International" >  "Lieux", vous pouvez définir les zones et les pays qui composent chaque zone. Une zone peut par exemple rassembler plusieurs pays auxquels vous souhaitez appliquer un même tarif d’expédition (le prix ne doit d’ailleurs pas être celui appliqué par MyParcel). Si vous souhaitez attirer davantage de clients néerlandais, vous avez la possibilité de proposer un prix intéressant pour l’expédition de vos produits, qui est peut par exemple être identique au tarif pour la Belgique.</p>
+    <p>La configuration standard présente les grandes parties du monde. Vous devrez donc compléter de nouvelles zones pour ajouter un transporteur par pays.</p>
+    <p>Lorsque les zones avec les pays correspondants ont été créées, vous pouvez ensuite créer un  "Transporteur" par zone. Prestashop peut ainsi choisir le bon tarif auprès du bon transporteur.</p>
+    <p>
+        <img src="media/Presta-locaties-zoneoverzicht-1.png"/>
+        La fenêtre ci-dessus montre les zones que PrestaShop affiche par défaut.<br><br>
+        <img src="media/Presta-zones-toevoegen-duitsland.png"/>
+        Lorsque vous cliquez sur le bouton "Ajouter une nouvelle zone", l’écran ci-dessus s’affiche. Vous pouvez alors saisir un nom pour la zone.<br><br>
+        <img src="media/Presta-landen-duitsland-toewijzen-3.png"/>
+        Si vous cliquez sur l’écran des pays et choisissez l’Allemagne, vous verrez que ce pays fait partie de la zone Europe. Pour l’Allemagne, nous voulons paramétrer un transporteur qui indique un prix déterminé lors du checkout, uniquement pour les clients allemands.<br><br>
+        <img src="media/Presta-zone-duitsland-toewijzen.png"/>
+        Nous avons créé une zone distincte pour l’Allemagne que nous avons nommée  "Colis Allemagne". <br><br>
+        <img src="media/Presta-zones-landenoverzicht.png"/>
+        Dans l’onglet pays, nous pouvons voir que l’Allemagne est alors affectée à la zone  "Colis Allemagne".
+    </p>
+    <h2 id="2_2">2.1 Paramétrage des  "Transporteurs"</h2>
+    <p>
+        Vous devez d’abord déterminer les modes d’expédition (transporteurs) que vous souhaitez utiliser pour envoyer vos produits aux clients. <br><br>
+        Cela dépend des paramètres suivants:
+    </p>
+    <ol>
+        <li>Depuis quels pays est-il possible de commander?</li>
+        <li>Votre boutique souhaite-t-elle également proposer une livraison via des points de collecte?</li>
+        <li>Vos clients peuvent-ils également retirer le produit dans un magasin ou un entrepôt physique?</li>
+    </ol>
+    <p>
+        Il est par ailleurs important de réfléchir aux tarifs que vous souhaitez facturer à votre client. En effet, les montants des options doivent être considérés séparément du montant que vous facturerez au client.
+        <img src="media/Presta-vervoerders-overzichtBE.png"/>
+        Vous trouverez ci-dessus un aperçu des transporteurs qui peuvent être créés dans Prestashop comme exemple. Vous allez maintenant créer un transporteur pour les colis qui sera repris dans la zone  "Colis Belgique".<br><br>
+        <img src="media/Presta-vervoerders-algemene-instellingenBE.png"/>
+        Dans ces paramètres généraux, vous pouvez donner un nom au transporteur et un message de traitement éventuel concernant le temps de transit.<br><br>
+        <img src="media/Presta-bezorgadressen-kostenBE.png"/>
+        Dans l’écran ci-dessus, vous indiquez le tarif de la zone pour laquelle vous avez créé ce transporteur.<br><br>
+        <img src="media/Presta-vervoerders-grootte-gewicht.png"/>
+        Dans l’écran ci-dessus, vous indiquez les dimensions maximales du colis et le poids total maximal de celui-ci.<br><br>
+        <img src="media/Presta-vervoerders-samenvattingBE.png"/>
+        L’écran ci-dessus affiche un aperçu de tous les paramètres créés pour ce transporteur.
+    </p>
+
+    <h1 id="3">3 Configuration du module MyParcel</h1>
+    <ol>
+        <li>Dans PrestaShop, allez dans<span class="nice"> Modules → Modules et Services → MyParcel → Configurer </span></li>
+    </ol>
+    <img src="media/myparcel_configureer.png"/>
+
+    <h2 id="3_1">3.1 Paramètres API</h2>
+    <p>
+        Vous devez saisir ici votre clé API pour effectuer la connexion avec votre compte MyParcel.<br><br>
+        <img src="media/myparcel_api_keyBE.png"/><br>
+        Vous la trouverez dans le menu <span class="nice">Paramètres → Général</span>, une fois connecté à votre compte MyParcel sur <a href="https://backoffice.sendmyparcel.be/">backoffice.sendmyparcel.be</a>
+    </p>
+
+    <h2 id="3_2">3.2 Automatisation du statut de la commande</h2>
+    <p>Indiquez ici si vous souhaitez que les statuts  "Envoyé" et  "Livré" soit mentionnés automatiquement après l’exportation de la commande vers MyParcel.</p>
+
+    <h2 id="3_3">3.3 Checkout MyParcel</h2>
+    <p>Toutes les couleurs du checkout peuvent ici être ajustées selon votre choix. Vous pouvez également adapter la police de caractères.</p><br><br>
+    <img src="media/myparcel_checkout.png"/>
+
+    <h2 id="3_4">3.4 Étiquettes d'expédition</h2>
+    <p>Pour la référence de l’étiquette, vous avez le choix d’indiquer un texte, un numéro d’identification ou une référence de commande. Vous pourrez ensuite déterminer plus facilement quelle commande se rapporte à quel colis.</p>
+    <p>Si vous choisissez une imprimante standard, le système supposera qu’il s’agit d’une imprimante (laser) A4 et imprimera quatre étiquettes A6 par page. Vous pouvez également opter pour une imprimante d’étiquettes qui doit alors être compatible avec le format A6.</p>
+
+    <h2 id="3_5">3.5 Concepts</h2>
+    <p>
+        Dans les concepts, il est possible de préciser quelles sont vos options d’expédition standards pour l’envoi de colis vers une adresse néerlandaise. Vous pouvez choisir les options  "format très grande taille",  "uniquement l’adresse du domicile",  "signature pour réception",  "retour en cas d’absence" et  "envoi assuré".  <br><br>
+        Lors de l’exportation, vos envois reprendront alors ces options par défaut. Les options que vous spécifiez ici peuvent cependant toujours être adaptées, par envoi, lors de l’exportation. <br><br>
+        <img src="media/myparcel_concepten.png"/><br><br>
+
+        Il est possible d’ajouter une référence dans la section <span class="nice"> Référence sur l’étiquette </span>Cette référence sera imprimée dans le coin supérieur gauche de l’étiquette. Par après, vous pourrez l’utiliser pour rechercher l’envoi dans l’aperçu des commandes. <br><br>
+        <img src="media/myparcel_veschrijving_label.png"/>
+    </p>
+
+    <h2 id="3_6">3.6 Partage de données</h2><br><br>
+    <img src="media/myparcel_gegevens.png"/><br>
+    <p>Activez cet élément pour vous assurer que le numéro de téléphone et l’adresse e-mail sont bien exportés vers MyParcel. L’adresse e-mail est nécessaire si vous souhaitez envoyer l’e-mail Track & Trace via le système MyParcel. Ceci est particulièrement utile si vous envoyez des colis à l’international. Pour les clients belges, cet e-mail est bilingue. Un client francophone aura donc accès aux informations utiles de la fonction Track & Trace.</p>
+    <p>Dans certains pays, les distances sont telles que le livreur appelle d’abord le destinataire pour vérifier qu’il est bien chez lui. Dans les pays concernés, le numéro de téléphone est donc aussi imprimé sur l’étiquette.</p>
+
+    <h2 id="3_7">3.7 Options de livraison lors du checkout</h2>
+    <li><b>Signature pour réception:</b> une signature pour réception de la personne qui accepte le colis (y compris une personne habitant sous le même toit ou un voisin) est requise. Autre option : la livraison uniquement au destinataire sans signature (et donc pas aux voisins), en combinaison éventuelle avec la signature obligatoire du destinataire. L’option  "supplément pour une livraison uniquement au destinataire" est un bon choix lorsqu’on a affaire à des voisins un peu trop curieux.</li>
+
+    <img src="media/presta-bezorgopties-checkoutBE.png"/>
+    <p>Si vous avez défini correctement les paramètres, le checkout doit ressembler à l’exemple ci-dessus pour vos clients. Dans ce cas, le client peut choisir un jour de livraison spécifique, une collecte à un point des services bpost et la signature pour réception.</p><br><br>
+
+    <h1 id="4">4 Le traitement de vos envois:</h1>
+    <p>Lorsqu’une commande est passée, elle apparaît dans les  "Commandes".</p>
+    <p>Une fois la commande payée, vous pouvez la traiter de deux manières.</p>
+    <ol>
+        <li>
+            Méthode 1. Cochez les commandes souhaitées et cliquez ensuite sur le bouton  "Exporter" dans les actions par lot. À ce moment, toutes les données de la commande sont envoyées à MyParcel et reçoivent le statut  "Concept". L’avantage du concept d’envoi est que vous pouvez encore modifier toutes les options et apporter des corrections aux coordonnées d’envoi. <br><br>
+            Lorsque vous imprimez les étiquettes dans l’environnement MyParcel, vos envois sont notifiés chez bpost et vous obtenez un code-barres un court instant plus tard. Ce code-barres est ensuite relié à Prestashop, de même que le statut de l’envoi.
+        </li><br><br>
+        <li>
+            Méthode 2. Cochez les commandes souhaitées dans Prestashop, choisissez  "Exporter et Imprimer" dans  "Action par lot". Un écran d’impression apparaît et un fichier PDF est créé. Vous pouvez ensuite imprimer ce fichier PDF. Cet envoi est alors immédiatement notifié à bpost et ne peut plus être modifié. <br><br>
+            Dans les deux cas, il peut arriver qu’un envoi génère un message d’erreur et qu’aucune exportation ne soit effectuée. En cas de message d’erreur, il est conseillé de d’abord vérifier que les données d’adressage ne contiennent aucune erreur. Le champ d’extension du numéro de rue peut provoquer quelque problème s’il contient plus de quatre caractères.
+        </li>
+    </ol>
+    </p>
+
+    <img src="media/Presta-bestellijst-gekozenbezorgdatum.png"/>
+    <p>Dans l’exemple ci-dessus, vous pouvez voir que le client a choisi une date de livraison et que le menu  "Actions par lot" est visible.</p><br><br>
+    <img src="media/Presta-orderlijst-print-button.png"/>
+    <p>
+        Lorsque vous cliquez sur l’icône imprimante, une fenêtre s’ouvre pour vous proposer des options concernant la position de départ de l’étiquette à imprimer. Il est également possible de choisir une imprimante d’étiquettes A6 (si disponible).<br><br>
+        Dans l’écran de commande détaillé, vous pouvez encore apporter des modifications au niveau du type d’envoi ou de l’adresse avant d’exporter la commande.
+    </p><br><br>
+
+    <footer class="site-footer">
+        <p><span class="site-footer-owner">MyParcel Belgique</span></p>
+        <p>
+            <span class="site-footer-credits">
+                <strong>Adresse </strong>Adriaan Brouwerstraat 16, 2000 Antwerpen&nbsp;
+                <strong>Téléphone </strong>03 808 18 20&nbsp;
+                <strong>E-mail</strong> &nbsp;info@sendmyparcel.be<br/>
+                <strong>Site internet </strong>www.sendmyparcel.be&nbsp;
+            </span><br/>&nbsp;
+        </p>
+    </footer>
+</section>

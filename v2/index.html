@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>PrestaShop MyParcel BE Gebruikershandleiding</title>
+        <meta name="description" content="Installatie- gebruikershandleiding voor de PrestaShop MyParcel BE plug-in">
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <link rel="shortcut icon" href="https://backoffice.myparcel.nl/images/favicon/favicon.ico">
+        <link href="css/normalize.css" media="screen" rel="stylesheet" type="text/css"/>
+        <link href="css/languagepicker.css" media="screen" rel="stylesheet" type="text/css"/>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css"/>
+        <link href="css/stylesheet.css" media="screen" rel="stylesheet" type="text/css"/>
+        <link href="css/github-light.css" media="screen" rel="stylesheet" type="text/css"/>
+        <script src="js/jquery-3.0.0.min.js"></script>
+        <script src="js/languagepicker.js"></script>
+    </head>
+    <body>
+        <ul class="languagepicker roundborders">
+            <li id="NL"><img src="media/flags/netherlands-flag-icon-16.png"/></li>
+            <li id="FR"><img src="media/flags/france-flag-icon-16.png"/></li>
+        </ul>
+        <section class="all-content"></section>
+
+        <script type="text/javascript">
+          (function init() {
+            if (typeof $ === 'undefined') { setTimeout(init, 100);return; }
+                $('#latest-release-zip').click(function (e) {
+                    e.preventDefault();
+                    $.get('https://api.github.com/repos/myparcelbe/prestashop/releases/latest')
+                    .then(function (response) { window.location.href = response.assets[0].browser_download_url; })
+                    .fail(function () { window.location.href = e.target.href; });
+                });
+            }());
+        </script>
+    </body>
+</html>
