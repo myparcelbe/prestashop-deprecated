@@ -13,6 +13,19 @@
         <link href="css/github-light.css" media="screen" rel="stylesheet" type="text/css"/>
         <script src="js/jquery-3.0.0.min.js"></script>
         <script src="js/languagepicker.js"></script>
+        <script type="text/javascript">
+            function downloadLatestFromGitHub(event, repo) {
+                event.preventDefault();
+                var request = new XMLHttpRequest();
+                request.open('GET', 'https://api.github.com/repos/' + repo + '/releases/latest', true);
+                request.onload = function () {
+                    if (request.status >= 200 && request.status < 400) {
+                        window.location.href = JSON.parse(request.responseText).assets[0].browser_download_url;
+                    }
+                };
+                request.send();
+            }
+        </script>
     </head>
     <body>
         <ul class="languagepicker roundborders">
@@ -20,17 +33,5 @@
             <li id="FR"><img src="media/flags/belgium-flag-icon-16.png"/> (FR)</li>
         </ul>
         <section class="all-content"></section>
-
-        <script type="text/javascript">
-          (function init() {
-            if (typeof $ === 'undefined') { setTimeout(init, 100);return; }
-                $('#latest-release-zip').click(function (e) {
-                    e.preventDefault();
-                    $.get('https://api.github.com/repos/myparcelbe/prestashop/releases/latest')
-                    .then(function (response) { window.location.href = response.assets[0].browser_download_url; })
-                    .fail(function () { window.location.href = e.target.href; });
-                });
-            }());
-        </script>
     </body>
 </html>
