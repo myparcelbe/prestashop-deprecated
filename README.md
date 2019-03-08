@@ -1,6 +1,6 @@
 # Manuel Prestashop
 
-Pour le manuel, allez à https://myparcelbe.github.io/prestashop
+Pour le manuel, allez à https://myparcelbe.github.io/prestashop#lang=FR
 
 ## Télécharger
 
@@ -10,7 +10,7 @@ Pour la dernière version, allez à https://github.com/myparcelbe/prestashop/rel
 
 # Prestashop-handleiding
 
-Voor de handleiding, ga naar https://myparcelbe.github.io/prestashop
+Voor de handleiding, ga naar https://myparcelbe.github.io/prestashop#lang=NL
 
 ## Download
 
