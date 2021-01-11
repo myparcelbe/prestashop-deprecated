@@ -6,9 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'e40631d46120a9c38ea139981f8dab26' => $vendorDir . '/ircmaxell/password-compat/lib/password.php',
-    '5dcb5f6b26ba14d1f5b2c513e728c33c' => $vendorDir . '/firstred/php-dot-notation/src/helpers.php',
-    '3e2471375464aac821502deb0ac64275' => $vendorDir . '/symfony/polyfill-php54/bootstrap.php',
-    'edc6464955a37aa4d5fbf39d40fb6ee7' => $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
-    '33a101f8bc35eaab3b8decf851a3fc7a' => $baseDir . '/classes/helpers.php',
+    '3480d8f702c8d1d51e7b6bdf09c0b045' => $vendorDir . '/myparcelnl/sdk/src/AutoLoader.php',
 );

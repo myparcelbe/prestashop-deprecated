@@ -6,8 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'MPBpostModule\\Symfony\\Polyfill\\Php55\\' => array($vendorDir . '/symfony/polyfill-php55'),
-    'MPBpostModule\\Symfony\\Polyfill\\Php54\\' => array($vendorDir . '/symfony/polyfill-php54'),
-    'MPBpostModule\\Firstred\\' => array($vendorDir . '/firstred/php-dot-notation/src'),
-    'MPBpostModule\\Curl\\' => array($vendorDir . '/php-curl-class/php-curl-class/src/Curl'),
+    'Gett\\MyparcelBE\\' => array($baseDir . '/src'),
 );

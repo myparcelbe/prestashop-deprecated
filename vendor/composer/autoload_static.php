@@ -4,89 +4,37 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3
+class ComposerStaticInitb2a06717476fd245afc09ebc2c7dabe5
 {
     public static $files = array (
-        'e40631d46120a9c38ea139981f8dab26' => __DIR__ . '/..' . '/ircmaxell/password-compat/lib/password.php',
-        '5dcb5f6b26ba14d1f5b2c513e728c33c' => __DIR__ . '/..' . '/firstred/php-dot-notation/src/helpers.php',
-        '3e2471375464aac821502deb0ac64275' => __DIR__ . '/..' . '/symfony/polyfill-php54/bootstrap.php',
-        'edc6464955a37aa4d5fbf39d40fb6ee7' => __DIR__ . '/..' . '/symfony/polyfill-php55/bootstrap.php',
-        '33a101f8bc35eaab3b8decf851a3fc7a' => __DIR__ . '/../..' . '/classes/helpers.php',
+        '3480d8f702c8d1d51e7b6bdf09c0b045' => __DIR__ . '/..' . '/myparcelnl/sdk/src/AutoLoader.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'M' => 
+        'G' => 
         array (
-            'MPBpostModule\\Symfony\\Polyfill\\Php55\\' => 37,
-            'MPBpostModule\\Symfony\\Polyfill\\Php54\\' => 37,
-            'MPBpostModule\\Firstred\\' => 23,
-            'MPBpostModule\\Curl\\' => 19,
+            'Gett\\MyparcelBE\\' => 16,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'MPBpostModule\\Symfony\\Polyfill\\Php55\\' => 
+        'Gett\\MyparcelBE\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php55',
-        ),
-        'MPBpostModule\\Symfony\\Polyfill\\Php54\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php54',
-        ),
-        'MPBpostModule\\Firstred\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firstred/php-dot-notation/src',
-        ),
-        'MPBpostModule\\Curl\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl',
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
     public static $classMap = array (
-        'CallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
-        'ComposerAutoloaderInit504ef3de54aa8dcb9e8e15832008d3d3' => __DIR__ . '/..' . '/composer/autoload_real.php',
-        'MPBpostBrievenbuspakjeItem' => __DIR__ . '/../..' . '/classes/MPBpostBrievenbuspakjeItem.php',
-        'MPBpostCarrierDeliverySetting' => __DIR__ . '/../..' . '/classes/MPBpostCarrierDeliverySetting.php',
-        'MPBpostDeliveryOption' => __DIR__ . '/../..' . '/classes/MPBpostDeliveryOption.php',
-        'MPBpostDemo' => __DIR__ . '/../..' . '/classes/MPBpostDemo.php',
-        'MPBpostModule\\BoxPacker\\Box' => __DIR__ . '/../..' . '/classes/BoxPacker/Box.php',
-        'MPBpostModule\\BoxPacker\\BoxList' => __DIR__ . '/../..' . '/classes/BoxPacker/BoxList.php',
-        'MPBpostModule\\BoxPacker\\Item' => __DIR__ . '/../..' . '/classes/BoxPacker/Item.php',
-        'MPBpostModule\\BoxPacker\\ItemList' => __DIR__ . '/../..' . '/classes/BoxPacker/ItemList.php',
-        'MPBpostModule\\BoxPacker\\PackedBox' => __DIR__ . '/../..' . '/classes/BoxPacker/PackedBox.php',
-        'MPBpostModule\\BoxPacker\\PackedBoxList' => __DIR__ . '/../..' . '/classes/BoxPacker/PackedBoxList.php',
-        'MPBpostModule\\BoxPacker\\Packer' => __DIR__ . '/../..' . '/classes/BoxPacker/Packer.php',
-        'MPBpostModule\\BoxPacker\\VolumePacker' => __DIR__ . '/../..' . '/classes/BoxPacker/VolumePacker.php',
-        'MPBpostModule\\BoxPacker\\WeightRedistributor' => __DIR__ . '/../..' . '/classes/BoxPacker/WeightRedistributor.php',
-        'MPBpostModule\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
-        'MPBpostModule\\Composer\\Autoload\\ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3' => __DIR__ . '/..' . '/composer/autoload_static.php',
-        'MPBpostModule\\Curl\\ArrayUtil' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/ArrayUtil.php',
-        'MPBpostModule\\Curl\\CaseInsensitiveArray' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/CaseInsensitiveArray.php',
-        'MPBpostModule\\Curl\\Curl' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/Curl.php',
-        'MPBpostModule\\Curl\\Decoder' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/Decoder.php',
-        'MPBpostModule\\Curl\\MultiCurl' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/MultiCurl.php',
-        'MPBpostModule\\Curl\\StringUtil' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/StringUtil.php',
-        'MPBpostModule\\Curl\\Url' => __DIR__ . '/..' . '/php-curl-class/php-curl-class/src/Curl/Url.php',
-        'MPBpostModule\\Firstred\\Dot' => __DIR__ . '/..' . '/firstred/php-dot-notation/src/Dot.php',
-        'MPBpostModule\\MPBpostHttpClient' => __DIR__ . '/../..' . '/classes/MPBpostHttpClient.php',
-        'MPBpostModule\\Symfony\\Polyfill\\Php54\\Php54' => __DIR__ . '/..' . '/symfony/polyfill-php54/Php54.php',
-        'MPBpostModule\\Symfony\\Polyfill\\Php55\\Php55' => __DIR__ . '/..' . '/symfony/polyfill-php55/Php55.php',
-        'MPBpostModule\\Symfony\\Polyfill\\Php55\\Php55ArrayColumn' => __DIR__ . '/..' . '/symfony/polyfill-php55/Php55ArrayColumn.php',
-        'MPBpostObjectModel' => __DIR__ . '/../..' . '/classes/MPBpostObjectModel.php',
-        'MPBpostOrder' => __DIR__ . '/../..' . '/classes/MPBpostOrder.php',
-        'MPBpostOrderHistory' => __DIR__ . '/../..' . '/classes/MPBpostOrderHistory.php',
-        'MPBpostTools' => __DIR__ . '/../..' . '/classes/MPBpostTools.php',
-        'RecursiveCallbackFilterIterator' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
-        'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
+        'Gett\\MyparcelBE\\OrderLabel' => __DIR__ . '/../..' . '/classes/OrderLabel.php',
+        'MyParcelBE' => __DIR__ . '/../..' . '/myparcelbe.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit504ef3de54aa8dcb9e8e15832008d3d3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb2a06717476fd245afc09ebc2c7dabe5::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb2a06717476fd245afc09ebc2c7dabe5::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb2a06717476fd245afc09ebc2c7dabe5::$classMap;
 
         }, null, ClassLoader::class);
     }
