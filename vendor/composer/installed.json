@@ -1,287 +1,70 @@
-[
-    {
-        "name": "firstred\/php-dot-notation",
-        "version": "2.x-dev",
-        "version_normalized": "2.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https:\/\/github.com\/firstred\/php-dot-notation.git",
-            "reference": "2540e04fb2e0e180038c3d704d0aed81bdcfc4c2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https:\/\/api.github.com\/repos\/firstred\/php-dot-notation\/zipball\/2540e04fb2e0e180038c3d704d0aed81bdcfc4c2",
-            "reference": "2540e04fb2e0e180038c3d704d0aed81bdcfc4c2",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "phpunit\/phpunit": "^4.0|^5.0|^6.0",
-            "squizlabs\/php_codesniffer": "^3.0"
-        },
-        "time": "2018-05-12T05:37:57+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src\/helpers.php"
-            ],
-            "psr-4": {
-                "MPBpostModule\\Firstred\\": "src"
-            }
-        },
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Riku S\u00e4rkinen",
-                "email": "riku@adbar.io"
+{
+    "packages": [
+        {
+            "name": "myparcelnl/sdk",
+            "version": "v5.2.6",
+            "version_normalized": "5.2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myparcelnl/sdk.git",
+                "reference": "41cc4fc8562ffd6f6b1c4b6965c79ea37ffbbb34"
             },
-            {
-                "name": "Michael Dekker",
-                "email": "git@michaeldekker.nl"
-            }
-        ],
-        "description": "PHP dot notation access to arrays",
-        "homepage": "https:\/\/github.com\/adbario\/php-dot-notation",
-        "keywords": [
-            "arrayaccess",
-            "dotnotation"
-        ],
-        "support": {
-            "source": "https:\/\/github.com\/firstred\/php-dot-notation\/tree\/2.x"
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/41cc4fc8562ffd6f6b1c4b6965c79ea37ffbbb34",
+                "reference": "41cc4fc8562ffd6f6b1c4b6965c79ea37ffbbb34",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5"
+            },
+            "time": "2021-01-25T15:47:37+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/AutoLoader.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Reindert Vetter",
+                    "email": "support@myparcel.nl",
+                    "homepage": "https://www.myparcel.nl",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Richard Perdaan",
+                    "email": "support@myparcel.nl",
+                    "homepage": "https://www.myparcel.nl",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Edie Lemoine",
+                    "email": "support@myparcel.nl",
+                    "homepage": "https://www.myparcel.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This package is designed to send and receive data from MyParcel by means of an API.",
+            "homepage": "https://www.myparcel.nl",
+            "keywords": [
+                "Flespakket",
+                "My Parcel",
+                "Post NL",
+                "myparcel",
+                "postnl"
+            ],
+            "install-path": "../myparcelnl/sdk"
         }
-    },
-    {
-        "name": "ircmaxell\/password-compat",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https:\/\/github.com\/ircmaxell\/password_compat.git",
-            "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https:\/\/api.github.com\/repos\/ircmaxell\/password_compat\/zipball\/5c5cde8822a69545767f7c7f3058cb15ff84614c",
-            "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c",
-            "shasum": ""
-        },
-        "require-dev": {
-            "phpunit\/phpunit": "4.*"
-        },
-        "time": "2014-11-20T16:49:30+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "lib\/password.php"
-            ]
-        },
-        "notification-url": "https:\/\/packagist.org\/downloads\/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Anthony Ferrara",
-                "email": "ircmaxell@php.net",
-                "homepage": "http:\/\/blog.ircmaxell.com"
-            }
-        ],
-        "description": "A compatibility library for the proposed simplified password hashing algorithm: https:\/\/wiki.php.net\/rfc\/password_hash",
-        "homepage": "https:\/\/github.com\/ircmaxell\/password_compat",
-        "keywords": [
-            "hashing",
-            "password"
-        ]
-    },
-    {
-        "name": "php-curl-class\/php-curl-class",
-        "version": "8.3.0",
-        "version_normalized": "8.3.0.0",
-        "source": {
-            "type": "git",
-            "url": "https:\/\/github.com\/php-curl-class\/php-curl-class.git",
-            "reference": "b5d9ec2120e4b27e4b2ec72fa9a302aa4e337fdf"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https:\/\/api.github.com\/repos\/php-curl-class\/php-curl-class\/zipball\/b5d9ec2120e4b27e4b2ec72fa9a302aa4e337fdf",
-            "reference": "b5d9ec2120e4b27e4b2ec72fa9a302aa4e337fdf",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "ext-mbstring": "*",
-            "php": ">=5.3"
-        },
-        "require-dev": {
-            "ext-gd": "*",
-            "phpunit\/phpunit": "*",
-            "squizlabs\/php_codesniffer": "*"
-        },
-        "time": "2018-08-18T18:02:12+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "MPBpostModule\\Curl\\": "src\/Curl\/"
-            }
-        },
-        "notification-url": "https:\/\/packagist.org\/downloads\/",
-        "license": [
-            "Unlicense"
-        ],
-        "authors": [
-            {
-                "name": "Zach Borboa"
-            }
-        ],
-        "description": "PHP Curl Class makes it easy to send HTTP requests and integrate with web APIs.",
-        "homepage": "https:\/\/github.com\/php-curl-class\/php-curl-class",
-        "keywords": [
-            "API-Client",
-            "api",
-            "class",
-            "client",
-            "curl",
-            "framework",
-            "http",
-            "http-client",
-            "http-proxy",
-            "json",
-            "php",
-            "php-curl",
-            "php-curl-library",
-            "proxy",
-            "requests",
-            "restful",
-            "web-scraper",
-            "web-scraping ",
-            "web-service",
-            "xml"
-        ]
-    },
-    {
-        "name": "symfony\/polyfill-php54",
-        "version": "v1.9.0",
-        "version_normalized": "1.9.0.0",
-        "source": {
-            "type": "git",
-            "url": "https:\/\/github.com\/symfony\/polyfill-php54.git",
-            "reference": "412977e090c6a8472dc39d50d1beb7d59495a965"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https:\/\/api.github.com\/repos\/symfony\/polyfill-php54\/zipball\/412977e090c6a8472dc39d50d1beb7d59495a965",
-            "reference": "412977e090c6a8472dc39d50d1beb7d59495a965",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2018-08-06T14:22:27+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.9-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "MPBpostModule\\Symfony\\Polyfill\\Php54\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ],
-            "classmap": [
-                "Resources\/stubs"
-            ]
-        },
-        "notification-url": "https:\/\/packagist.org\/downloads\/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https:\/\/symfony.com\/contributors"
-            }
-        ],
-        "description": "Symfony polyfill backporting some PHP 5.4+ features to lower PHP versions",
-        "homepage": "https:\/\/symfony.com",
-        "keywords": [
-            "compatibility",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    },
-    {
-        "name": "symfony\/polyfill-php55",
-        "version": "v1.9.0",
-        "version_normalized": "1.9.0.0",
-        "source": {
-            "type": "git",
-            "url": "https:\/\/github.com\/symfony\/polyfill-php55.git",
-            "reference": "578b8528da843de0fc65ec395900fa3181f2ead7"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https:\/\/api.github.com\/repos\/symfony\/polyfill-php55\/zipball\/578b8528da843de0fc65ec395900fa3181f2ead7",
-            "reference": "578b8528da843de0fc65ec395900fa3181f2ead7",
-            "shasum": ""
-        },
-        "require": {
-            "ircmaxell\/password-compat": "~1.0",
-            "php": ">=5.3.3"
-        },
-        "time": "2018-08-06T14:22:27+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.9-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "MPBpostModule\\Symfony\\Polyfill\\Php55\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https:\/\/packagist.org\/downloads\/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https:\/\/symfony.com\/contributors"
-            }
-        ],
-        "description": "Symfony polyfill backporting some PHP 5.5+ features to lower PHP versions",
-        "homepage": "https:\/\/symfony.com",
-        "keywords": [
-            "compatibility",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    }
-]
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
