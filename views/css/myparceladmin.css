@@ -5,6 +5,7 @@
 .myparcel-radio-container {
   display: inline-block;
   padding: 0 20px;
+  vertical-align: middle;
 }
 .myparcel-radio {
   display: none;
@@ -64,6 +65,7 @@
 }
 .money-input-wrapper {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .pointer-myparcel-labels label {
@@ -86,7 +88,8 @@
   border-top: 1px solid #dedede;
   padding-top: 15px;
 }
-#myparcel-order-panel.panel .panel-heading img {
+#myparcel-order-panel.panel .panel-heading img,
+#myparcel-order-panel.card .card-header-title img {
   height: 16px;
   width: 16px;
 }
@@ -133,8 +136,8 @@
   display: flex;
   align-items: center;
 }
-.insurance-amount-custom > span,
-.insurance-amount-custom > div {
+.concept-label-wrapper .insurance-amount-custom > span,
+.concept-label-wrapper .insurance-amount-custom > div {
   padding-left: 4px;
 }
 .insurance-amount-custom .input-group {
@@ -159,4 +162,8 @@ td.ui-state-danger {
 }
 .datepicker-row .datepicker-exceptions {
   flex-grow: 1;
+}
+.delivery-options-span .material-icons {
+  color: inherit;
+  font-size: inherit;
 }

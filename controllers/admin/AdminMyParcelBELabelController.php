@@ -6,15 +6,19 @@ use Gett\MyparcelBE\Label\LabelOptionsResolver;
 use Gett\MyparcelBE\Logger\Logger;
 use Gett\MyparcelBE\Module\Carrier\Provider\CarrierSettingsProvider;
 use Gett\MyparcelBE\Module\Carrier\Provider\DeliveryOptionsProvider;
+use Gett\MyparcelBE\Module\Tools\Tools;
 use Gett\MyparcelBE\OrderLabel;
+use Gett\MyparcelBE\Provider\OrderLabelProvider;
 use Gett\MyparcelBE\Service\Consignment\Download;
+use Gett\MyparcelBE\Service\DeliverySettingsProvider;
 use Gett\MyparcelBE\Service\MyparcelStatusProvider;
+use Gett\MyparcelBE\Service\Order\OrderTotalWeight;
 use MyParcelNL\Sdk\src\Exception\InvalidConsignmentException;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory as ConsignmentFactorySdk;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 
 if (file_exists(_PS_MODULE_DIR_ . 'myparcelbe/vendor/autoload.php')) {
     require_once _PS_MODULE_DIR_ . 'myparcelbe/vendor/autoload.php';
@@ -68,7 +72,7 @@ class AdminMyParcelBELabelController extends ModuleAdminController
             } catch (Exception $e) {
                 Logger::addLog($e->getMessage(), true, true);
                 header('HTTP/1.1 500 Internal Server Error', true, 500);
-                die($this->module->l('A error occurred in the MyParcel module, please try again.', 'adminlabelcontroller'));
+                die($this->module->l('An error occurred in the MyParcel module, please try again.', 'adminlabelcontroller'));
             }
 
             $status_provider = new MyparcelStatusProvider();
@@ -110,7 +114,7 @@ class AdminMyParcelBELabelController extends ModuleAdminController
             foreach ($orderIds as $orderId) {
                 $orderLabelParams = [
                     'id_order' => (int) $orderId,
-                    'id_carrier' => 0
+                    'id_carrier' => 0,
                 ];
                 foreach ($orders as $orderRow) {
                     if ((int) $orderRow['id_order'] === (int) $orderId) {
@@ -126,7 +130,10 @@ class AdminMyParcelBELabelController extends ModuleAdminController
                 } else {
                     $consignment->setPackageType(1);
                 }
-                if ($options->only_to_recepient == 1 && $consignment instanceof PostNLConsignment) {
+                if ($consignment->getPackageType() == AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP) {
+                    $consignment->setTotalWeight((new OrderTotalWeight())->provide((int) $orderId));
+                }
+                if ($options->only_to_recipient == 1 && $consignment instanceof PostNLConsignment) {
                     $consignment->setOnlyRecipient(true);
                 } else {
                     $consignment->setOnlyRecipient(false);
@@ -156,11 +163,24 @@ class AdminMyParcelBELabelController extends ModuleAdminController
             Logger::addLog($e->getFile(), true, true);
             Logger::addLog($e->getLine(), true, true);
             header('HTTP/1.1 500 Internal Server Error', true, 500);
-            die($this->module->l('A error occurred in the MyParcel module, please try again.', 'adminlabelcontroller'));
+            die($this->module->l('An error occurred in the MyParcel module, please try again.', 'adminlabelcontroller'));
         }
 
         $status_provider = new MyparcelStatusProvider();
         foreach ($collection as $consignment) {
+            if ($consignment->isCdCountry()) {
+                $products = OrderLabel::getCustomsOrderProducts((int) $consignment->getReferenceId());
+                if ($products) {
+                    $orderObject = new Order();
+                    if (!$orderObject->hasInvoice()) {
+                        $this->errors[] = sprintf(
+                            $this->module->l('International order ID#%s must have invoice.', 'adminlabelcontroller'),
+                            $consignment->getReferenceId()
+                        );
+                        continue;
+                    }
+                }
+            }
             try {
                 OrderLabel::createFromConsignment($consignment, $status_provider);
             } catch (Exception $e) {
@@ -173,7 +193,6 @@ class AdminMyParcelBELabelController extends ModuleAdminController
 
     public function processRefresh()
     {
-
         $id_labels = OrderLabel::getOrdersLabels(Tools::getValue('order_ids'));
         if (empty($id_labels)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
@@ -271,6 +290,16 @@ class AdminMyParcelBELabelController extends ModuleAdminController
 
     public function processDownloadLabel()
     {
+        Tools::setCookieSameSite(
+            'downloadPdfLabel',
+            1,
+            0,
+            '/',
+            '',
+            false,
+            false,
+            'Strict'
+        );
         $service = new Download(
             Configuration::get(Constant::API_KEY_CONFIGURATION_NAME),
             Tools::getAllValues(),
@@ -282,10 +311,10 @@ class AdminMyParcelBELabelController extends ModuleAdminController
 
     public function fixSignature(AbstractConsignment $consignment)
     {
-        if ($consignment->getCountry() === 'NL' && $this->module->isBE()) {
+        if ($consignment->getCountry() === AbstractConsignment::CC_NL && $this->module->isBE()) {
             $consignment->signature = 0;
         }
-        if ($consignment->getCountry() === 'BE' && $this->module->isNL()) {
+        if ($consignment->getCountry() === AbstractConsignment::CC_BE && $this->module->isNL()) {
             $consignment->signature = 0;
         }
     }
@@ -305,8 +334,8 @@ class AdminMyParcelBELabelController extends ModuleAdminController
     public function sanitizePackageType(AbstractConsignment $consignment)
     {
         if ($this->module->isBE()) {
-            if ($consignment->package_type !== 1) {
-                $consignment->package_type = 1;
+            if ($consignment->package_type !== AbstractConsignment::PACKAGE_TYPE_PACKAGE) {
+                $consignment->package_type = AbstractConsignment::PACKAGE_TYPE_PACKAGE;
             }
         }
     }
@@ -314,7 +343,28 @@ class AdminMyParcelBELabelController extends ModuleAdminController
     public function processExportPrint()
     {
         $collection = $this->processCreateb();
-        setcookie('downloadPdfLabel', 1);
+        Tools::setCookieSameSite(
+            'downloadPdfLabel',
+            1,
+            0,
+            '/',
+            '',
+            false,
+            false,
+            'Strict'
+        );
+        if (!is_string($collection->getLabelPdf())) {
+            $redirectParams = [];
+            $idOrder = (new OrderLabelProvider($this))->provideOrderId((int) Tools::getValue('label_id'));
+            if ($idOrder) {
+                $redirectParams['vieworder'] = '';
+                $redirectParams['id_order'] = $idOrder;
+            }
+
+            Tools::redirectAdmin(
+                $this->context->link->getAdminLink('AdminOrders', true, [], $redirectParams)
+            );
+        }
         $collection->downloadPdfOfLabels(Configuration::get(
             Constant::LABEL_OPEN_DOWNLOAD_CONFIGURATION_NAME,
             false
@@ -371,7 +421,7 @@ class AdminMyParcelBELabelController extends ModuleAdminController
                                 } else {
                                     $insuranceValue = (int) $postValues['insurance-amount-custom-value'] ?? 0;
                                 }
-                                $deliveryOptions->shipmentOptions->insurance->amount = $insuranceValue * 100;// cents
+                                $deliveryOptions->shipmentOptions->insurance->amount = $insuranceValue * 100; // cents
                                 $deliveryOptions->shipmentOptions->insurance->currency = $currency->iso_code;
                             }
                             break;
@@ -402,16 +452,21 @@ class AdminMyParcelBELabelController extends ModuleAdminController
         }
 
         if ($idOrder) {
-            $labelList = OrderLabel::getOrderLabels((int)$idOrder, []);
+            $psVersion = '';
+            if (version_compare(_PS_VERSION_, '1.7.7.0', '>=')) {
+                $psVersion = '-177';
+            }
+            $labelList = OrderLabel::getOrderLabels((int) $idOrder, []);
             $labelListHtml = $this->context->smarty->createData(
                 $this->context->smarty
             );
             $labelListHtml->assign([
                 'labelList' => $labelList,
+                'promptForLabelPosition' => Configuration::get(Constant::LABEL_PROMPT_POSITION_CONFIGURATION_NAME),
             ]);
 
             $labelListHtmlTpl = $this->context->smarty->createTemplate(
-                $this->module->getTemplatePath('views/templates/admin/hook/label-list.tpl'),
+                $this->module->getTemplatePath('views/templates/admin/hook/label-list' . $psVersion . '.tpl'),
                 $labelListHtml
             );
 
@@ -449,18 +504,46 @@ class AdminMyParcelBELabelController extends ModuleAdminController
             $collection = $factory->fromOrder($order);
             $consignments = $collection->getConsignments();
             if (!empty($consignments)) {
-                foreach ($consignments as &$consignment) {
+                foreach ($consignments as $consignmentKey => &$consignment) {
+                    if ($consignment->isCdCountry()) {
+                        $products = OrderLabel::getCustomsOrderProducts($order['id_order']);
+                        if ($products) {
+                            $orderObject = new Order();
+                            if (!$orderObject->hasInvoice()) {
+                                unset($consignments[$consignmentKey]);
+                                $this->errors[] = sprintf(
+                                    $this->module->l('International order ID#%s must have invoice.', 'adminlabelcontroller'),
+                                    $order['id_order']
+                                );
+                                continue;
+                            }
+                        }
+                    }
                     $consignment->delivery_date = $this->fixPastDeliveryDate($consignment->delivery_date);
                     $this->fixSignature($consignment);
                     $this->sanitizeDeliveryType($consignment);
                     $this->sanitizePackageType($consignment);
+                    if (isset($postValues['insurance'])) {
+                        $insuranceValue = $postValues['insuranceAmount'] ?? 0;
+                        if (strpos($insuranceValue, 'amount') !== false) {
+                            $insuranceValue = (int) str_replace(
+                                'amount',
+                                '',
+                                $insuranceValue
+                            );
+                        }
+                        if ((int) $insuranceValue == -1) {
+                            $insuranceValue = $postValues['insurance-amount-custom-value'] ?? 0;
+                        }
+                        $consignment->setInsurance((int) $insuranceValue);
+                    }
                 }
             }
             Logger::addLog($collection->toJson());
             $collection->setLinkOfLabels();
             if ($this->module->isNL()
-                && $postValues[Constant::RETURN_PACKAGE_CONFIGURATION_NAME]) {
-                $collection->sendReturnLabelMails();
+                && ($postValues[Constant::RETURN_PACKAGE_CONFIGURATION_NAME] ?? 0)) {
+                $collection->generateReturnConsignments(true);
             }
         } catch (InvalidConsignmentException $e) {
             Logger::addLog($this->module->l(
@@ -562,6 +645,10 @@ class AdminMyParcelBELabelController extends ModuleAdminController
 
     public function ajaxProcessUpdateDeliveryOptions()
     {
+        $psVersion = '';
+        if (version_compare(_PS_VERSION_, '1.7.7.0', '>=')) {
+            $psVersion = '-177';
+        }
         $postValues = Tools::getAllValues();
         $options = $postValues['myparcel-delivery-options'] ?? null;
         $action = $postValues['action'] ?? null;
@@ -584,6 +671,8 @@ class AdminMyParcelBELabelController extends ModuleAdminController
         $deliveryOptionsProvider = new DeliveryOptionsProvider();
         $deliveryOptions = $deliveryOptionsProvider->provide($order->id);
         $carrierSettingsProvider = new CarrierSettingsProvider($this->module);
+        $currency = Currency::getDefaultCurrency();
+        $labelOptionsResolver = new LabelOptionsResolver();
 
         $labelConceptHtml = $this->context->smarty->createData($this->context->smarty);
         $labelConceptHtml->assign([
@@ -591,9 +680,14 @@ class AdminMyParcelBELabelController extends ModuleAdminController
             'carrierSettings' => $carrierSettingsProvider->provide($order->id_carrier),
             'date_warning_display' => $deliveryOptionsProvider->provideWarningDisplay($order->id),
             'isBE' => $this->module->isBE(),
+            'currencySign' => $currency->getSign(),
+            'labelOptions' => $labelOptionsResolver->getLabelOptions([
+                'id_order' => (int) $order->id,
+                'id_carrier' => (int) $order->id_carrier,
+            ]),
         ]);
         $labelConceptHtmlTpl = $this->context->smarty->createTemplate(
-            $this->module->getTemplatePath('views/templates/admin/hook/label-concept.tpl'),
+            $this->module->getTemplatePath('views/templates/admin/hook/label-concept' . $psVersion . '.tpl'),
             $labelConceptHtml
         );
 
@@ -779,5 +873,17 @@ class AdminMyParcelBELabelController extends ModuleAdminController
         }
 
         $this->returnAjaxResponse([], (int) $idOrder);
+    }
+
+    public function ajaxProcessGetDeliverySettings()
+    {
+        $id_carrier = (int) Tools::getValue('id_carrier');
+        $params = (new DeliverySettingsProvider($this->module, $id_carrier, $this->context))
+            ->setOrderId((int) Tools::getValue('id_order'))
+            ->get()
+        ;
+
+        echo json_encode($params);
+        exit;
     }
 }

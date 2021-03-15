@@ -2,7 +2,6 @@
 
 namespace Gett\MyparcelBE\Module\Configuration;
 
-use Carrier;
 use Gett\MyparcelBE\Constant;
 use Gett\MyparcelBE\Module\Carrier\ExclusiveField;
 use Tools;
@@ -133,7 +132,7 @@ abstract class AbstractForm
             if ($name == Constant::IGNORE_ORDER_STATUS_CONFIGURATION_NAME) {
                 $temp = explode(',', $values[$name]);
                 foreach ($temp as $value) {
-                    $values["MY_PARCEL_IGNORE_ORDER_STATUS_{$value}"] = 1;
+                    $values[Constant::IGNORE_ORDER_STATUS_CONFIGURATION_NAME . '_' . $value] = 1;
                 }
             }
         }

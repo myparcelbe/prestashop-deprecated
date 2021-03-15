@@ -2,9 +2,10 @@
 
 namespace Gett\MyparcelBE\Label;
 
+use Gett\MyparcelBE\Carrier\PackageFormatCalculator;
+use Gett\MyparcelBE\Carrier\PackageTypeCalculator;
 use Gett\MyparcelBE\Constant;
 use Gett\MyparcelBE\OrderLabel;
-use Gett\MyparcelBE\Carrier\PackageTypeCalculator;
 use Gett\MyparcelBE\Service\CarrierConfigurationProvider;
 use Gett\MyparcelBE\Service\ProductConfigurationProvider;
 
@@ -17,11 +18,13 @@ class LabelOptionsResolver
         $order_products = OrderLabel::getOrderProducts($params['id_order']);
 
         return json_encode([
-            'package_type' => PackageTypeCalculator::getOrderPackageType($params['id_order'], $params['id_carrier']),
-            'only_to_recepient' => $this->getOnlyToReciepient($delivery_settings, $order_products, $params['id_carrier']),
+            'package_type' => (new PackageTypeCalculator())->getOrderPackageType($params['id_order'], $params['id_carrier']),
+            'package_format' => (new PackageFormatCalculator())->getOrderPackageFormat($params['id_order'], $params['id_carrier']),
+            'only_to_recipient' => $this->getOnlyToReciepient($delivery_settings, $order_products, $params['id_carrier']),
             'age_check' => $this->getAgeCheck($order_products, $params['id_carrier']),
             'signature' => $this->getSignature($delivery_settings, $order_products, $params['id_carrier']),
             'insurance' => $this->getInsurance($order_products, $params['id_carrier']),
+            'return_undelivered' => $this->getReturnUndelivered($order_products, $params['id_carrier']),
         ]);
     }
 
@@ -78,5 +81,16 @@ class LabelOptionsResolver
         }
 
         return CarrierConfigurationProvider::get($id_carrier, Constant::INSURANCE_CONFIGURATION_NAME, false);
+    }
+
+    private function getReturnUndelivered(array $products, int $id_carrier)
+    {
+        foreach ($products as $product) {
+            if (ProductConfigurationProvider::get($product['product_id'], Constant::RETURN_PACKAGE_CONFIGURATION_NAME)) {
+                return true;
+            }
+        }
+
+        return CarrierConfigurationProvider::get($id_carrier, Constant::RETURN_PACKAGE_CONFIGURATION_NAME, false);
     }
 }

@@ -19,7 +19,7 @@
                                     value="a4"
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a4"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a4'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a4'}checked="checked"{/if}
                             >
                             <label for="a4">{l s='A4' mod='myparcelbe'}</label>
                         </div>
@@ -30,7 +30,7 @@
                                     value="a6"
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a6"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a6'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a6'}checked="checked"{/if}
                             >
                             <label for="a6">{l s='A6' mod='myparcelbe'}</label>
                         </div>
@@ -42,7 +42,7 @@
                                 type="checkbox"
                                 value="1"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 1}checked="checked"{/if}
+                                {if 1 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-left">{l s='Top-left' mod='myparcelbe'}</label>
                         <br>
@@ -51,7 +51,7 @@
                                 type="checkbox"
                                 value="2"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 2}checked="checked"{/if}
+                                {if 2 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-right">{l s='Top-right' mod='myparcelbe'}</label>
                         <br>
@@ -60,7 +60,7 @@
                                 type="checkbox"
                                 value="3"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 3}checked="checked"{/if}
+                                {if 3 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="bottom-left">{l s='Bottom-left' mod='myparcelbe'}</label>
                         <br>
@@ -69,7 +69,7 @@
                                 type="checkbox"
                                 value="4"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 4}checked="checked"{/if}
+                                {if 4 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="bottom-right">{l s='Bottom-right' mod='myparcelbe'}</label>
                     </div>
@@ -101,7 +101,7 @@
                                     value="a4"
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a4"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a4'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a4'}checked="checked"{/if}
                             >
                             <label for="a4_bulk">{l s='A4' mod='myparcelbe'}</label>
                         </div>
@@ -112,7 +112,7 @@
                                     value="a6"
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a6"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a6'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a6'}checked="checked"{/if}
                             >
                             <label for="a6_bulk">{l s='A6' mod='myparcelbe'}</label>
                         </div>
@@ -124,7 +124,7 @@
                                 type="checkbox"
                                 value="1"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 1}checked="checked"{/if}
+                                {if 1 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-left-bulk">{l s='Top-left' mod='myparcelbe'}</label>
                         <br>
@@ -133,7 +133,7 @@
                                 type="checkbox"
                                 value="2"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 2}checked="checked"{/if}
+                                {if 2 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-right-bulk">{l s='Top-right' mod='myparcelbe'}</label>
                         <br>
@@ -142,16 +142,16 @@
                                 type="checkbox"
                                 value="3"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 3}checked="checked"{/if}
+                                {if 3 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
-                        <label for="bottom-left-bulk">{l s='Print' mod='myparcelbe'}</label>
+                        <label for="bottom-left-bulk">{l s='Bottom-left' mod='myparcelbe'}</label>
                         <br>
                         <input
                                 id="bottom-right-bulk"
                                 type="checkbox"
                                 value="4"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 4}checked="checked"{/if}
+                                {if 4 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="bottom-right-bulk">{l s='Bottom-right' mod='myparcelbe'}</label>
                     </div>
@@ -250,15 +250,15 @@
                         </div>
                     </div>
                     {if !$isBE}
-                        <div class="form-group">
+                        <div class="form-group insurance-amount-custom">
                             <div class="myparcel-radio-container">
                                 <input id="heigherthen500" type="radio" value="-1" class="myparcel-radio" name="insuranceAmount">
                                 <label for="heigherthen500">{l s='Higher than € 500' mod='myparcelbe'}</label>
                             </div>
                             <div class="money-input-wrapper">
                                 <div class="input-group money-type">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">€ </span>
+                                    <div class="input-group-addon input-group-prepend">
+                                        <span class="input-group-prefix input-group-text">{$currencySign}</span>
                                     </div>
                                     <input
                                             type="text"
@@ -305,7 +305,7 @@
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a4"
                                     id="a4_bulk_export_print"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a4'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a4'}checked="checked"{/if}
                             >
                             <label for="a4_bulk_export_print">{l s='A4' mod='myparcelbe'}</label>
                         </div>
@@ -316,7 +316,7 @@
                                     name="format"
                                     class="myparcel-radio page-format-radio page-format-a6"
                                     id="a6_bulk_export_print"
-                                    {if $labelConfiguration.MY_PARCEL_LABEL_SIZE eq 'a6'}checked="checked"{/if}
+                                    {if $labelConfiguration.MYPARCELBE_LABEL_SIZE eq 'a6'}checked="checked"{/if}
                             >
                             <label for="a6_bulk_export_print">{l s='A6' mod='myparcelbe'}</label>
                         </div>
@@ -328,7 +328,7 @@
                                 type="checkbox"
                                 value="1"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 1}checked="checked"{/if}
+                                {if 1 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-left-bulk-export-print">{l s='Top-left' mod='myparcelbe'}</label>
                         <br>
@@ -337,7 +337,7 @@
                                 type="checkbox"
                                 value="2"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 2}checked="checked"{/if}
+                                {if 2 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="top-right-bulk-export-print">{l s='Top-right' mod='myparcelbe'}</label>
                         <br>
@@ -346,7 +346,7 @@
                                 type="checkbox"
                                 value="3"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 3}checked="checked"{/if}
+                                {if 3 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="bottom-left-bulk-export-print">{l s='Bottom-left' mod='myparcelbe'}</label>
                         <br>
@@ -355,7 +355,7 @@
                                 type="checkbox"
                                 value="4"
                                 name="position[]"
-                                {if $labelConfiguration.MY_PARCEL_LABEL_POSITION eq 4}checked="checked"{/if}
+                                {if 4 / $labelConfiguration.MYPARCELBE_LABEL_POSITION >= 1}checked="checked"{/if}
                         >
                         <label for="bottom-right-bulk-export-print">{l s='Bottom-right' mod='myparcelbe'}</label>
                     </div>

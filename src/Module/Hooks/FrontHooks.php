@@ -6,6 +6,7 @@ use Address;
 use Configuration;
 use Currency;
 use Db;
+use Gett\MyparcelBE\Carrier\PackageTypeCalculator;
 use Product;
 use Tools;
 use Validate;
@@ -42,6 +43,10 @@ trait FrontHooks
             }
             $carrier = new \Carrier($id_carrier);
             if (Validate::isLoadedObject($carrier)) {
+                $optionsObj = json_decode($options);
+                if ($optionsObj === null) {
+                    $optionsObj = new \StdClass();
+                }
                 $optionsObj->carrier = str_replace(' ', '', strtolower($carrier->name));
                 Db::getInstance(_PS_USE_SQL_SLAVE_)->insert(
                     'myparcelbe_delivery_settings',
@@ -83,7 +88,7 @@ trait FrontHooks
                 if ($display_taxes_label) {
                     $shipping_cost = $this->context->getTranslator()->trans(
                         '%price% tax incl.',
-                        array('%price%' => $shipping_cost),
+                        ['%price%' => $shipping_cost],
                         'Shop.Theme.Checkout'
                     );
                 }
@@ -91,10 +96,15 @@ trait FrontHooks
                 if ($display_taxes_label) {
                     $shipping_cost = $this->context->getTranslator()->trans(
                         '%price% tax excl.',
-                        array('%price%' => $shipping_cost),
+                        ['%price%' => $shipping_cost],
                         'Shop.Theme.Checkout'
                     );
                 }
+            }
+
+            if (empty($this->context->cart->id_carrier)) {
+                $selectedDeliveryOption = current($this->context->cart->getDeliveryOption(null, false, false));
+                $this->context->cart->id_carrier = (int) $selectedDeliveryOption;
             }
 
             $this->context->smarty->assign([
@@ -102,6 +112,8 @@ trait FrontHooks
                 'delivery_settings' => $this->getDeliverySettingsByCart((int) $this->context->cart->id),
                 'shipping_cost' => $shipping_cost,
                 'carrier' => $params['carrier'],
+                'enableDeliveryOptions' => (new PackageTypeCalculator())
+                    ->allowDeliveryOptions($this->context->cart, $this->getModuleCountry()),
             ]);
 
             return $this->display($this->name, 'views/templates/hook/carrier.tpl');

@@ -2,21 +2,13 @@
 
 namespace Gett\MyparcelBE\Module\Hooks;
 
-use Address;
-use AddressFormat;
-use Carrier;
 use Configuration;
-use Currency;
-use Customer;
 use Dispatcher;
 use Gett\MyparcelBE\Constant;
 use Gett\MyparcelBE\Label\LabelOptionsResolver;
-use Gett\MyparcelBE\Module\Carrier\Provider\CarrierSettingsProvider;
-use Gett\MyparcelBE\Module\Carrier\Provider\DeliveryOptionsProvider;
-use Gett\MyparcelBE\OrderLabel;
-use Gett\MyparcelBE\Provider\OrderLabelProvider;
+use Gett\MyparcelBE\Module\Hooks\Helpers\AdminOrderList;
+use Gett\MyparcelBE\Module\Hooks\Helpers\AdminOrderView;
 use Order;
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use Validate;
 
 trait LegacyOrderPageHooks
@@ -26,46 +18,39 @@ trait LegacyOrderPageHooks
     public function hookDisplayAdminListBefore()
     {
         if ($this->context->controller instanceof \AdminOrdersController) {
-            \Media::addJsDefL('print_labels_text', $this->l('Print labels', 'legacyorderpagehooks'));
-            \Media::addJsDefL('refresh_labels_text', $this->l('Refresh labels', 'legacyorderpagehooks'));
-            \Media::addJsDefL('export_labels_text', $this->l('Export labels', 'legacyorderpagehooks'));
-            \Media::addJsDefL(
-                'export_and_print_label_text',
-                $this->l('Export and print labels', 'legacyorderpagehooks')
-            );
-            $this->context->controller->addJS(
-                $this->_path . 'views/js/admin/order.js'
-            );
+            $adminOrderList = new AdminOrderList($this);
 
-            $link = $this->context->link;
-            $this->context->smarty->assign([
-                'action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'createLabel']),
-                'download_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'downloadLabel']),
-                'print_bulk_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'print']),
-                'export_print_bulk_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'exportPrint']),
-                'isBE' => $this->isBE(),
-                'labelConfiguration' => $this->getLabelDefaultConfiguration(),
-                'PACKAGE_TYPE' => Constant::PACKAGE_TYPE_CONFIGURATION_NAME,
-                'ONLY_RECIPIENT' => Constant::ONLY_RECIPIENT_CONFIGURATION_NAME,
-                'AGE_CHECK' => Constant::AGE_CHECK_CONFIGURATION_NAME,
-                'PACKAGE_FORMAT' => Constant::PACKAGE_FORMAT_CONFIGURATION_NAME,
-                'RETURN_PACKAGE' => Constant::RETURN_PACKAGE_CONFIGURATION_NAME,
-                'SIGNATURE_REQUIRED' => Constant::SIGNATURE_REQUIRED_CONFIGURATION_NAME,
-                'INSURANCE' => Constant::INSURANCE_CONFIGURATION_NAME,
-            ]);
-
-            return $this->display($this->name, 'views/templates/admin/hook/orders_popups.tpl');
+            return $adminOrderList->getAdminAfterHeader();
         }
 
         return '';
     }
 
-    public function hookActionAdminOrdersListingFieldsModifier($params)
+    public function hookActionAdminOrdersListingFieldsModifier(&$params)
     {
         if (!isset($params['select'])) {
             $params['select'] = '';
         }
-        $params['select'] .= ',1 as `myparcel_void_1` ,1 as `myparcel_void_2`, a.id_carrier';
+        if (!isset($params['join'])) {
+            $params['join'] = '';
+        }
+        $prefix = 'car' . $this->id;
+
+        $params['select'] .= ', 1 as `myparcel_void_1`, 1 as `myparcel_void_2`, a.`id_carrier`';
+        $params['select'] .= ', a.`id_cart` , \'\' AS myparcel_void_0';
+        $params['select'] .= ', ' . $prefix . '.`id_reference` AS id_carrier_reference';
+        $params['select'] .= ', ' . $prefix . '.`name` AS carrier_name';
+
+        $params['join'] .= '
+            LEFT JOIN ' . _DB_PREFIX_ . 'carrier ' . $prefix . ' ON (a.id_carrier = ' . $prefix . '.id_carrier)';
+
+        $params['fields']['myparcel_void_0'] = [
+            'title' => $this->l('Delivery date', 'legacyorderpagehooks'),
+            'callback' => 'printMyParcelDeliveryInfo',
+            'search' => false,
+            'orderby' => false,
+            'callback_object' => $this,
+        ];
 
         $params['fields']['myparcel_void_1'] = [
             'title' => $this->l('Labels', 'legacyorderpagehooks'),
@@ -115,27 +100,14 @@ trait LegacyOrderPageHooks
             return '';
         }
 
-        $label_options_resolver = new LabelOptionsResolver();
+        $labelOptionsResolver = new LabelOptionsResolver();
         $carrierReference = (int) $this->carrierList[(int) $params['id_carrier']];
-        $allowSetSignature = true;
-        $allowSetOnlyRecipient = true;
-        switch ($carrierReference) {
-            case (int) Configuration::get(Constant::DPD_CONFIGURATION_NAME):
-                $allowSetSignature = false;
-                $allowSetOnlyRecipient = false;
-                break;
-            case (int) Configuration::get(Constant::BPOST_CONFIGURATION_NAME):
-                $allowSetOnlyRecipient = false;
-                break;
-            case (int) Configuration::get(Constant::POSTNL_CONFIGURATION_NAME):
-            default:
-                break;
-        }
+        $orderHelper = new AdminOrderList($this);
 
         $this->context->smarty->assign([
-            'label_options' => $label_options_resolver->getLabelOptions($params),
-            'allowSetSignature' => $allowSetSignature,
-            'allowSetOnlyRecipient' => $allowSetOnlyRecipient,
+            'label_options' => $labelOptionsResolver->getLabelOptions($params),
+            'allowSetSignature' => $orderHelper->allowSetSignature($carrierReference),
+            'allowSetOnlyRecipient' => $orderHelper->allowSetOnlyRecipient($carrierReference),
         ]);
 
         return $this->display($this->name, 'views/templates/admin/icon-concept.tpl');
@@ -143,36 +115,10 @@ trait LegacyOrderPageHooks
 
     public function hookActionAdminControllerSetMedia()
     {
-        if ($this->context->controller instanceof \AdminOrdersController) {
-            $link = new \Link();
-            \Media::addJsDef(
-                [
-                    'default_label_size' => Configuration::get(Constant::LABEL_SIZE_CONFIGURATION_NAME) == false ? 'a4' : Configuration::get(Constant::LABEL_SIZE_CONFIGURATION_NAME),
-                    'default_label_position' => Configuration::get(Constant::LABEL_POSITION_CONFIGURATION_NAME) == false ? '1' : Configuration::get(Constant::LABEL_POSITION_CONFIGURATION_NAME),
-                    'prompt_for_label_position' => Configuration::get(Constant::LABEL_PROMPT_POSITION_CONFIGURATION_NAME) == false ? '0' : Configuration::get(Constant::LABEL_PROMPT_POSITION_CONFIGURATION_NAME),
-                    'create_labels_bulk_route' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'createb']),
-                    'refresh_labels_bulk_route' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'refresh']),
-                    'create_label_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'createLabel', 'listingPage' => true]),
-                    'create_label_error' => $this->l('Cannot create label for orders', 'legacyorderpagehooks'),
-                    'no_order_selected_error' => $this->l('Please select at least one order first.', 'legacyorderpagehooks'),
-                ]
-            );
-
-            $this->context->controller->addJS(
-                $this->_path . 'views/js/admin/order.js'
-            );
-        } elseif ($this->context->controller->php_self == 'AdminOrders') { //symfony controller
-            \Media::addJsDef(
-                [
-                    'default_label_size' => Configuration::get(Constant::LABEL_SIZE_CONFIGURATION_NAME) == false ? 'a4' : Configuration::get(Constant::LABEL_SIZE_CONFIGURATION_NAME),
-                    'default_label_position' => Configuration::get(Constant::LABEL_POSITION_CONFIGURATION_NAME) == false ? '1' : Configuration::get(Constant::LABEL_POSITION_CONFIGURATION_NAME),
-                    'prompt_for_label_position' => Configuration::get(Constant::LABEL_PROMPT_POSITION_CONFIGURATION_NAME) == false ? '0' : Configuration::get(Constant::LABEL_PROMPT_POSITION_CONFIGURATION_NAME),
-                ]
-            );
-
-            $this->context->controller->addJS(
-                $this->_path . 'views/js/admin/symfony/orders-list.js'
-            );
+        if ($this->context->controller instanceof \AdminOrdersController
+            || $this->context->controller->php_self == 'AdminOrders') {
+            $adminOrder = new AdminOrderList($this);
+            $adminOrder->setHeaderContent();
         }
     }
 
@@ -189,17 +135,12 @@ trait LegacyOrderPageHooks
             Configuration::get(Constant::POSTNL_CONFIGURATION_NAME),
         ]);
     }
-    
-    public function getLabelDefaultConfiguration(): array
-    {
-        return Configuration::getMultiple([
-            Constant::LABEL_SIZE_CONFIGURATION_NAME,
-            Constant::LABEL_POSITION_CONFIGURATION_NAME,
-        ]);
-    }
 
-    public function hookDisplayInvoice($params)
+    public function hookDisplayInvoice($params): string
     {
+        if (version_compare(_PS_VERSION_, '1.7.7.0', '>=')) {
+            return '';
+        }
         $idOrder = (int) $params['id_order'];
         $controller = Dispatcher::getInstance()->getController();
 
@@ -210,101 +151,33 @@ trait LegacyOrderPageHooks
         if (!Validate::isLoadedObject($order)) {
             return '';
         }
+        $adminOrderView = new AdminOrderView($this, (int) $params['id_order'], $this->context);
 
-        $currency = Currency::getDefaultCurrency();
+        return $adminOrderView->display();
+    }
 
-        $link = $this->context->link;
-        $labelUrl = $link->getAdminLink('AdminMyParcelBELabel', true, [], ['id_order' => $idOrder]);
-        $deliveryAddress = new Address($order->id_address_delivery);
-        $deliveryAddressFormatted = AddressFormat::generateAddress($deliveryAddress, [], '<br />');
-        $bulk_actions = [
-            'refreshLabels' => [
-                'text' => $this->l('Refresh', 'legacyorderpagehooks'),
-                'icon' => 'icon-refresh',
-                'ajax' => 1,
-            ],
-            'printLabels' => [
-                'text' => $this->l('Print', 'legacyorderpagehooks'),
-                'icon' => 'icon-print',
-            ]
-        ];
-        $deliveryOptionsProvider = new DeliveryOptionsProvider();
-        $deliveryOptions = $deliveryOptionsProvider->provide($order->id);
-        $labelList = (new OrderLabelProvider($this))->provideLabels($order->id, []);
+    public function printMyParcelDeliveryInfo($id, $row)
+    {
+        if (empty($row['id_carrier_reference'])) {
+            return '';
+        }
+        $adminOrderList = new AdminOrderList($this);
+        if (!$adminOrderList->isMyParcelCarrier($row['id_carrier_reference'])) {
+            return '';
+        }
+        $deliverySettings = $this->getDeliverySettingsByCart($row['id_cart']);
+        try {
+            if (empty($deliverySettings['date'])) {
+                return '';
+            }
+            $date = new \DateTime($deliverySettings['date']);
+            $dateFormatted = $date->format($this->context->language->date_format_lite);
+            if (!empty($dateFormatted)) {
+                $id = sprintf('[%s] %s', $dateFormatted, $row['carrier_name']);
+            }
+        } catch (\Exception $exception) {
+        }
 
-        $labelListHtml = $this->context->smarty->createData($this->context->smarty);
-        $labelListHtml->assign(['labelList' => $labelList]);
-        $labelListHtmlTpl = $this->context->smarty->createTemplate(
-            $this->getTemplatePath('views/templates/admin/hook/label-list.tpl'),
-            $labelListHtml
-        );
-
-        $labelConceptHtml = $this->context->smarty->createData($this->context->smarty);
-        $labelReturnHtml = $this->context->smarty->createData($this->context->smarty);
-
-        $carrierSettingsProvider = new CarrierSettingsProvider($this);
-        $deliveryAddress = new Address($order->id_address_delivery);
-        $customer = new Customer($order->id_customer);
-
-        $labelConceptHtml->assign([
-            'deliveryOptions' => json_decode(json_encode($deliveryOptions), true),
-            'carrierSettings' => $carrierSettingsProvider->provide($order->id_carrier),
-            'date_warning_display' => $deliveryOptionsProvider->provideWarningDisplay($order->id),
-            'isBE' => $this->isBE(),
-        ]);
-        $labelReturnHtml->assign([
-            'deliveryOptions' => json_decode(json_encode($deliveryOptions), true),
-            'carrierSettings' => $carrierSettingsProvider->provide($order->id_carrier),
-            'isBE' => $this->isBE(),
-            'currencySign' => $currency->getSign(),
-            'customerName' => trim($deliveryAddress->firstname . ' ' . $deliveryAddress->lastname),
-            'customerEmail' => $customer->email,
-            'labelUrl' => $labelUrl,
-        ]);
-        $labelConceptHtmlTpl = $this->context->smarty->createTemplate(
-            $this->getTemplatePath('views/templates/admin/hook/label-concept.tpl'),
-            $labelConceptHtml
-        );
-        $labelReturnHtmlTpl = $this->context->smarty->createTemplate(
-            $this->getTemplatePath('views/templates/admin/hook/label-return-form.tpl'),
-            $labelReturnHtml
-        );
-
-        $this->context->controller->addCss($this->_path . 'views/css/myparcel.css');
-        $this->context->controller->addJs($this->_path . 'views/dist/myparcel.js');
-
-        $this->context->smarty->assign([
-            'modulePathUri' => $this->getPathUri(),
-            'id_order' => $idOrder,
-            'id_carrier' => $order->id_carrier,
-            'addressEditUrl' => $link->getAdminLink('AdminAddresses', true, [], [
-                'id_order' => $idOrder,
-                'id_address' => $order->id_address_delivery,
-                'addaddress' => '',
-                'realedit' => 1,
-                'address_type' => 1,
-                'back' => urlencode(str_replace('&conf=4', '', $_SERVER['REQUEST_URI'])),
-            ]),
-            'delivery_address_formatted' => $deliveryAddressFormatted,
-            'labelListHtml' => $labelListHtmlTpl->fetch(),
-            'labelConceptHtml' => $labelConceptHtmlTpl->fetch(),
-            'labelReturnHtml' => $labelReturnHtmlTpl->fetch(),
-            'labelList' => $labelList,
-            'bulk_actions' => $bulk_actions,
-            'labelUrl' => $labelUrl,
-            'labelAction' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'createLabel']),
-            'download_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'downloadLabel']),
-            'print_bulk_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'print']),
-            'export_print_bulk_action' => $link->getAdminLink('AdminMyParcelBELabel', true, [], ['action' => 'exportPrint']),
-            //'isBE' => $this->isBE(),
-            //'carrierSettings' => $carrierLabelSettings,
-            'carrierLabels' => Constant::SINGLE_LABEL_CREATION_OPTIONS,
-            //'date_warning_display' => ($nextDeliveryDate > $deliveryDate),
-            'deliveryOptions' => json_decode(json_encode($deliveryOptions), true),
-            'currencySign' => $currency->getSign(),
-            'labelConfiguration' => $this->getLabelDefaultConfiguration(),
-        ]);
-
-        return $this->display($this->name, 'views/templates/admin/hook/order-label-block.tpl');
+        return $id;
     }
 }

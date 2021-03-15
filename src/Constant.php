@@ -2,11 +2,9 @@
 
 namespace Gett\MyparcelBE;
 
-use Configuration;
-
 class Constant
 {
-    const POSTNL_DEFAULT_CARRIER = 'MYPARCEL_DEFAULT_CARRIER';
+    const POSTNL_DEFAULT_CARRIER = 'MYPARCELBE_DEFAULT_CARRIER';
 
     const MENU_API_SETTINGS = 0;
     const MENU_GENERAL_SETTINGS = 1;
@@ -15,26 +13,26 @@ class Constant
     const MENU_CUSTOMS_SETTINGS = 4;
     const MENU_CARRIER_SETTINGS = 5;
 
-    const API_KEY_CONFIGURATION_NAME = 'MY_PARCEL_API_KEY';
-    const API_LOGGING_CONFIGURATION_NAME = 'MY_PARCEL_API_LOGGING';
+    const API_KEY_CONFIGURATION_NAME = 'MYPARCELBE_API_KEY';
+    const API_LOGGING_CONFIGURATION_NAME = 'MYPARCELBE_API_LOGGING';
 
-    const PACKAGE_TYPE_CONFIGURATION_NAME = 'MY_PARCEL_PACKAGE_TYPE';
-    const ONLY_RECIPIENT_CONFIGURATION_NAME = 'MY_PARCEL_RECIPIENT_ONLY';
-    const AGE_CHECK_CONFIGURATION_NAME = 'MY_PARCEL_AGE_CHECK';
-    const PACKAGE_FORMAT_CONFIGURATION_NAME = 'MY_PARCEL_PACKAGE_FORMAT';
+    const PACKAGE_TYPE_CONFIGURATION_NAME = 'MYPARCELBE_PACKAGE_TYPE';
+    const ONLY_RECIPIENT_CONFIGURATION_NAME = 'MYPARCELBE_RECIPIENT_ONLY';
+    const AGE_CHECK_CONFIGURATION_NAME = 'MYPARCELBE_AGE_CHECK';
+    const PACKAGE_FORMAT_CONFIGURATION_NAME = 'MYPARCELBE_PACKAGE_FORMAT';
 
-    const RETURN_PACKAGE_CONFIGURATION_NAME = 'MY_PARCEL_RETURN_PACKAGE';
-    const SIGNATURE_REQUIRED_CONFIGURATION_NAME = 'MY_PARCEL_SIGNATURE_REQUIRED';
-    const INSURANCE_CONFIGURATION_NAME = 'MY_PARCEL_INSURANCE';
-    const CUSTOMS_FORM_CONFIGURATION_NAME = 'MY_PARCEL_CUSTOMS_FORM';
-    const CUSTOMS_CODE_CONFIGURATION_NAME = 'MY_PARCEL_CUSTOMS_CODE';
-    const DEFAULT_CUSTOMS_CODE_CONFIGURATION_NAME = 'MY_PARCEL_DEFAULT_CUSTOMS_CODE';
-    const CUSTOMS_ORIGIN_CONFIGURATION_NAME = 'MY_PARCEL_CUSTOMS_ORIGIN';
-    const DEFAULT_CUSTOMS_ORIGIN_CONFIGURATION_NAME = 'MY_PARCEL_DEFAULT_CUSTOMS_ORIGIN';
-    const CUSTOMS_AGE_CHECK_CONFIGURATION_NAME = 'MY_PARCEL_CUSTOMS_AGE_CHECK';
+    const RETURN_PACKAGE_CONFIGURATION_NAME = 'MYPARCELBE_RETURN_PACKAGE';
+    const SIGNATURE_REQUIRED_CONFIGURATION_NAME = 'MYPARCELBE_SIGNATURE_REQUIRED';
+    const INSURANCE_CONFIGURATION_NAME = 'MYPARCELBE_INSURANCE';
+    const CUSTOMS_FORM_CONFIGURATION_NAME = 'MYPARCELBE_CUSTOMS_FORM';
+    const CUSTOMS_CODE_CONFIGURATION_NAME = 'MYPARCELBE_CUSTOMS_CODE';
+    const DEFAULT_CUSTOMS_CODE_CONFIGURATION_NAME = 'MYPARCELBE_DEFAULT_CUSTOMS_CODE';
+    const CUSTOMS_ORIGIN_CONFIGURATION_NAME = 'MYPARCELBE_CUSTOMS_ORIGIN';
+    const DEFAULT_CUSTOMS_ORIGIN_CONFIGURATION_NAME = 'MYPARCELBE_DEFAULT_CUSTOMS_ORIGIN';
+    const CUSTOMS_AGE_CHECK_CONFIGURATION_NAME = 'MYPARCELBE_CUSTOMS_AGE_CHECK';
 
     const SINGLE_LABEL_CREATION_OPTIONS = [
-        'packageType'=> self::PACKAGE_TYPE_CONFIGURATION_NAME,
+        'packageType' => self::PACKAGE_TYPE_CONFIGURATION_NAME,
         'packageFormat' => self::PACKAGE_FORMAT_CONFIGURATION_NAME,
         'onlyRecipient' => self::ONLY_RECIPIENT_CONFIGURATION_NAME,
         'ageCheck' => self::AGE_CHECK_CONFIGURATION_NAME,
@@ -44,7 +42,7 @@ class Constant
     ];
 
     const SINGLE_LABEL_RETURN_OPTIONS = [
-        'packageType'=> 'return_' . self::PACKAGE_TYPE_CONFIGURATION_NAME,
+        'packageType' => 'return_' . self::PACKAGE_TYPE_CONFIGURATION_NAME,
         'packageFormat' => 'return_' . self::PACKAGE_FORMAT_CONFIGURATION_NAME,
         'onlyRecipient' => 'return_' . self::ONLY_RECIPIENT_CONFIGURATION_NAME,
         'ageCheck' => 'return_' . self::AGE_CHECK_CONFIGURATION_NAME,
@@ -56,28 +54,35 @@ class Constant
 
     const CUTOFF_EXCEPTIONS = 'cutoff_exceptions';
 
+    const PACKAGE_TYPE_PACKAGE = 1;
+    const PACKAGE_TYPE_MAILBOX = 2;
+    const PACKAGE_TYPE_LETTER = 3;
+    const PACKAGE_TYPE_DIGITAL_STAMP = 4;
     const PACKAGE_TYPES = [
-        1 => 'package',
-        2 => 'mailbox package',
-        3 => 'letter',
-        4 => 'digital stamp',
+        self::PACKAGE_TYPE_PACKAGE => 'package',
+        self::PACKAGE_TYPE_MAILBOX => 'mailbox package',
+        self::PACKAGE_TYPE_LETTER => 'letter',
+        self::PACKAGE_TYPE_DIGITAL_STAMP => 'digital stamp',
     ];
+    const PACKAGE_TYPE_WEIGHT_LIMIT = 2; // Kg
     const PACKAGE_FORMATS = [
         1 => 'normal',
         2 => 'large',
         3 => 'automatic',
     ];
+    const PACKAGE_FORMAT_LARGE_INDEX = 2;
 
-    const SHARE_CUSTOMER_EMAIL_CONFIGURATION_NAME = 'MY_PARCEL_SHARE_CUSTOMER_EMAIL';
-    const SHARE_CUSTOMER_PHONE_CONFIGURATION_NAME = 'MY_PARCEL_SHARE_CUSTOMER_PHONE';
+    const SHARE_CUSTOMER_EMAIL_CONFIGURATION_NAME = 'MYPARCELBE_SHARE_CUSTOMER_EMAIL';
+    const SHARE_CUSTOMER_PHONE_CONFIGURATION_NAME = 'MYPARCELBE_SHARE_CUSTOMER_PHONE';
+    const USE_ADDRESS2_AS_STREET_NUMBER_CONFIGURATION_NAME = 'MYPARCELBE_USE_ADDRESS2_AS_STREET_NUMBER';
 
-    const LABEL_DESCRIPTION_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_DESCRIPTION';
-    const LABEL_OPEN_DOWNLOAD_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_OPEN_DOWNLOAD';
-    const LABEL_SIZE_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_SIZE';
-    const LABEL_POSITION_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_POSITION';
-    const LABEL_PROMPT_POSITION_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_PROMPT_POSITION';
+    const LABEL_DESCRIPTION_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_DESCRIPTION';
+    const LABEL_OPEN_DOWNLOAD_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_OPEN_DOWNLOAD';
+    const LABEL_SIZE_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_SIZE';
+    const LABEL_POSITION_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_POSITION';
+    const LABEL_PROMPT_POSITION_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_PROMPT_POSITION';
 
-    const LABEL_CREATED_ORDER_STATUS_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_CREATED_ORDER_STATUS';
+    const LABEL_CREATED_ORDER_STATUS_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_CREATED_ORDER_STATUS';
 
     const CARRIER_CONFIGURATION_FIELDS = [
         'deliveryTitle',
@@ -147,18 +152,18 @@ class Constant
     ];
     const DEFAULT_CUTOFF_TIME = '17:00';
 
-    const STATUS_CHANGE_MAIL_CONFIGURATION_NAME = 'MY_PARCEL_STATUS_CHANGE_MAIL';
-    const SENT_ORDER_STATE_FOR_DIGITAL_STAMPS_CONFIGURATION_NAME = 'MY_PARCEL_SENT_ORDER_STATE_FOR_DIGITAL_STAMPS';
-    const LABEL_SCANNED_ORDER_STATUS_CONFIGURATION_NAME = 'MY_PARCEL_LABEL_SCANNED_ORDER_STATUS';
-    const DELIVERED_ORDER_STATUS_CONFIGURATION_NAME = 'MY_PARCEL_DELIVERED_ORDER_STATUS';
-    const ORDER_NOTIFICATION_AFTER_CONFIGURATION_NAME = 'MY_PARCEL_ORDER_NOTIFICATION_AFTER';
+    const STATUS_CHANGE_MAIL_CONFIGURATION_NAME = 'MYPARCELBE_STATUS_CHANGE_MAIL';
+    const SENT_ORDER_STATE_FOR_DIGITAL_STAMPS_CONFIGURATION_NAME = 'MYPARCELBE_SENT_ORDER_STATE_FOR_DIGITAL_STAMPS';
+    const LABEL_SCANNED_ORDER_STATUS_CONFIGURATION_NAME = 'MYPARCELBE_LABEL_SCANNED_ORDER_STATUS';
+    const DELIVERED_ORDER_STATUS_CONFIGURATION_NAME = 'MYPARCELBE_DELIVERED_ORDER_STATUS';
+    const ORDER_NOTIFICATION_AFTER_CONFIGURATION_NAME = 'MYPARCELBE_ORDER_NOTIFICATION_AFTER';
 
-    const IGNORE_ORDER_STATUS_CONFIGURATION_NAME = 'MY_PARCEL_IGNORE_ORDER_STATUS';
-    const WEBHOOK_ID_CONFIGURATION_NAME = 'MY_PARCEL_WEBHOOK_ID';
+    const IGNORE_ORDER_STATUS_CONFIGURATION_NAME = 'MYPARCELBE_IGNORE_ORDER_STATUS';
+    const WEBHOOK_ID_CONFIGURATION_NAME = 'MYPARCELBE_WEBHOOK_ID';
 
-    const POSTNL_CONFIGURATION_NAME = 'MYPARCEL_POSTNL';
-    const BPOST_CONFIGURATION_NAME = 'MYPARCEL_BPOST';
-    const DPD_CONFIGURATION_NAME = 'MYPARCEL_DPD';
+    const POSTNL_CONFIGURATION_NAME = 'MYPARCELBE_POSTNL';
+    const BPOST_CONFIGURATION_NAME = 'MYPARCELBE_BPOST';
+    const DPD_CONFIGURATION_NAME = 'MYPARCELBE_DPD';
 
     const CONCEPT_STATUS = 1;
     const SCANNED_STATUS = 3;
@@ -196,7 +201,7 @@ class Constant
             'ALLOW_DELIVERY_FORM' => ['BE' => true, 'NL' => true],
             self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => [1 => true],
-                'NL' => [1 => true, 2 => true, 3 => true, 4 => true]
+                'NL' => [1 => true, 2 => true, 3 => true, 4 => true],
             ],
             self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => true, 'NL' => true],
             self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => [1 => true, 2 => true], 'NL' => [1 => true, 2 => true]],
@@ -208,7 +213,7 @@ class Constant
             'ALLOW_RETURN_FORM' => ['BE' => false, 'NL' => true],
             'return_' . self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => false,
-                'NL' => [1 => true, 2 => true, 3 => true, 4 => true]
+                'NL' => [1 => true, 2 => true, 3 => true, 4 => true],
             ],
             'return_' . self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => false, 'NL' => true],
             'return_' . self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => false, 'NL' => [1 => true, 2 => true]],
@@ -243,7 +248,7 @@ class Constant
             'ALLOW_DELIVERY_FORM' => ['BE' => true, 'NL' => true],
             self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => [1 => true],
-                'NL' => false
+                'NL' => false,
             ],
             self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => [1 => true], 'NL' => false],
@@ -255,7 +260,7 @@ class Constant
             'ALLOW_RETURN_FORM' => ['BE' => true, 'NL' => false],
             'return_' . self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => [1 => true],
-                'NL' => false
+                'NL' => false,
             ],
             'return_' . self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             'return_' . self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => [1 => true], 'NL' => false],
@@ -290,7 +295,7 @@ class Constant
             'ALLOW_DELIVERY_FORM' => ['BE' => true, 'NL' => true],
             self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => [1 => true],
-                'NL' => false
+                'NL' => false,
             ],
             self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => [1 => true], 'NL' => false],
@@ -302,7 +307,7 @@ class Constant
             'ALLOW_RETURN_FORM' => ['BE' => false, 'NL' => false],
             'return_' . self::PACKAGE_TYPE_CONFIGURATION_NAME => [
                 'BE' => false,
-                'NL' => false
+                'NL' => false,
             ],
             'return_' . self::ONLY_RECIPIENT_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             'return_' . self::PACKAGE_FORMAT_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
@@ -310,6 +315,6 @@ class Constant
             'return_' . self::INSURANCE_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             'return_' . self::AGE_CHECK_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
             'return_' . self::RETURN_PACKAGE_CONFIGURATION_NAME => ['BE' => false, 'NL' => false],
-        ]
+        ],
     ];
 }

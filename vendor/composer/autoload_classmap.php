@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Gett\\MyparcelBE\\OrderLabel' => $baseDir . '/classes/OrderLabel.php',
     'MyParcelBE' => $baseDir . '/myparcelbe.php',
 );
